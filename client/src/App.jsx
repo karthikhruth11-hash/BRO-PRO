@@ -15,6 +15,7 @@ import TeamSection from './components/TeamSection';
 import { AuthModal } from './components/AuthModule/AuthModal';
 import AuthPage from './components/AuthModule/AuthPage';
 import { AdminDashboardModal } from './components/AuthModule/AdminDashboardModal';
+import { AdminControlCenter } from './components/AuthModule/AdminControlCenter';
 import { SubscriptionModal } from './components/AuthModule/SubscriptionModal';
 import { sendChatMessage } from './services/apiClient';
 import { streamChatResponse } from './services/streamingClient';
@@ -335,7 +336,7 @@ export default function App() {
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         currentUser={currentUser}
         onOpenAuth={() => setActiveView('auth')}
-        onOpenAdmin={() => setShowAdminDashboard(true)}
+        onOpenAdmin={() => setActiveView('admin')}
         onLogout={handleLogout}
       />
 
@@ -362,7 +363,7 @@ export default function App() {
             onToggleRightPanel={() => setIsRightPanelOpen(!isRightPanelOpen)}
             currentUser={currentUser}
             onOpenAuth={() => setActiveView('auth')}
-            onOpenAdmin={() => setShowAdminDashboard(true)}
+            onOpenAdmin={() => setActiveView('admin')}
             onLogout={handleLogout}
           />
         )}
@@ -372,14 +373,16 @@ export default function App() {
         {activeView === 'files' && <FileSystemPanel />}
         {activeView === 'training' && <TrainingPanel />}
         {activeView === 'voiceStudio' && <CustomVoiceStudio />}
+        {activeView === 'admin' && <AdminControlCenter onClose={() => setActiveView('chat')} />}
         {activeView === 'auth' && (
           <AuthPage
             onAuthSuccess={(user, token) => {
               setCurrentUser(user);
               if (user && (user.isAdmin || user.role === 'ADMIN')) {
-                setShowAdminDashboard(true);
+                setActiveView('admin');
+              } else {
+                setActiveView('chat');
               }
-              setActiveView('chat');
             }}
             onNavigateToApp={() => setActiveView('chat')}
           />
