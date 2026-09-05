@@ -377,16 +377,18 @@ export default function App() {
         {activeView === 'training' && <TrainingPanel />}
         {activeView === 'voiceStudio' && <CustomVoiceStudio />}
         {activeView === 'auth' && (
-          <AuthPage
-            onAuthSuccess={(user, token) => {
-              setCurrentUser(user);
-              if (user && (user.isAdmin || user.role === 'ADMIN')) {
-                setShowAdminDashboard(true);
-              }
-              setActiveView('chat');
-            }}
-            onNavigateToApp={() => setActiveView('chat')}
-          />
+          <div style={{ flex: 1, width: '100%', height: '100%', overflowY: 'auto' }}>
+            <AuthPage
+              onAuthSuccess={(user, token) => {
+                setCurrentUser(user);
+                if (user && (user.isAdmin || user.role === 'ADMIN')) {
+                  setShowAdminDashboard(true);
+                }
+                setActiveView('chat');
+              }}
+              onNavigateToApp={() => setActiveView('chat')}
+            />
+          </div>
         )}
       </div>
 
