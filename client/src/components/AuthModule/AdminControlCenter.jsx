@@ -223,42 +223,49 @@ export function AdminControlCenter({ onClose }) {
     window.open(`/api/auth-manager/admin/export-excel?token=${token}`, "_blank");
   };
 
-  const filteredUsers = users.filter(u => {
-    const matchesSearch =
-      u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      u.id.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredUsers = (users || []).filter(u => {
+    if (!u) return false;
+    const nameStr = (u.name || "").toLowerCase();
+    const emailStr = (u.email || "").toLowerCase();
+    const idStr = (u.id || "").toLowerCase();
+    const search = (searchTerm || "").toLowerCase();
+
+    const matchesSearch = nameStr.includes(search) || emailStr.includes(search) || idStr.includes(search);
 
     if (!matchesSearch) return false;
     if (statusFilter === "active") return u.accountStatus === "active" && !u.isExpired;
     if (statusFilter === "suspended") return u.accountStatus === "suspended";
     if (statusFilter === "expired") return u.isExpired && !u.isAdmin;
-    if (statusFilter === "admin") return u.isAdmin;
+    if (statusFilter === "admin") return u.isAdmin || u.role === "ADMIN";
     return true;
   });
-
-
 
   return (
     <div style={{
       display: "flex",
-      height: "100%",
-      width: "100%",
-      flex: 1,
+      height: "100vh",
+      width: "100vw",
+      minHeight: "100vh",
+      minWidth: "100vw",
+      maxHeight: "100vh",
+      maxWidth: "100vw",
       background: "radial-gradient(circle at 50% 0%, #0d1629 0%, #060913 100%)",
       color: "#e2e8f0",
       fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-      overflow: "hidden"
+      overflow: "hidden",
+      boxSizing: "border-box"
     }}>
       {/* SIDEBAR NAVIGATION */}
       <div style={{
         width: "270px",
+        height: "100%",
         background: "rgba(10, 16, 30, 0.95)",
         backdropFilter: "blur(20px)",
         borderRight: "1px solid rgba(0, 240, 255, 0.15)",
         display: "flex",
         flexDirection: "column",
-        flexShrink: 0
+        flexShrink: 0,
+        overflow: "hidden"
       }}>
         {/* Header Branding */}
         <div style={{
@@ -368,7 +375,7 @@ export function AdminControlCenter({ onClose }) {
             </div>
           </div>
           <button
-            onClick={onClose}
+            onClick={() => onClose && onClose()}
             style={{
               width: "100%",
               padding: "10px",
@@ -392,7 +399,7 @@ export function AdminControlCenter({ onClose }) {
       </div>
 
       {/* MAIN VIEW CONTENT */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <div style={{ flex: 1, height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
         {/* Top Header Bar */}
         <div style={{
           padding: "18px 32px",
@@ -401,7 +408,8 @@ export function AdminControlCenter({ onClose }) {
           backdropFilter: "blur(12px)",
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between"
+          justifyContent: "space-between",
+          flexShrink: 0
         }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", color: "#64748b", fontWeight: 600 }}>
@@ -700,7 +708,7 @@ export function AdminControlCenter({ onClose }) {
                       </td>
                       <td style={tdStyle}>
                         <span style={badgeStyle(l.status === "success" ? "#10b981" : "#ef4444")}>
-                          {l.status.toUpperCase()}
+                          {(l.status || "STATUS").toUpperCase()}
                         </span>
                       </td>
                       <td style={tdStyle}>
@@ -740,7 +748,7 @@ export function AdminControlCenter({ onClose }) {
                         <span style={{ fontSize: "13px", color: "#e2e8f0" }}>{r.type}</span>
                       </td>
                       <td style={tdStyle}>
-                        <span style={badgeStyle(r.status === "success" ? "#10b981" : "#f59e0b")}>{r.status.toUpperCase()}</span>
+                        <span style={badgeStyle(r.status === "success" ? "#10b981" : "#f59e0b")}>{(r.status || "STATUS").toUpperCase()}</span>
                       </td>
                       <td style={tdStyle}>
                         <div style={{ fontSize: "12.5px", color: "#64748b" }}>{r.ipAddress}</div>

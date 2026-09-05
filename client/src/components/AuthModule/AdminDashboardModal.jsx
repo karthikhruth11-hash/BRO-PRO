@@ -21,29 +21,31 @@ class AdminErrorBoundary extends React.Component {
         <div style={{
           padding: "40px",
           color: "#f87171",
-          background: "#0a101e",
-          height: "100%",
+          background: "#070a12",
+          width: "100vw",
+          height: "100vh",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          fontFamily: "sans-serif"
+          fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
         }}>
-          <h2 style={{ color: "#ef4444" }}>Admin Control Center Component Warning</h2>
-          <p style={{ color: "#94a3b8", maxWidth: "500px", textAlign: "center" }}>
-            {this.state.error?.message || "An unexpected rendering error occurred while loading dashboard metrics."}
+          <h2 style={{ color: "#ef4444", marginBottom: "12px", fontSize: "22px" }}>Admin Control Center Warning</h2>
+          <p style={{ color: "#94a3b8", maxWidth: "550px", textAlign: "center", lineHeight: 1.5, fontSize: "14px" }}>
+            {this.state.error?.message || "An unexpected error occurred while loading dashboard metrics."}
           </p>
-          <div style={{ display: "flex", gap: "12px", marginTop: "20px" }}>
+          <div style={{ display: "flex", gap: "14px", marginTop: "24px" }}>
             <button
               onClick={() => this.setState({ hasError: false, error: null })}
               style={{
-                padding: "10px 20px",
+                padding: "10px 22px",
                 borderRadius: "8px",
                 background: "rgba(0,240,255,0.2)",
                 border: "1px solid #00f0ff",
                 color: "#00f0ff",
                 cursor: "pointer",
-                fontWeight: 700
+                fontWeight: 700,
+                fontSize: "14px"
               }}
             >
               Retry Load
@@ -51,16 +53,17 @@ class AdminErrorBoundary extends React.Component {
             <button
               onClick={this.props.onClose}
               style={{
-                padding: "10px 20px",
+                padding: "10px 22px",
                 borderRadius: "8px",
                 background: "rgba(239,68,68,0.2)",
                 border: "1px solid #ef4444",
                 color: "#ef4444",
                 cursor: "pointer",
-                fontWeight: 700
+                fontWeight: 700,
+                fontSize: "14px"
               }}
             >
-              Close
+              Close & Return to Chat
             </button>
           </div>
         </div>
@@ -80,9 +83,11 @@ export function AdminDashboardModal({ isOpen, onClose }) {
       left: 0,
       right: 0,
       bottom: 0,
+      width: "100vw",
+      height: "100vh",
       zIndex: 999999,
       background: "#070a12",
-      overflowY: "auto",
+      overflow: "hidden",
       display: "flex",
       flexDirection: "column"
     }}>

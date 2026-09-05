@@ -15,6 +15,7 @@ import TeamSection from './components/TeamSection';
 import { AuthModal } from './components/AuthModule/AuthModal';
 import AuthPage from './components/AuthModule/AuthPage';
 import { AdminDashboardModal } from './components/AuthModule/AdminDashboardModal';
+import { AdminControlCenter } from './components/AuthModule/AdminControlCenter';
 import { SubscriptionModal } from './components/AuthModule/SubscriptionModal';
 import { sendChatMessage } from './services/apiClient';
 import { streamChatResponse } from './services/streamingClient';
@@ -52,10 +53,21 @@ export default function App() {
         });
         const data = await res.json();
         if (data.success && data.authenticated) {
-          setCurrentUser(data.user);
-          if (data.accessInfo && data.accessInfo.isExpired && !data.user.isAdmin) {
+          const isMasterAdmin = Boolean(
+            data.user && (
+              data.user.isAdmin ||
+              data.user.role === 'ADMIN' ||
+              (data.user.email && data.user.email.toLowerCase() === 'karthikhruth@gmail.com')
+            )
+          );
+          const normalizedUser = {
+            ...data.user,
+            isAdmin: isMasterAdmin ? true : Boolean(data.user?.isAdmin)
+          };
+          setCurrentUser(normalizedUser);
+          if (data.accessInfo && data.accessInfo.isExpired && !isMasterAdmin) {
             setShowSubscriptionModal(true);
-          } else if (data.trialInfo && data.trialInfo.isExpired && !data.user.isAdmin) {
+          } else if (data.trialInfo && data.trialInfo.isExpired && !isMasterAdmin) {
             setShowSubscriptionModal(true);
           }
         }
@@ -372,11 +384,27 @@ export default function App() {
         {activeView === 'files' && <FileSystemPanel />}
         {activeView === 'training' && <TrainingPanel />}
         {activeView === 'voiceStudio' && <CustomVoiceStudio />}
+        {activeView === 'admin' && (
+          <div style={{ flex: 1, width: '100%', height: '100%', overflow: 'hidden' }}>
+            <AdminControlCenter onClose={() => setActiveView('chat')} />
+          </div>
+        )}
         {activeView === 'auth' && (
           <AuthPage
             onAuthSuccess={(user, token) => {
-              setCurrentUser(user);
-              if (user && (user.isAdmin || user.role === 'ADMIN')) {
+              const isMasterAdmin = Boolean(
+                user && (
+                  user.isAdmin ||
+                  user.role === 'ADMIN' ||
+                  (user.email && user.email.toLowerCase() === 'karthikhruth@gmail.com')
+                )
+              );
+              const normalizedUser = {
+                ...user,
+                isAdmin: isMasterAdmin ? true : Boolean(user?.isAdmin)
+              };
+              setCurrentUser(normalizedUser);
+              if (isMasterAdmin) {
                 setShowAdminDashboard(true);
               }
               setActiveView('chat');
