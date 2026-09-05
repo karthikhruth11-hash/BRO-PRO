@@ -54,6 +54,9 @@ export default function App() {
         const data = await res.json();
         if (data.success && data.authenticated) {
           setCurrentUser(data.user);
+          if (data.user && (data.user.isAdmin || data.user.role === 'ADMIN')) {
+            setShowAdminDashboard(true);
+          }
           if (data.accessInfo && data.accessInfo.isExpired && !data.user.isAdmin) {
             setShowSubscriptionModal(true);
           } else if (data.trialInfo && data.trialInfo.isExpired && !data.user.isAdmin) {
@@ -311,10 +314,6 @@ export default function App() {
     a.click();
   };
 
-  if (activeView === 'admin') {
-    return <AdminControlCenter onClose={() => setActiveView('chat')} />;
-  }
-
   return (
     <div style={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden' }}>
       {/* Panel 1: Left Navigation Sidebar */}
@@ -340,7 +339,7 @@ export default function App() {
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         currentUser={currentUser}
         onOpenAuth={() => setActiveView('auth')}
-        onOpenAdmin={() => setActiveView('admin')}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
         onLogout={handleLogout}
       />
 
@@ -367,7 +366,7 @@ export default function App() {
             onToggleRightPanel={() => setIsRightPanelOpen(!isRightPanelOpen)}
             currentUser={currentUser}
             onOpenAuth={() => setActiveView('auth')}
-            onOpenAdmin={() => setActiveView('admin')}
+            onOpenAdmin={() => setShowAdminDashboard(true)}
             onLogout={handleLogout}
           />
         )}
@@ -377,16 +376,14 @@ export default function App() {
         {activeView === 'files' && <FileSystemPanel />}
         {activeView === 'training' && <TrainingPanel />}
         {activeView === 'voiceStudio' && <CustomVoiceStudio />}
-        {activeView === 'admin' && <AdminControlCenter onClose={() => setActiveView('chat')} />}
         {activeView === 'auth' && (
           <AuthPage
             onAuthSuccess={(user, token) => {
               setCurrentUser(user);
               if (user && (user.isAdmin || user.role === 'ADMIN')) {
-                setActiveView('admin');
-              } else {
-                setActiveView('chat');
+                setShowAdminDashboard(true);
               }
+              setActiveView('chat');
             }}
             onNavigateToApp={() => setActiveView('chat')}
           />
