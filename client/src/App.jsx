@@ -189,8 +189,11 @@ export default function App() {
     return () => clearInterval(interval);
   }, [currentUser]);
 
-  const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0];
-  const messages = activeSession ? activeSession.messages : [];
+  const DEFAULT_SESSION = { id: 'session-1', title: 'Initial System Session', messages: [] };
+  const activeSession = (Array.isArray(sessions) && sessions.length > 0
+    ? (sessions.find(s => s.id === activeSessionId) || sessions[0])
+    : null) || DEFAULT_SESSION;
+  const messages = activeSession?.messages || [];
 
   const updateSessionMessages = (newMessages, titleUpdate = null) => {
     setSessions(prev => prev.map(s => {
@@ -422,7 +425,7 @@ export default function App() {
           selectedModel={selectedModel}
           messageCount={messages.length}
           tokensUsed={lastExecution?.tokensUsed}
-          activeTopic={activeSession.title}
+          activeTopic={activeSession?.title || 'Initial Session'}
           onQuickToolClick={(toolId) => handleSendMessage(`Execute quick tool: ${toolId}`)}
           onExportChat={handleExportChat}
           onClearChat={clearHistory}
