@@ -15,7 +15,6 @@ import TeamSection from './components/TeamSection';
 import { AuthModal } from './components/AuthModule/AuthModal';
 import AuthPage from './components/AuthModule/AuthPage';
 import { AdminDashboardModal } from './components/AuthModule/AdminDashboardModal';
-import { AdminControlCenter } from './components/AuthModule/AdminControlCenter';
 import { SubscriptionModal } from './components/AuthModule/SubscriptionModal';
 import { sendChatMessage } from './services/apiClient';
 import { streamChatResponse } from './services/streamingClient';
@@ -54,10 +53,6 @@ export default function App() {
         const data = await res.json();
         if (data.success && data.authenticated) {
           setCurrentUser(data.user);
-          if (data.user && (data.user.isAdmin || data.user.role === 'ADMIN')) {
-            // Admin gets instant access to chat view with unlimited access
-            setActiveView('chat');
-          }
           if (data.accessInfo && data.accessInfo.isExpired && !data.user.isAdmin) {
             setShowSubscriptionModal(true);
           } else if (data.trialInfo && data.trialInfo.isExpired && !data.user.isAdmin) {
@@ -315,14 +310,6 @@ export default function App() {
     a.click();
   };
 
-  if (activeView === 'admin') {
-    return (
-      <div style={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden', background: '#070a12' }}>
-        <AdminControlCenter onClose={() => setActiveView('chat')} />
-      </div>
-    );
-  }
-
   return (
     <div style={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden' }}>
       {/* Panel 1: Left Navigation Sidebar */}
@@ -348,7 +335,7 @@ export default function App() {
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         currentUser={currentUser}
         onOpenAuth={() => setActiveView('auth')}
-        onOpenAdmin={() => setActiveView('admin')}
+        onOpenAdmin={() => setShowAdminDashboard(true)}
         onLogout={handleLogout}
       />
 
@@ -375,7 +362,7 @@ export default function App() {
             onToggleRightPanel={() => setIsRightPanelOpen(!isRightPanelOpen)}
             currentUser={currentUser}
             onOpenAuth={() => setActiveView('auth')}
-            onOpenAdmin={() => setActiveView('admin')}
+            onOpenAdmin={() => setShowAdminDashboard(true)}
             onLogout={handleLogout}
           />
         )}
@@ -385,17 +372,17 @@ export default function App() {
         {activeView === 'files' && <FileSystemPanel />}
         {activeView === 'training' && <TrainingPanel />}
         {activeView === 'voiceStudio' && <CustomVoiceStudio />}
-
         {activeView === 'auth' && (
-          <div style={{ flex: 1, width: '100%', height: '100%', overflowY: 'auto' }}>
-            <AuthPage
-              onAuthSuccess={(user, token) => {
-                setCurrentUser(user);
-                setActiveView('chat');
-              }}
-              onNavigateToApp={() => setActiveView('chat')}
-            />
-          </div>
+          <AuthPage
+            onAuthSuccess={(user, token) => {
+              setCurrentUser(user);
+              if (user && (user.isAdmin || user.role === 'ADMIN')) {
+                setShowAdminDashboard(true);
+              }
+              setActiveView('chat');
+            }}
+            onNavigateToApp={() => setActiveView('chat')}
+          />
         )}
       </div>
 

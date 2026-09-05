@@ -91,12 +91,9 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
       setSuccessMsg(data.message);
       if (data.token) {
         localStorage.setItem("bro_auth_token", data.token);
-        if (onAuthSuccess) {
-          onAuthSuccess(data.user, data.token);
-        } else if (onNavigateToApp) {
-          onNavigateToApp();
-        }
+        if (onAuthSuccess) onAuthSuccess(data.user, data.token);
       }
+      if (onNavigateToApp) onNavigateToApp();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -206,11 +203,8 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
       const data = await res.json();
       if (!data.success) throw new Error(data.message);
       localStorage.setItem("bro_auth_token", data.token);
-      if (onAuthSuccess) {
-        onAuthSuccess(data.user, data.token);
-      } else if (onNavigateToApp) {
-        onNavigateToApp();
-      }
+      if (onAuthSuccess) onAuthSuccess(data.user, data.token);
+      if (onNavigateToApp) onNavigateToApp();
     } catch (err) {
       setError(err.message);
     } finally {

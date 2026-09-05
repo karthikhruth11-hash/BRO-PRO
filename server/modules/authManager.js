@@ -90,7 +90,7 @@ export class AuthManager {
         if (!data.sessions) data.sessions = [];
         if (!data.settings) data.settings = INITIAL_AUTH_DATA.settings;
 
-        // Auto seed master admin if missing or update if present
+        // Auto seed master admin if missing
         let adminUser = data.users.find(u => u && u.email && u.email.toLowerCase().trim() === "karthikhruth@gmail.com");
         if (!adminUser) {
           adminUser = {
@@ -100,7 +100,6 @@ export class AuthManager {
             mobile: "+919177164536",
             passwordHash: this.hashPassword("AdminPassword123!"),
             role: "ADMIN",
-            isAdmin: true,
             isVerified: true,
             accountStatus: "active",
             created_at: new Date().toISOString(),
@@ -112,13 +111,6 @@ export class AuthManager {
           };
           data.users.push(adminUser);
           this.write(data);
-        } else {
-          let updated = false;
-          if (adminUser.role !== "ADMIN") { adminUser.role = "ADMIN"; updated = true; }
-          if (!adminUser.isAdmin) { adminUser.isAdmin = true; updated = true; }
-          if (!adminUser.isVerified) { adminUser.isVerified = true; updated = true; }
-          if (adminUser.access_expires_at !== null) { adminUser.access_expires_at = null; updated = true; }
-          if (updated) this.write(data);
         }
 
         globalAuthCache = data;
@@ -1374,9 +1366,8 @@ export class AuthManager {
   }
 
   sanitizeUser(user) {
-    if (!user) return null;
     const { passwordHash, ...clean } = user;
-    const isAdmin = isAuthorizedAdminEmail(clean.email) || clean.role === "ADMIN" || clean.isAdmin === true;
+    const isAdmin = isAuthorizedAdminEmail(clean.email) || clean.role === "ADMIN";
     return {
       ...clean,
       role: isAdmin ? "ADMIN" : (clean.role || "USER"),
