@@ -314,6 +314,14 @@ export default function App() {
     a.click();
   };
 
+  if (activeView === 'admin') {
+    return (
+      <div style={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden', background: '#070a12' }}>
+        <AdminControlCenter onClose={() => setActiveView('chat')} />
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden' }}>
       {/* Panel 1: Left Navigation Sidebar */}
@@ -376,11 +384,6 @@ export default function App() {
         {activeView === 'files' && <FileSystemPanel />}
         {activeView === 'training' && <TrainingPanel />}
         {activeView === 'voiceStudio' && <CustomVoiceStudio />}
-        {activeView === 'admin' && (
-          <div style={{ flex: 1, width: '100%', height: '100%', overflowY: 'auto', background: '#070a12' }}>
-            <AdminControlCenter onClose={() => setActiveView('chat')} />
-          </div>
-        )}
 
         {activeView === 'auth' && (
           <div style={{ flex: 1, width: '100%', height: '100%', overflowY: 'auto' }}>
