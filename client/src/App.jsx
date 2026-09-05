@@ -311,6 +311,10 @@ export default function App() {
     a.click();
   };
 
+  if (activeView === 'admin') {
+    return <AdminControlCenter onClose={() => setActiveView('chat')} />;
+  }
+
   return (
     <div style={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden' }}>
       {/* Panel 1: Left Navigation Sidebar */}
