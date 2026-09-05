@@ -21,7 +21,8 @@ import {
   PinOff,
   Clock,
   Users,
-  Brain
+  Brain,
+  Shield
 } from 'lucide-react';
 
 export default function Sidebar({
