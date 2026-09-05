@@ -259,15 +259,15 @@ export default function Sidebar({
 
       {/* PROMINENT AUTH & ADMIN DASHBOARD BAR */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        {currentUser && currentUser.isAdmin && (
+        {currentUser && (currentUser.isAdmin || currentUser.role === 'ADMIN' || (currentUser.email && currentUser.email.toLowerCase() === 'karthikhruth@gmail.com')) && (
           <button
             onClick={onOpenAdmin}
             style={{
               width: '100%',
               padding: '10px 14px',
               borderRadius: '10px',
-              background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.2) 0%, rgba(112, 0, 255, 0.2) 100%)',
-              border: '1px solid rgba(0, 240, 255, 0.4)',
+              background: 'linear-gradient(135deg, rgba(0, 240, 255, 0.25) 0%, rgba(112, 0, 255, 0.25) 100%)',
+              border: '1px solid #00f0ff',
               color: '#00f0ff',
               fontSize: '0.85rem',
               fontWeight: 800,
@@ -276,7 +276,7 @@ export default function Sidebar({
               alignItems: 'center',
               justifyContent: 'center',
               gap: '8px',
-              boxShadow: '0 0 15px rgba(0, 240, 255, 0.2)'
+              boxShadow: '0 0 15px rgba(0, 240, 255, 0.3)'
             }}
           >
             <Shield size={16} /> Admin Control Center
