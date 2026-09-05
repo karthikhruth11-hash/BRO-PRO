@@ -55,7 +55,8 @@ export default function App() {
         if (data.success && data.authenticated) {
           setCurrentUser(data.user);
           if (data.user && (data.user.isAdmin || data.user.role === 'ADMIN')) {
-            setActiveView('admin');
+            // Admin gets instant access to chat view with unlimited access
+            setActiveView('chat');
           }
           if (data.accessInfo && data.accessInfo.isExpired && !data.user.isAdmin) {
             setShowSubscriptionModal(true);
@@ -390,11 +391,7 @@ export default function App() {
             <AuthPage
               onAuthSuccess={(user, token) => {
                 setCurrentUser(user);
-                if (user && (user.isAdmin || user.role === 'ADMIN')) {
-                  setActiveView('admin');
-                } else {
-                  setActiveView('chat');
-                }
+                setActiveView('chat');
               }}
               onNavigateToApp={() => setActiveView('chat')}
             />
