@@ -242,8 +242,9 @@ export function AdminControlCenter({ onClose }) {
   return (
     <div style={{
       display: "flex",
-      height: "100vh",
-      width: "100vw",
+      height: "100%",
+      width: "100%",
+      flex: 1,
       background: "radial-gradient(circle at 50% 0%, #0d1629 0%, #060913 100%)",
       color: "#e2e8f0",
       fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
