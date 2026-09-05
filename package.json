@@ -1,0 +1,20 @@
+{
+  "name": "wednesday-bro-ai-pro",
+  "version": "2.0.0",
+  "private": true,
+  "description": "BRO AI (W.E.D.N.E.S.D.A.Y. Pro) - Production-Grade Personal AI Assistant",
+  "homepage": "https://karthikhruth11-hash.github.io/BRO-PRO",
+  "scripts": {
+    "start": "node server/index.js",
+    "server": "node server/index.js",
+    "client": "npm --prefix client run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "build": "npm --prefix client run build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d client/dist"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "gh-pages": "^6.3.0"
+  }
+}
