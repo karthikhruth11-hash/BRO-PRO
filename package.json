@@ -4,6 +4,7 @@
   "private": true,
   "description": "BRO AI (W.E.D.N.E.S.D.A.Y. Pro) - Production-Grade Personal AI Assistant",
   "homepage": "https://karthikhruth11-hash.github.io/BRO-PRO",
+  "type": "module",
   "scripts": {
     "start": "node server/index.js",
     "server": "node server/index.js",
@@ -12,6 +13,16 @@
     "build": "npm --prefix client run build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d client/dist"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "docx": "^9.7.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "node-os-utils": "^1.3.7",
+    "nodemailer": "^10.0.0",
+    "pdfkit": "^0.20.2",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",
