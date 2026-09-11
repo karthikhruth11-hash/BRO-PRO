@@ -218,109 +218,119 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '30px 20px',
-      background: '#070a12',
+      padding: '40px 20px',
+      background: 'var(--bg-primary, #0b0f19)',
       minHeight: '100%',
       overflowY: 'auto',
-      color: '#f8fafc',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
+      color: 'var(--text-main, #f8fafc)',
+      fontFamily: 'inherit'
     }}>
       
-      {/* Main Glass Console Container */}
+      {/* Main Container */}
       <div style={{
         width: '100%',
-        maxWidth: '900px',
+        maxWidth: '920px',
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-        borderRadius: '24px',
-        border: '1px solid rgba(0, 240, 255, 0.3)',
-        background: 'rgba(13, 17, 26, 0.95)',
-        boxShadow: '0 0 50px rgba(0, 240, 255, 0.15)',
-        overflow: 'hidden',
-        backdropFilter: 'blur(20px)'
+        borderRadius: '16px',
+        border: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.12))',
+        background: 'var(--bg-card, #131b2e)',
+        boxShadow: 'var(--shadow-lg, 0 16px 48px rgba(0, 0, 0, 0.45))',
+        overflow: 'hidden'
       }}>
         
         {/* Left Side Visual Showcase Banner */}
         <div style={{
           padding: '36px',
-          background: 'linear-gradient(135deg, #070a12 0%, #0d1424 50%, #15102a 100%)',
-          borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+          background: 'var(--bg-secondary, #0e1526)',
+          borderRight: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.08))',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
+          gap: '24px'
         }}>
           <div>
-            {/* Holographic Logo Badge */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '30px' }}>
-              <div style={{
-                padding: '12px',
-                borderRadius: '16px',
-                background: 'linear-gradient(135deg, #00f0ff 0%, #3b82f6 100%)',
-                boxShadow: '0 0 20px rgba(0, 240, 255, 0.5)',
-                color: '#070a12',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <Cpu size={28} />
-              </div>
+            {/* Logo Badge */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
+              <img
+                src="/sagw-ai-logo.png"
+                alt="SAGW AI"
+                style={{
+                  width: '50px',
+                  height: '50px',
+                  borderRadius: '13px',
+                  objectFit: 'cover',
+                  border: '1px solid rgba(56, 189, 248, 0.3)',
+                  boxShadow: '0 4px 18px rgba(0, 0, 0, 0.5)'
+                }}
+              />
               <div>
-                <h1 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0, letterSpacing: '-0.5px', color: '#fff' }}>
-                  BRO AI PRO <span style={{ fontSize: '0.7rem', padding: '2px 8px', borderRadius: '12px', background: 'rgba(0,240,255,0.15)', color: '#00f0ff', border: '1px solid rgba(0,240,255,0.3)', fontFamily: 'monospace' }}>v2.0</span>
-                </h1>
-                <p style={{ fontSize: '0.78rem', color: '#00f0ff', margin: '2px 0 0 0', fontFamily: 'monospace' }}>Next-Gen Multi-LLM Orchestration</p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div className="sagw-brand-title" style={{ fontSize: '1.45rem' }}>
+                    <span className="sagw-word">SAGW</span>
+                    <span className="ai-word">AI</span>
+                  </div>
+                  <span style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: '6px', background: 'rgba(56, 189, 248, 0.12)', color: '#38bdf8', border: '1px solid rgba(56, 189, 248, 0.25)', fontFamily: 'monospace', fontWeight: 600 }}>PRO</span>
+                </div>
+                <p style={{ fontSize: '0.78rem', color: 'var(--text-muted, #94a3b8)', margin: '2px 0 0 0', letterSpacing: '0.03em' }}>From Darkness to Clarity</p>
               </div>
             </div>
 
             {/* Feature Cards */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ padding: '14px 16px', borderRadius: '14px', background: 'rgba(7, 10, 18, 0.7)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                <Sparkles size={20} color="#00f0ff" style={{ marginTop: '2px', shrink: 0 }} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div style={{ padding: '14px 16px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle, rgba(255,255,255,0.06))', display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                <div style={{ padding: '6px', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.1)', color: 'var(--accent-primary, #3b82f6)', flexShrink: 0 }}>
+                  <Sparkles size={18} />
+                </div>
                 <div>
-                  <h4 style={{ margin: '0 0 2px 0', fontSize: '0.88rem', fontWeight: 700, color: '#fff' }}>30-Day Free Trial</h4>
-                  <p style={{ margin: 0, fontSize: '0.75rem', color: '#94a3b8', lineHeight: 1.4 }}>Instant access to all multi-model features, code generation, and memory stores upon verification.</p>
+                  <h4 style={{ margin: '0 0 2px 0', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main, #f8fafc)' }}>30-Day Free Trial</h4>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted, #94a3b8)', lineHeight: 1.45 }}>Instant access to all multi-model features, code generation, and memory stores upon verification.</p>
                 </div>
               </div>
 
-              <div style={{ padding: '14px 16px', borderRadius: '14px', background: 'rgba(7, 10, 18, 0.7)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                <ShieldCheck size={20} color="#10b981" style={{ marginTop: '2px', shrink: 0 }} />
+              <div style={{ padding: '14px 16px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle, rgba(255,255,255,0.06))', display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                <div style={{ padding: '6px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--accent-success, #10b981)', flexShrink: 0 }}>
+                  <ShieldCheck size={18} />
+                </div>
                 <div>
-                  <h4 style={{ margin: '0 0 2px 0', fontSize: '0.88rem', fontWeight: 700, color: '#fff' }}>Real OTP Email & Mobile Auth</h4>
-                  <p style={{ margin: 0, fontSize: '0.75rem', color: '#94a3b8', lineHeight: 1.4 }}>Verification codes dispatched to your 10-digit Phone & Gmail. Security codes are encrypted.</p>
+                  <h4 style={{ margin: '0 0 2px 0', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main, #f8fafc)' }}>Real OTP Email & Mobile Auth</h4>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted, #94a3b8)', lineHeight: 1.45 }}>Verification codes dispatched to your 10-digit Phone & Gmail. Security codes are encrypted.</p>
                 </div>
               </div>
 
-              <div style={{ padding: '14px 16px', borderRadius: '14px', background: 'rgba(7, 10, 18, 0.7)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
-                <Zap size={20} color="#a855f7" style={{ marginTop: '2px', shrink: 0 }} />
+              <div style={{ padding: '14px 16px', borderRadius: '12px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid var(--border-subtle, rgba(255,255,255,0.06))', display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                <div style={{ padding: '6px', borderRadius: '8px', background: 'rgba(139, 92, 246, 0.1)', color: '#a855f7', flexShrink: 0 }}>
+                  <Zap size={18} />
+                </div>
                 <div>
-                  <h4 style={{ margin: '0 0 2px 0', fontSize: '0.88rem', fontWeight: 700, color: '#fff' }}>10-Min Unregistered Limit</h4>
-                  <p style={{ margin: 0, fontSize: '0.75rem', color: '#94a3b8', lineHeight: 1.4 }}>Unregistered guest sessions expire after 10 minutes, requiring registration for continued access.</p>
+                  <h4 style={{ margin: '0 0 2px 0', fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main, #f8fafc)' }}>10-Min Unregistered Limit</h4>
+                  <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-muted, #94a3b8)', lineHeight: 1.45 }}>Unregistered guest sessions expire after 10 minutes, requiring registration for continued access.</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div style={{ paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: '#64748b' }}>
+          <div style={{ paddingTop: '18px', borderTop: '1px solid var(--border-subtle, rgba(255,255,255,0.08))', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted, #64748b)' }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Star size={14} color="#f59e0b" fill="#f59e0b" /> Master Admin Authorization</span>
             <span style={{ fontFamily: 'monospace' }}>AUTH_SECURE</span>
           </div>
         </div>
 
         {/* Right Side Form Panel */}
-        <div style={{ padding: '36px', display: 'flex', flexDirection: 'column', justify: 'center', background: 'rgba(13, 17, 26, 0.6)' }}>
+        <div style={{ padding: '36px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           
           {/* Header Mode Navigation Tabs */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.1)', paddingBottom: '12px', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle, rgba(255,255,255,0.08))', paddingBottom: '12px', marginBottom: '24px' }}>
             <div style={{ display: 'flex', gap: '16px' }}>
               <button
                 onClick={() => { setMode("login"); setError(""); setSuccessMsg(""); }}
                 style={{
                   background: 'none',
                   border: 'none',
-                  borderBottom: mode === "login" ? '2px solid #00f0ff' : '2px solid transparent',
-                  color: mode === "login" ? '#00f0ff' : '#94a3b8',
-                  fontSize: '0.9rem',
-                  fontWeight: 700,
+                  borderBottom: mode === "login" ? '2px solid var(--accent-primary, #3b82f6)' : '2px solid transparent',
+                  color: mode === "login" ? 'var(--text-main, #f8fafc)' : 'var(--text-muted, #94a3b8)',
+                  fontSize: '0.88rem',
+                  fontWeight: 600,
                   cursor: 'pointer',
                   paddingBottom: '8px',
                   display: 'flex',
@@ -336,10 +346,10 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
                 style={{
                   background: 'none',
                   border: 'none',
-                  borderBottom: mode === "register" ? '2px solid #00f0ff' : '2px solid transparent',
-                  color: mode === "register" ? '#00f0ff' : '#94a3b8',
-                  fontSize: '0.9rem',
-                  fontWeight: 700,
+                  borderBottom: mode === "register" ? '2px solid var(--accent-primary, #3b82f6)' : '2px solid transparent',
+                  color: mode === "register" ? 'var(--text-main, #f8fafc)' : 'var(--text-muted, #94a3b8)',
+                  fontSize: '0.88rem',
+                  fontWeight: 600,
                   cursor: 'pointer',
                   paddingBottom: '8px',
                   display: 'flex',
@@ -354,7 +364,7 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
             {onNavigateToApp && (
               <button
                 onClick={onNavigateToApp}
-                style={{ background: 'none', border: 'none', color: '#00f0ff', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                style={{ background: 'none', border: 'none', color: 'var(--accent-primary, #3b82f6)', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
               >
                 Back to Workspace <ArrowRight size={14} />
               </button>
@@ -363,15 +373,15 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
 
           {/* Alert Banners */}
           {error && (
-            <div style={{ padding: '12px 14px', borderRadius: '10px', background: 'rgba(153, 27, 27, 0.4)', border: '1px solid rgba(239, 68, 68, 0.4)', color: '#fca5a5', fontSize: '0.8rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AlertCircle size={16} color="#f87171" style={{ shrink: 0 }} />
+            <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)', color: '#fca5a5', fontSize: '0.8rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertCircle size={16} color="#ef4444" style={{ flexShrink: 0 }} />
               <span>{error}</span>
             </div>
           )}
 
           {successMsg && (
-            <div style={{ padding: '12px 14px', borderRadius: '10px', background: 'rgba(6, 78, 59, 0.4)', border: '1px solid rgba(16, 185, 129, 0.4)', color: '#6ee7b7', fontSize: '0.8rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckCircle2 size={16} color="#34d399" style={{ shrink: 0 }} />
+            <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.25)', color: '#6ee7b7', fontSize: '0.8rem', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <CheckCircle2 size={16} color="#10b981" style={{ flexShrink: 0 }} />
               <span>{successMsg}</span>
             </div>
           )}
@@ -380,9 +390,9 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
           {mode === "login" && (
             <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>Email / Mobile Number</label>
+                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '6px' }}>Email / Mobile Number</label>
                 <div style={{ position: 'relative' }}>
-                  <Mail size={16} color="#64748b" style={{ position: 'absolute', left: '12px', top: '12px' }} />
+                  <Mail size={16} color="var(--text-muted, #64748b)" style={{ position: 'absolute', left: '12px', top: '11px' }} />
                   <input
                     type="text"
                     name="email"
@@ -390,24 +400,24 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
                     placeholder="name@gmail.com or +91 9876543210"
                     value={formData.email}
                     onChange={handleChange}
-                    style={{ width: '100%', padding: '10px 12px 10px 38px', background: '#070a12', border: '1px solid #1e293b', borderRadius: '10px', color: '#fff', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', padding: '10px 12px 10px 38px', background: 'var(--bg-input, rgba(0,0,0,0.3))', border: '1px solid var(--border-subtle, rgba(255,255,255,0.12))', borderRadius: '8px', color: 'var(--text-main, #f8fafc)', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
                   />
                 </div>
               </div>
 
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                  <label style={{ fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Password</label>
+                  <label style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Password</label>
                   <button
                     type="button"
                     onClick={() => { setMode("forgot"); setError(""); setSuccessMsg(""); }}
-                    style={{ background: 'none', border: 'none', color: '#00f0ff', fontSize: '0.75rem', cursor: 'pointer', padding: 0 }}
+                    style={{ background: 'none', border: 'none', color: 'var(--accent-primary, #3b82f6)', fontSize: '0.75rem', cursor: 'pointer', padding: 0 }}
                   >
                     Forgot Password?
                   </button>
                 </div>
                 <div style={{ position: 'relative' }}>
-                  <Lock size={16} color="#64748b" style={{ position: 'absolute', left: '12px', top: '12px' }} />
+                  <Lock size={16} color="var(--text-muted, #64748b)" style={{ position: 'absolute', left: '12px', top: '11px' }} />
                   <input
                     type="password"
                     name="password"
@@ -415,7 +425,7 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
                     placeholder="••••••••"
                     value={formData.password}
                     onChange={handleChange}
-                    style={{ width: '100%', padding: '10px 12px 10px 38px', background: '#070a12', border: '1px solid #1e293b', borderRadius: '10px', color: '#fff', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', padding: '10px 12px 10px 38px', background: 'var(--bg-input, rgba(0,0,0,0.3))', border: '1px solid var(--border-subtle, rgba(255,255,255,0.12))', borderRadius: '8px', color: 'var(--text-main, #f8fafc)', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
                   />
                 </div>
               </div>
@@ -423,22 +433,20 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
               <button
                 type="submit"
                 disabled={loading}
+                className="btn-primary"
                 style={{
                   width: '100%',
-                  padding: '12px',
-                  background: 'linear-gradient(90deg, #00f0ff 0%, #3b82f6 100%)',
-                  border: 'none',
-                  borderRadius: '10px',
-                  color: '#070a12',
+                  padding: '11px',
+                  borderRadius: '8px',
                   fontSize: '0.9rem',
-                  fontWeight: 800,
-                  cursor: 'pointer',
+                  fontWeight: 600,
+                  cursor: loading ? 'not-allowed' : 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  boxShadow: '0 0 20px rgba(0, 240, 255, 0.3)',
-                  marginTop: '8px'
+                  marginTop: '6px',
+                  opacity: loading ? 0.7 : 1
                 }}
               >
                 {loading ? "Signing In..." : "Sign In to Account"}
@@ -451,9 +459,9 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
           {mode === "register" && (
             <form onSubmit={handleRegister} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>Full Name</label>
+                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '4px' }}>Full Name</label>
                 <div style={{ position: 'relative' }}>
-                  <User size={16} color="#64748b" style={{ position: 'absolute', left: '12px', top: '10px' }} />
+                  <User size={16} color="var(--text-muted, #64748b)" style={{ position: 'absolute', left: '12px', top: '10px' }} />
                   <input
                     type="text"
                     name="name"
@@ -461,15 +469,15 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
                     placeholder="Karthik User"
                     value={formData.name}
                     onChange={handleChange}
-                    style={{ width: '100%', padding: '9px 12px 9px 38px', background: '#070a12', border: '1px solid #1e293b', borderRadius: '10px', color: '#fff', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', padding: '9px 12px 9px 38px', background: 'var(--bg-input, rgba(0,0,0,0.3))', border: '1px solid var(--border-subtle, rgba(255,255,255,0.12))', borderRadius: '8px', color: 'var(--text-main, #f8fafc)', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }}
                   />
                 </div>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>Valid Email Address (Gmail / Domain)</label>
+                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '4px' }}>Valid Email Address (Gmail / Domain)</label>
                 <div style={{ position: 'relative' }}>
-                  <Mail size={16} color="#64748b" style={{ position: 'absolute', left: '12px', top: '10px' }} />
+                  <Mail size={16} color="var(--text-muted, #64748b)" style={{ position: 'absolute', left: '12px', top: '10px' }} />
                   <input
                     type="email"
                     name="email"
@@ -477,15 +485,15 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
                     placeholder="user@gmail.com"
                     value={formData.email}
                     onChange={handleChange}
-                    style={{ width: '100%', padding: '9px 12px 9px 38px', background: '#070a12', border: '1px solid #1e293b', borderRadius: '10px', color: '#fff', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', padding: '9px 12px 9px 38px', background: 'var(--bg-input, rgba(0,0,0,0.3))', border: '1px solid var(--border-subtle, rgba(255,255,255,0.12))', borderRadius: '8px', color: 'var(--text-main, #f8fafc)', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }}
                   />
                 </div>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>Valid Mobile Number (10 Digits)</label>
+                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '4px' }}>Valid Mobile Number (10 Digits)</label>
                 <div style={{ position: 'relative' }}>
-                  <Phone size={16} color="#64748b" style={{ position: 'absolute', left: '12px', top: '10px' }} />
+                  <Phone size={16} color="var(--text-muted, #64748b)" style={{ position: 'absolute', left: '12px', top: '10px' }} />
                   <input
                     type="tel"
                     name="mobile"
@@ -493,14 +501,14 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
                     placeholder="+91 9876543210"
                     value={formData.mobile}
                     onChange={handleChange}
-                    style={{ width: '100%', padding: '9px 12px 9px 38px', background: '#070a12', border: '1px solid #1e293b', borderRadius: '10px', color: '#fff', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', padding: '9px 12px 9px 38px', background: 'var(--bg-input, rgba(0,0,0,0.3))', border: '1px solid var(--border-subtle, rgba(255,255,255,0.12))', borderRadius: '8px', color: 'var(--text-main, #f8fafc)', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }}
                   />
                 </div>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>Password</label>
+                  <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '4px' }}>Password</label>
                   <input
                     type="password"
                     name="password"
@@ -508,11 +516,11 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
                     placeholder="••••••••"
                     value={formData.password}
                     onChange={handleChange}
-                    style={{ width: '100%', padding: '9px 12px', background: '#070a12', border: '1px solid #1e293b', borderRadius: '10px', color: '#fff', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', padding: '9px 12px', background: 'var(--bg-input, rgba(0,0,0,0.3))', border: '1px solid var(--border-subtle, rgba(255,255,255,0.12))', borderRadius: '8px', color: 'var(--text-main, #f8fafc)', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>Confirm</label>
+                  <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '4px' }}>Confirm</label>
                   <input
                     type="password"
                     name="confirmPassword"
@@ -520,7 +528,7 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
                     placeholder="••••••••"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    style={{ width: '100%', padding: '9px 12px', background: '#070a12', border: '1px solid #1e293b', borderRadius: '10px', color: '#fff', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', padding: '9px 12px', background: 'var(--bg-input, rgba(0,0,0,0.3))', border: '1px solid var(--border-subtle, rgba(255,255,255,0.12))', borderRadius: '8px', color: 'var(--text-main, #f8fafc)', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }}
                   />
                 </div>
               </div>
@@ -528,22 +536,20 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
               <button
                 type="submit"
                 disabled={loading}
+                className="btn-primary"
                 style={{
                   width: '100%',
-                  padding: '12px',
-                  background: 'linear-gradient(90deg, #00f0ff 0%, #3b82f6 100%)',
-                  border: 'none',
-                  borderRadius: '10px',
-                  color: '#070a12',
+                  padding: '11px',
+                  borderRadius: '8px',
                   fontSize: '0.9rem',
-                  fontWeight: 800,
-                  cursor: 'pointer',
+                  fontWeight: 600,
+                  cursor: loading ? 'not-allowed' : 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  boxShadow: '0 0 20px rgba(0, 240, 255, 0.3)',
-                  marginTop: '6px'
+                  marginTop: '6px',
+                  opacity: loading ? 0.7 : 1
                 }}
               >
                 {loading ? "Sending OTP to Mobile & Gmail..." : "Register & Send Real OTP"}
@@ -555,22 +561,22 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
           {/* MODE 3: REAL OTP VERIFICATION */}
           {mode === "verify" && (
             <form onSubmit={handleVerifyOTP} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ padding: '14px', borderRadius: '12px', background: 'rgba(0, 240, 255, 0.08)', border: '1px solid rgba(0, 240, 255, 0.25)', fontSize: '0.82rem', color: '#cbd5e1' }}>
-                <p style={{ margin: '0 0 6px 0', fontWeight: 700, color: '#00f0ff', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ padding: '14px', borderRadius: '10px', background: 'rgba(59, 130, 246, 0.08)', border: '1px solid rgba(59, 130, 246, 0.2)', fontSize: '0.82rem', color: 'var(--text-secondary, #cbd5e1)' }}>
+                <p style={{ margin: '0 0 6px 0', fontWeight: 600, color: 'var(--accent-primary, #3b82f6)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <Mail size={16} /> Verification Code Sent to Inbox
                 </p>
-                <div style={{ fontSize: '0.78rem', color: '#94a3b8', lineHeight: 1.5 }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted, #94a3b8)', lineHeight: 1.5 }}>
                   A 6-digit real-time OTP code has been dispatched to:<br />
-                  📧 Gmail: <strong style={{ color: '#fff' }}>{pendingEmail || formData.email}</strong><br />
-                  📱 Mobile: <strong style={{ color: '#fff' }}>{pendingMobile || formData.mobile}</strong><br />
-                  <span style={{ color: '#38bdf8', fontSize: '0.75rem', marginTop: '6px', display: 'inline-block' }}>Please check your Gmail inbox or SMS text messages for your 6-digit code.</span>
+                  📧 Gmail: <strong style={{ color: 'var(--text-main, #f8fafc)' }}>{pendingEmail || formData.email}</strong><br />
+                  📱 Mobile: <strong style={{ color: 'var(--text-main, #f8fafc)' }}>{pendingMobile || formData.mobile}</strong><br />
+                  <span style={{ color: 'var(--accent-primary, #3b82f6)', fontSize: '0.75rem', marginTop: '6px', display: 'inline-block' }}>Please check your Gmail inbox or SMS text messages for your 6-digit code.</span>
                 </div>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>Enter 6-Digit OTP Code</label>
+                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '6px' }}>Enter 6-Digit OTP Code</label>
                 <div style={{ position: 'relative' }}>
-                  <KeyRound size={18} color="#64748b" style={{ position: 'absolute', left: '14px', top: '12px' }} />
+                  <KeyRound size={18} color="var(--text-muted, #64748b)" style={{ position: 'absolute', left: '14px', top: '12px' }} />
                   <input
                     type="text"
                     name="otp"
@@ -579,7 +585,7 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
                     placeholder="123456"
                     value={formData.otp}
                     onChange={handleChange}
-                    style={{ width: '100%', padding: '12px 12px 12px 42px', background: '#070a12', border: '1px solid rgba(0, 240, 255, 0.5)', borderRadius: '10px', color: '#00f0ff', fontSize: '1.2rem', letterSpacing: '6px', textAlign: 'center', fontFamily: 'monospace', fontWeight: 700, outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', padding: '12px 12px 12px 42px', background: 'var(--bg-input, rgba(0,0,0,0.3))', border: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.18))', borderRadius: '8px', color: 'var(--accent-primary, #3b82f6)', fontSize: '1.2rem', letterSpacing: '6px', textAlign: 'center', fontFamily: 'monospace', fontWeight: 700, outline: 'none', boxSizing: 'border-box' }}
                   />
                 </div>
               </div>
@@ -592,12 +598,12 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
                   style={{
                     flex: 1,
                     padding: '10px',
-                    background: resendCooldown > 0 ? '#1e293b' : 'rgba(255,255,255,0.08)',
-                    border: '1px solid rgba(255,255,255,0.15)',
-                    borderRadius: '10px',
-                    color: resendCooldown > 0 ? '#64748b' : '#38bdf8',
+                    background: resendCooldown > 0 ? 'rgba(255,255,255,0.03)' : 'rgba(255,255,255,0.06)',
+                    border: '1px solid var(--border-subtle, rgba(255,255,255,0.1))',
+                    borderRadius: '8px',
+                    color: resendCooldown > 0 ? 'var(--text-muted, #64748b)' : 'var(--accent-primary, #3b82f6)',
                     fontSize: '0.78rem',
-                    fontWeight: 700,
+                    fontWeight: 600,
                     cursor: resendCooldown > 0 ? 'not-allowed' : 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -612,21 +618,22 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
                 <button
                   type="submit"
                   disabled={loading}
+                  className="btn-primary"
                   style={{
                     flex: 2,
-                    padding: '12px',
-                    background: 'linear-gradient(90deg, #10b981 0%, #059669 100%)',
+                    padding: '11px',
+                    borderRadius: '8px',
+                    background: 'var(--accent-success, #10b981)',
                     border: 'none',
-                    borderRadius: '10px',
                     color: '#fff',
                     fontSize: '0.88rem',
-                    fontWeight: 800,
-                    cursor: 'pointer',
+                    fontWeight: 600,
+                    cursor: loading ? 'not-allowed' : 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: '6px',
-                    boxShadow: '0 0 20px rgba(16, 185, 129, 0.3)'
+                    opacity: loading ? 0.7 : 1
                   }}
                 >
                   {loading ? "Verifying..." : "Verify & Activate Trial"}
@@ -639,14 +646,14 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
           {/* MODE 4: FORGOT PASSWORD - REQUEST OTP */}
           {mode === "forgot" && (
             <form onSubmit={handleRequestForgotOTP} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <p style={{ fontSize: '0.82rem', color: '#94a3b8', margin: 0, lineHeight: 1.4 }}>
+              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted, #94a3b8)', margin: 0, lineHeight: 1.5 }}>
                 Enter your registered Email or Mobile number below. We will send a 6-digit password reset OTP to both your Gmail and Mobile number.
               </p>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>Registered Email / Mobile</label>
+                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '6px' }}>Registered Email / Mobile</label>
                 <div style={{ position: 'relative' }}>
-                  <Mail size={16} color="#64748b" style={{ position: 'absolute', left: '12px', top: '12px' }} />
+                  <Mail size={16} color="var(--text-muted, #64748b)" style={{ position: 'absolute', left: '12px', top: '11px' }} />
                   <input
                     type="text"
                     name="email"
@@ -654,7 +661,7 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
                     placeholder="user@gmail.com or +91 9876543210"
                     value={formData.email}
                     onChange={handleChange}
-                    style={{ width: '100%', padding: '10px 12px 10px 38px', background: '#070a12', border: '1px solid #1e293b', borderRadius: '10px', color: '#fff', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', padding: '10px 12px 10px 38px', background: 'var(--bg-input, rgba(0,0,0,0.3))', border: '1px solid var(--border-subtle, rgba(255,255,255,0.12))', borderRadius: '8px', color: 'var(--text-main, #f8fafc)', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
                   />
                 </div>
               </div>
@@ -662,21 +669,19 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
               <button
                 type="submit"
                 disabled={loading}
+                className="btn-primary"
                 style={{
                   width: '100%',
-                  padding: '12px',
-                  background: 'linear-gradient(90deg, #f59e0b 0%, #d97706 100%)',
-                  border: 'none',
-                  borderRadius: '10px',
-                  color: '#fff',
+                  padding: '11px',
+                  borderRadius: '8px',
                   fontSize: '0.9rem',
-                  fontWeight: 800,
-                  cursor: 'pointer',
+                  fontWeight: 600,
+                  cursor: loading ? 'not-allowed' : 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  boxShadow: '0 0 20px rgba(245, 158, 11, 0.3)'
+                  opacity: loading ? 0.7 : 1
                 }}
               >
                 {loading ? "Sending Reset Code..." : "Send Reset OTP"}
@@ -688,17 +693,17 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
           {/* MODE 5: FORGOT PASSWORD - RESET */}
           {mode === "forgot_reset" && (
             <form onSubmit={handleResetPassword} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ padding: '10px 12px', borderRadius: '10px', background: 'rgba(245, 158, 11, 0.15)', border: '1px solid rgba(245, 158, 11, 0.4)', fontSize: '0.78rem', color: '#fbbf24' }}>
+              <div style={{ padding: '10px 12px', borderRadius: '8px', background: 'rgba(245, 158, 11, 0.1)', border: '1px solid rgba(245, 158, 11, 0.3)', fontSize: '0.78rem', color: 'var(--accent-warning, #fbbf24)' }}>
                 Reset OTP dispatched to Gmail & Mobile for <strong>{pendingEmail || formData.email}</strong>.
               </div>
 
               {activeOtpCode && (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '10px', background: 'rgba(0, 240, 255, 0.15)', border: '1px solid rgba(0, 240, 255, 0.4)' }}>
-                  <span style={{ fontSize: '0.78rem', color: '#00f0ff', fontWeight: 600 }}>Active Reset Code: <strong>{activeOtpCode}</strong></span>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.25)' }}>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--accent-primary, #3b82f6)', fontWeight: 600 }}>Active Reset Code: <strong>{activeOtpCode}</strong></span>
                   <button
                     type="button"
                     onClick={() => setFormData(prev => ({ ...prev, otp: activeOtpCode }))}
-                    style={{ background: '#00f0ff', border: 'none', borderRadius: '6px', color: '#000', fontSize: '0.72rem', fontWeight: 800, padding: '4px 10px', cursor: 'pointer' }}
+                    style={{ background: 'var(--accent-primary, #3b82f6)', border: 'none', borderRadius: '6px', color: '#fff', fontSize: '0.72rem', fontWeight: 600, padding: '4px 10px', cursor: 'pointer' }}
                   >
                     Auto-Fill Code
                   </button>
@@ -706,7 +711,7 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
               )}
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '4px' }}>6-Digit Reset OTP</label>
+                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '4px' }}>6-Digit Reset OTP</label>
                 <input
                   type="text"
                   name="otp"
@@ -715,12 +720,12 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
                   placeholder="123456"
                   value={formData.otp}
                   onChange={handleChange}
-                  style={{ width: '100%', padding: '10px', background: '#070a12', border: '1px solid rgba(245, 158, 11, 0.5)', borderRadius: '10px', color: '#fbbf24', fontSize: '1.1rem', letterSpacing: '4px', textAlign: 'center', fontFamily: 'monospace', fontWeight: 700, outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '10px', background: 'var(--bg-input, rgba(0,0,0,0.3))', border: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.18))', borderRadius: '8px', color: 'var(--accent-warning, #fbbf24)', fontSize: '1.1rem', letterSpacing: '4px', textAlign: 'center', fontFamily: 'monospace', fontWeight: 700, outline: 'none', boxSizing: 'border-box' }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: '4px' }}>New Password</label>
+                <label style={{ display: 'block', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted, #94a3b8)', textTransform: 'uppercase', letterSpacing: '0.4px', marginBottom: '4px' }}>New Password</label>
                 <input
                   type="password"
                   name="newPassword"
@@ -728,28 +733,29 @@ export default function AuthPage({ onAuthSuccess, onNavigateToApp }) {
                   placeholder="At least 6 characters"
                   value={formData.newPassword}
                   onChange={handleChange}
-                  style={{ width: '100%', padding: '10px 12px', background: '#070a12', border: '1px solid #1e293b', borderRadius: '10px', color: '#fff', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }}
+                  style={{ width: '100%', padding: '10px 12px', background: 'var(--bg-input, rgba(0,0,0,0.3))', border: '1px solid var(--border-subtle, rgba(255,255,255,0.12))', borderRadius: '8px', color: 'var(--text-main, #f8fafc)', fontSize: '0.85rem', outline: 'none', boxSizing: 'border-box' }}
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={loading}
+                className="btn-primary"
                 style={{
                   width: '100%',
-                  padding: '12px',
-                  background: 'linear-gradient(90deg, #10b981 0%, #059669 100%)',
+                  padding: '11px',
+                  borderRadius: '8px',
+                  background: 'var(--accent-success, #10b981)',
                   border: 'none',
-                  borderRadius: '10px',
                   color: '#fff',
                   fontSize: '0.88rem',
-                  fontWeight: 800,
-                  cursor: 'pointer',
+                  fontWeight: 600,
+                  cursor: loading ? 'not-allowed' : 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '6px',
-                  boxShadow: '0 0 20px rgba(16, 185, 129, 0.3)'
+                  opacity: loading ? 0.7 : 1
                 }}
               >
                 {loading ? "Updating Password..." : "Update Password & Sign In"}

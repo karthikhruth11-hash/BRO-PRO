@@ -2,6 +2,7 @@ import express from "express";
 import { processUserIntent } from "../core/intentRouter.js";
 import { db } from "../data/db.js";
 import { authManager } from "../modules/authManager.js";
+import { hermesAgent } from "../agent/hermesAgent.js";
 
 const router = express.Router();
 
@@ -85,16 +86,34 @@ router.post("/", async (req, res) => {
     const authUser = getAuthUserFromReq(req);
     const currentConvId = conversationId || "conv_default";
     
+    // Retrieve previous conversation history before adding current message
+    const previousMessages = db.getMessages(currentConvId);
+    const history = (previousMessages || []).slice(-8).map(m => ({
+      role: m.role === "assistant" ? "assistant" : "user",
+      content: m.content
+    }));
+
     // Store user message
     db.addMessage(currentConvId, "user", message);
 
-    // Process AI response
-    const result = await processUserIntent({ message, persona, options: { ...options, userContext: authUser } });
+    // Process AI response with full multi-turn history
+    const result = await processUserIntent({
+      message,
+      persona,
+      options: { ...options, history, conversationId: currentConvId, userContext: authUser }
+    });
 
     // Store AI response
     db.addMessage(currentConvId, "assistant", result.response, {
       toolUsed: result.toolUsed,
       sources: result.sources
+    });
+
+    // Record turn in Hermes Agent for topic and question memory
+    hermesAgent.recordTurn({
+      question: message,
+      answer: result.response,
+      topic: result.detectedTopic
     });
 
     res.json(result);
@@ -124,17 +143,21 @@ router.post("/stream", async (req, res) => {
     // Send Thinking status chunk
     res.write(`data: ${JSON.stringify({ type: "status", status: "thinking", message: "Analyzing prompt & context..." })}\n\n`);
 
+    // Retrieve previous messages for conversation context before appending current user message
+    const previousMessages = db.getMessages(currentConvId);
+    const history = (previousMessages || []).slice(-8).map(m => ({
+      role: m.role === "assistant" ? "assistant" : "user",
+      content: m.content
+    }));
+
     // Store user message in DB
     db.addMessage(currentConvId, "user", message, { attachments });
-
-    // Get previous messages for conversation context
-    const history = db.getMessages(currentConvId).slice(-6);
 
     // Process full response from engine
     const fullResult = await processUserIntent({
       message,
       persona,
-      options: { ...options, history, attachments, userContext: authUser }
+      options: { ...options, history, conversationId: currentConvId, attachments, userContext: authUser }
     });
 
     const fullResponseText = fullResult.response || "No response generated.";
@@ -157,6 +180,13 @@ router.post("/stream", async (req, res) => {
     db.addMessage(currentConvId, "assistant", fullResponseText, {
       toolUsed: fullResult.toolUsed,
       sources: fullResult.sources
+    });
+
+    // Record turn in Hermes Agent for topic and question memory
+    hermesAgent.recordTurn({
+      question: message,
+      answer: fullResponseText,
+      topic: fullResult.detectedTopic
     });
 
     // Send Done event

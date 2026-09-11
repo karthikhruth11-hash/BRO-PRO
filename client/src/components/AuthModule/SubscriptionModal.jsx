@@ -37,40 +37,105 @@ export function SubscriptionModal({ isOpen, onClose, onSubscriptionSuccess }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
-      <div className="relative w-full max-w-lg bg-slate-900 border border-purple-500/40 rounded-2xl shadow-2xl overflow-hidden text-slate-100 p-6 space-y-6">
+    <div style={{
+      position: "fixed",
+      inset: 0,
+      zIndex: 99999,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      background: "rgba(0, 0, 0, 0.7)",
+      backdropFilter: "blur(6px)",
+      padding: "16px"
+    }}>
+      <div style={{
+        position: "relative",
+        width: "100%",
+        maxWidth: "480px",
+        background: "var(--bg-card, #131b2e)",
+        border: "1px solid var(--border-subtle, rgba(255, 255, 255, 0.12))",
+        borderRadius: "16px",
+        boxShadow: "var(--shadow-lg, 0 16px 48px rgba(0, 0, 0, 0.45))",
+        color: "var(--text-main, #f8fafc)",
+        padding: "24px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "20px"
+      }}>
         
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-6 h-6 text-purple-400" />
-            <h2 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">
-              30-Day Free Trial Expired
-            </h2>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid var(--border-subtle, rgba(255, 255, 255, 0.08))", paddingBottom: "14px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <img
+              src="/sagw-ai-logo.png"
+              alt="SAGW AI"
+              style={{ width: "34px", height: "34px", borderRadius: "8px", objectFit: "cover", border: "1px solid rgba(56, 189, 248, 0.25)" }}
+            />
+            <div>
+              <h2 style={{ fontSize: "16px", fontWeight: 700, margin: 0, color: "var(--text-main, #f8fafc)" }}>
+                30-Day Free Trial Expired
+              </h2>
+              <span style={{ fontSize: "12px", color: "var(--text-muted, #94a3b8)" }}>Upgrade your SAGW AI plan</span>
+            </div>
           </div>
-          <button onClick={onClose} className="p-1 rounded-lg hover:bg-slate-800 text-slate-400">
-            <X className="w-5 h-5" />
+          <button
+            onClick={onClose}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "var(--text-muted, #94a3b8)",
+              cursor: "pointer",
+              padding: "6px",
+              borderRadius: "6px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <X size={18} />
           </button>
         </div>
 
-        <p className="text-sm text-slate-300">
-          Your 30-day free trial has concluded. Upgrade to <strong>BRO AI Pro Subscription</strong> to unlock unlimited multi-LLM routing, high-speed execution, and persistent memory stores.
+        <p style={{ fontSize: "13.5px", color: "var(--text-secondary, #94a3b8)", margin: 0, lineHeight: 1.6 }}>
+          Your 30-day free trial has concluded. Upgrade to <strong style={{ color: "#38bdf8" }}>SAGW AI Pro</strong> to unlock unlimited multi-LLM routing, high-speed execution, and persistent memory stores.
         </p>
 
-        <div className="p-4 rounded-xl bg-purple-950/40 border border-purple-500/30 space-y-2">
-          <div className="text-lg font-bold text-white flex items-center justify-between">
-            <span>Annual Pro Membership</span>
-            <span className="text-xl text-purple-300 font-mono">₹999 / year</span>
+        <div style={{
+          padding: "16px",
+          borderRadius: "12px",
+          background: "var(--bg-secondary, rgba(255, 255, 255, 0.03))",
+          border: "1px solid var(--border-subtle, rgba(255, 255, 255, 0.08))",
+          display: "flex",
+          flexDirection: "column",
+          gap: "12px"
+        }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span style={{ fontWeight: 600, fontSize: "14px", color: "var(--text-main, #f8fafc)" }}>Annual Pro Membership</span>
+            <span style={{ fontSize: "18px", fontWeight: 700, color: "var(--accent-primary, #3b82f6)", fontFamily: "monospace" }}>₹999 / year</span>
           </div>
-          <ul className="text-xs text-slate-300 space-y-1.5 pt-2 border-t border-purple-500/20">
-            <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> Unlimited Local & Cloud Multi-LLM Ensemble</li>
-            <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> High-Speed Telemetry & Code Generation Engine</li>
-            <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> Full Knowledge Graph PC Data Trainer Integration</li>
-          </ul>
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px", paddingTop: "10px", borderTop: "1px solid var(--border-subtle, rgba(255, 255, 255, 0.06))", fontSize: "12.5px", color: "var(--text-secondary, #94a3b8)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <CheckCircle2 size={15} color="var(--accent-success, #10b981)" /> Unlimited Local & Cloud Multi-LLM Ensemble
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <CheckCircle2 size={15} color="var(--accent-success, #10b981)" /> High-Speed Telemetry & Code Generation Engine
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <CheckCircle2 size={15} color="var(--accent-success, #10b981)" /> Full Knowledge Graph PC Data Trainer Integration
+            </div>
+          </div>
         </div>
 
         {msg && (
-          <div className="p-3 rounded-lg bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs text-center">
+          <div style={{
+            padding: "10px 14px",
+            borderRadius: "8px",
+            background: "rgba(16, 185, 129, 0.1)",
+            border: "1px solid rgba(16, 185, 129, 0.3)",
+            color: "var(--accent-success, #10b981)",
+            fontSize: "12.5px",
+            textAlign: "center"
+          }}>
             {msg}
           </div>
         )}
@@ -78,9 +143,21 @@ export function SubscriptionModal({ isOpen, onClose, onSubscriptionSuccess }) {
         <button
           onClick={handleSubscribe}
           disabled={loading}
-          className="w-full py-3.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 font-bold rounded-xl text-white shadow-xl transition flex items-center justify-center gap-2 text-sm"
+          className="btn-primary"
+          style={{
+            width: "100%",
+            padding: "12px",
+            fontSize: "14px",
+            fontWeight: 600,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            cursor: loading ? "not-allowed" : "pointer",
+            opacity: loading ? 0.7 : 1
+          }}
         >
-          <CreditCard className="w-5 h-5" />
+          <CreditCard size={18} />
           {loading ? "Verifying Payment..." : "Subscribe Now (Razorpay Server Verified)"}
         </button>
 

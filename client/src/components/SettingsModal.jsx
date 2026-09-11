@@ -20,14 +20,30 @@ export default function SettingsModal({ onClose }) {
 
   return (
     <div className="modal-overlay">
-      <div className="glass-panel-glow" style={{ width: '520px', padding: '24px', borderRadius: '18px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+      <div style={{
+        width: '520px',
+        maxWidth: '90vw',
+        padding: '24px',
+        borderRadius: '16px',
+        background: 'var(--bg-card, #131b2e)',
+        border: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.12))',
+        boxShadow: 'var(--shadow-lg, 0 16px 48px rgba(0, 0, 0, 0.45))',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px'
+      }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Settings size={20} color="var(--accent-amber)" />
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>System & Provider Configuration</h3>
+            <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Settings size={18} color="var(--accent-primary, #3b82f6)" />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, margin: 0, color: 'var(--text-main, #f8fafc)' }}>System & Provider Configuration</h3>
+              <span style={{ fontSize: '0.72rem', color: 'var(--text-muted, #94a3b8)' }}>Manage API credentials and runtime hosts</span>
+            </div>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
-            <X size={20} />
+          <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted, #94a3b8)', cursor: 'pointer', padding: '6px', borderRadius: '6px', display: 'flex' }}>
+            <X size={18} />
           </button>
         </div>
 

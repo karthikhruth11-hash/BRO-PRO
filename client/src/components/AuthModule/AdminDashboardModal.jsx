@@ -40,11 +40,11 @@ class AdminErrorBoundary extends React.Component {
               style={{
                 padding: "10px 22px",
                 borderRadius: "8px",
-                background: "rgba(0,240,255,0.2)",
-                border: "1px solid #00f0ff",
-                color: "#00f0ff",
+                background: "var(--accent-primary, #3b82f6)",
+                border: "1px solid var(--accent-primary, #3b82f6)",
+                color: "#ffffff",
                 cursor: "pointer",
-                fontWeight: 700,
+                fontWeight: 600,
                 fontSize: "14px"
               }}
             >

@@ -213,14 +213,72 @@ export function AdminControlCenter({ onClose }) {
     }
   };
 
-  const handleExportChatTrigger = (targetId = "", format = "json") => {
-    let url = `/api/auth-manager/admin/export-chat?token=${token}&format=${format}`;
-    if (targetId) url += `&userId=${targetId}`;
-    window.open(url, "_blank");
+  const handleExportChatTrigger = async (targetId = "", format = "json") => {
+    try {
+      const handshakeToken = "wednesday-secret-local-handshake-token-2026";
+      let url = `/api/auth-manager/admin/export-chat?token=${encodeURIComponent(token)}&handshake_token=${handshakeToken}&format=${format}`;
+      if (targetId) url += `&userId=${encodeURIComponent(targetId)}`;
+
+      const res = await fetch(url, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "x-wednesday-token": handshakeToken
+        }
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || err.error || `Export failed with status ${res.status}`);
+      }
+
+      const blob = await res.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = downloadUrl;
+      const ext = format === "csv" ? "csv" : format === "txt" ? "txt" : format === "html" ? "html" : "json";
+      a.download = `bro_ai_chat_export_${Date.now()}.${ext}`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(downloadUrl);
+      setActionMsg(`Exported conversations (${format.toUpperCase()}) successfully!`);
+      setTimeout(() => setActionMsg(""), 3500);
+    } catch (err) {
+      alert("Chat Export failed: " + err.message);
+    }
   };
 
-  const handleExportUsersExcel = () => {
-    window.open(`/api/auth-manager/admin/export-excel?token=${token}`, "_blank");
+  const handleExportUsersExcel = async () => {
+    try {
+      const handshakeToken = "wednesday-secret-local-handshake-token-2026";
+      const url = `/api/auth-manager/admin/export-excel?token=${encodeURIComponent(token)}&handshake_token=${handshakeToken}`;
+
+      const res = await fetch(url, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "x-wednesday-token": handshakeToken
+        }
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.message || err.error || `Export failed with status ${res.status}`);
+      }
+
+      const blob = await res.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = downloadUrl;
+      a.download = `bro_ai_users_${Date.now()}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(downloadUrl);
+      setActionMsg("Users report exported successfully (CSV)!");
+      setTimeout(() => setActionMsg(""), 3500);
+    } catch (err) {
+      alert("Users Export failed: " + err.message);
+    }
   };
 
   const filteredUsers = (users || []).filter(u => {
@@ -249,19 +307,18 @@ export function AdminControlCenter({ onClose }) {
       minWidth: "100vw",
       maxHeight: "100vh",
       maxWidth: "100vw",
-      background: "radial-gradient(circle at 50% 0%, #0d1629 0%, #060913 100%)",
-      color: "#e2e8f0",
-      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+      background: "var(--bg-primary)",
+      color: "var(--text-main)",
+      fontFamily: "var(--font-body)",
       overflow: "hidden",
       boxSizing: "border-box"
     }}>
       {/* SIDEBAR NAVIGATION */}
       <div style={{
-        width: "270px",
+        width: "250px",
         height: "100%",
-        background: "rgba(10, 16, 30, 0.95)",
-        backdropFilter: "blur(20px)",
-        borderRight: "1px solid rgba(0, 240, 255, 0.15)",
+        background: "var(--bg-secondary)",
+        borderRight: "1px solid var(--border-subtle)",
         display: "flex",
         flexDirection: "column",
         flexShrink: 0,
@@ -269,35 +326,38 @@ export function AdminControlCenter({ onClose }) {
       }}>
         {/* Header Branding */}
         <div style={{
-          padding: "24px 20px",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+          padding: "20px 16px",
+          borderBottom: "1px solid var(--border-subtle)",
           display: "flex",
           alignItems: "center",
-          gap: "14px"
+          gap: "10px"
         }}>
-          <div style={{
-            width: "42px",
-            height: "42px",
-            borderRadius: "12px",
-            background: "linear-gradient(135deg, #00f0ff 0%, #7000ff 100%)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#fff",
-            boxShadow: "0 0 20px rgba(0, 240, 255, 0.4)"
-          }}>
-            <Shield size={24} />
-          </div>
+          <img
+            src="/sagw-ai-logo.png"
+            alt="SAGW AI"
+            style={{
+              width: "36px",
+              height: "36px",
+              borderRadius: "var(--radius-sm)",
+              objectFit: "cover",
+              border: "1px solid rgba(56, 189, 248, 0.25)",
+              boxShadow: "var(--shadow-sm)"
+            }}
+          />
           <div>
-            <div style={{ fontWeight: 800, fontSize: "17px", color: "#fff", letterSpacing: "0.5px", display: "flex", alignItems: "center", gap: "6px" }}>
-              BRO AI <span style={{ fontSize: "10px", padding: "2px 6px", borderRadius: "4px", background: "rgba(0,240,255,0.2)", color: "#00f0ff" }}>PRO</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <div className="sagw-brand-title" style={{ fontSize: "15px" }}>
+                <span className="sagw-word">SAGW</span>
+                <span className="ai-word">AI</span>
+              </div>
+              <span style={{ fontSize: "10px", padding: "1px 5px", borderRadius: "var(--radius-xs)", background: "rgba(56, 189, 248, 0.12)", color: "#38bdf8", fontWeight: 600, border: "1px solid rgba(56, 189, 248, 0.25)" }}>PRO</span>
             </div>
-            <div style={{ fontSize: "11px", color: "#00f0ff", fontWeight: 700, letterSpacing: "1px", marginTop: "2px" }}>ADMIN CONTROL CENTER</div>
+            <div style={{ fontSize: "10px", color: "var(--text-dim)", fontWeight: 600, letterSpacing: "0.04em", marginTop: "1px" }}>CONTROL CENTER</div>
           </div>
         </div>
 
         {/* Navigation Items */}
-        <div style={{ flex: 1, padding: "14px 12px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "4px" }}>
+        <div style={{ flex: 1, padding: "12px 10px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "2px" }}>
           {[
             { id: "dashboard", label: "Dashboard Overview", icon: Activity },
             { id: "users", label: "Users Management", icon: Users, badge: currentStats?.members?.total },
@@ -323,32 +383,32 @@ export function AdminControlCenter({ onClose }) {
                   alignItems: "center",
                   justifyContent: "space-between",
                   width: "100%",
-                  padding: "11px 16px",
-                  borderRadius: "10px",
-                  border: isActive ? "1px solid rgba(0, 240, 255, 0.3)" : "1px solid transparent",
-                  background: isActive ? "linear-gradient(90deg, rgba(0,240,255,0.15) 0%, rgba(112,0,255,0.1) 100%)" : "transparent",
-                  color: isActive ? "#00f0ff" : "#94a3b8",
-                  fontWeight: isActive ? 700 : 500,
-                  fontSize: "13.5px",
+                  padding: "8px 12px",
+                  borderRadius: "var(--radius-sm)",
+                  border: isActive ? "1px solid var(--border-strong)" : "1px solid transparent",
+                  background: isActive ? "var(--bg-hover)" : "transparent",
+                  color: isActive ? "var(--text-main)" : "var(--text-muted)",
+                  fontWeight: isActive ? 600 : 400,
+                  fontSize: "13px",
                   cursor: "pointer",
                   textAlign: "left",
-                  transition: "all 0.2s ease",
+                  transition: "all 0.15s ease",
                   outline: "none"
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                  <Icon size={18} style={{ color: isActive ? "#00f0ff" : "#64748b" }} />
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  <Icon size={15} style={{ color: isActive ? "var(--accent-primary)" : "var(--text-dim)" }} />
                   <span>{item.label}</span>
                 </div>
                 {item.badge !== undefined && item.badge !== null && (
                   <span style={{
-                    fontSize: "11px",
-                    fontWeight: 700,
-                    padding: "2px 8px",
-                    borderRadius: "12px",
-                    background: item.highlight ? "rgba(16, 185, 129, 0.25)" : "rgba(255, 255, 255, 0.1)",
-                    color: item.highlight ? "#10b981" : "#94a3b8",
-                    border: item.highlight ? "1px solid rgba(16, 185, 129, 0.4)" : "none"
+                    fontSize: "10.5px",
+                    fontWeight: 600,
+                    padding: "1px 7px",
+                    borderRadius: "var(--radius-xs)",
+                    background: item.highlight ? "rgba(16, 185, 129, 0.12)" : "var(--bg-hover)",
+                    color: item.highlight ? "var(--accent-emerald)" : "var(--text-dim)",
+                    border: item.highlight ? "1px solid rgba(16, 185, 129, 0.3)" : "1px solid var(--border-subtle)"
                   }}>
                     {item.badge}
                   </span>
@@ -360,40 +420,36 @@ export function AdminControlCenter({ onClose }) {
 
         {/* Footer Admin Status */}
         <div style={{
-          padding: "18px",
-          borderTop: "1px solid rgba(255, 255, 255, 0.08)",
+          padding: "14px 16px",
+          borderTop: "1px solid var(--border-subtle)",
           display: "flex",
           flexDirection: "column",
-          gap: "12px",
-          background: "rgba(0,0,0,0.2)"
+          gap: "10px",
+          background: "var(--bg-card)"
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <div style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#10b981", boxShadow: "0 0 10px #10b981" }} />
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "var(--accent-emerald)" }} />
             <div>
-              <div style={{ fontSize: "12px", fontWeight: 700, color: "#fff" }}>karthikhruth@gmail.com</div>
-              <div style={{ fontSize: "10.5px", color: "#10b981" }}>Authorized Administrator</div>
+              <div style={{ fontSize: "11.5px", fontWeight: 600, color: "var(--text-main)" }}>karthikhruth@gmail.com</div>
+              <div style={{ fontSize: "10px", color: "var(--text-dim)" }}>Authorized Administrator</div>
             </div>
           </div>
           <button
             onClick={() => onClose && onClose()}
+            className="btn-secondary"
             style={{
               width: "100%",
-              padding: "10px",
-              borderRadius: "8px",
-              border: "1px solid rgba(239, 68, 68, 0.4)",
-              background: "rgba(239, 68, 68, 0.12)",
-              color: "#ef4444",
-              fontWeight: 700,
-              fontSize: "13px",
+              padding: "7px 10px",
+              borderRadius: "var(--radius-sm)",
+              color: "var(--accent-red)",
+              fontWeight: 500,
+              fontSize: "12px",
               cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
               justifyContent: "center",
-              gap: "8px",
-              transition: "all 0.2s"
+              gap: "6px"
             }}
           >
-            <X size={16} /> Exit Admin Dashboard
+            <X size={14} /> Exit Admin Dashboard
           </button>
         </div>
       </div>
@@ -402,74 +458,57 @@ export function AdminControlCenter({ onClose }) {
       <div style={{ flex: 1, height: "100%", display: "flex", flexDirection: "column", overflow: "hidden" }}>
         {/* Top Header Bar */}
         <div style={{
-          padding: "18px 32px",
-          borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
-          background: "rgba(10, 16, 30, 0.6)",
-          backdropFilter: "blur(12px)",
+          padding: "14px 28px",
+          borderBottom: "1px solid var(--border-subtle)",
+          background: "var(--bg-secondary)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           flexShrink: 0
         }}>
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "12px", color: "#64748b", fontWeight: 600 }}>
-              <span>ADMIN CONTROL</span> <ChevronRight size={12} /> <span style={{ color: "#00f0ff" }}>{activeTab.toUpperCase()}</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "11px", color: "var(--text-dim)", fontWeight: 500 }}>
+              <span>ADMIN CONTROL</span> <ChevronRight size={11} /> <span style={{ color: "var(--accent-primary)" }}>{activeTab.toUpperCase()}</span>
             </div>
-            <h1 style={{ margin: "4px 0 0 0", fontSize: "22px", fontWeight: 800, color: "#fff", textTransform: "capitalize" }}>
+            <h1 style={{ margin: "2px 0 0 0", fontSize: "18px", fontWeight: 700, color: "var(--text-main)", textTransform: "capitalize", letterSpacing: "-0.01em" }}>
               {activeTab.replace(/([A-Z])/g, ' $1')}
             </h1>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             {actionMsg && (
               <div style={{
-                fontSize: "12.5px",
-                fontWeight: 700,
-                color: "#10b981",
-                background: "rgba(16, 185, 129, 0.15)",
-                padding: "8px 16px",
-                borderRadius: "8px",
-                border: "1px solid rgba(16, 185, 129, 0.4)"
+                fontSize: "12px",
+                fontWeight: 600,
+                color: "var(--accent-emerald)",
+                background: "rgba(16, 185, 129, 0.12)",
+                padding: "6px 12px",
+                borderRadius: "var(--radius-sm)",
+                border: "1px solid rgba(16, 185, 129, 0.3)"
               }}>
                 {actionMsg}
               </div>
             )}
             <button
               onClick={handleExportUsersExcel}
+              className="btn-secondary"
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "9px 16px",
-                borderRadius: "9px",
-                background: "rgba(16, 185, 129, 0.15)",
-                border: "1px solid rgba(16, 185, 129, 0.4)",
-                color: "#10b981",
-                fontSize: "13px",
-                fontWeight: 700,
-                cursor: "pointer"
+                padding: "7px 13px",
+                fontSize: "12.5px"
               }}
             >
-              <FileSpreadsheet size={16} /> Export Users CSV
+              <FileSpreadsheet size={15} style={{ color: "var(--accent-emerald)" }} /> Export Users CSV
             </button>
             <button
               onClick={fetchAllAdminData}
               disabled={loading}
+              className="btn-primary"
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-                padding: "9px 16px",
-                borderRadius: "9px",
-                background: "rgba(0, 240, 255, 0.15)",
-                border: "1px solid rgba(0, 240, 255, 0.4)",
-                color: "#00f0ff",
-                fontSize: "13px",
-                fontWeight: 700,
-                cursor: "pointer"
+                padding: "7px 13px",
+                fontSize: "12.5px"
               }}
             >
-              <RefreshCw size={16} className={loading ? "animate-spin" : ""} /> Refresh
+              <RefreshCw size={14} className={loading ? "animate-spin" : ""} /> Refresh
             </button>
           </div>
         </div>
@@ -498,17 +537,17 @@ export function AdminControlCenter({ onClose }) {
           {activeTab === "dashboard" && (
             <div style={{ display: "flex", flexDirection: "column", gap: "28px" }}>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: "20px" }}>
-                <MetricCard title="Total Registered Members" value={currentStats?.members?.total || 0} icon={Users} color="#00f0ff" subtext={`${currentStats?.members?.verified || 0} Verified Accounts`} />
+                <MetricCard title="Total Registered Members" value={currentStats?.members?.total || 0} icon={Users} color="#3b82f6" subtext={`${currentStats?.members?.verified || 0} Verified Accounts`} />
                 <MetricCard title="Currently Logged In" value={currentStats?.members?.currentlyLoggedIn || 0} icon={Radio} color="#10b981" subtext={`${currentStats?.members?.recentlyActive || 0} active in last 24h`} pulse />
                 <MetricCard title="Active 30-Day Accounts" value={currentStats?.access?.activeTrial || 0} icon={Clock} color="#a855f7" subtext={`${currentStats?.access?.approachingExpiration || 0} expiring within 7 days`} />
                 <MetricCard title="Expired Access Users" value={currentStats?.access?.expiredTrial || 0} icon={UserX} color="#f59e0b" subtext="Access period completed" />
                 <MetricCard title="Suspended / Banned" value={currentStats?.members?.suspended || 0} icon={UserX} color="#ef4444" subtext="Blocked by administrator" />
-                <MetricCard title="Unlimited Administrators" value={currentStats?.access?.unlimitedAdmins || 1} icon={Shield} color="#00f0ff" subtext="Permanent access granted" />
+                <MetricCard title="Unlimited Administrators" value={currentStats?.access?.unlimitedAdmins || 1} icon={Shield} color="#3b82f6" subtext="Permanent access granted" />
               </div>
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }}>
                 <div style={cardStyle}>
-                  <h3 style={cardTitleStyle}><Key size={20} color="#00f0ff" /> Authentication Activity Metrics</h3>
+                  <h3 style={cardTitleStyle}><Key size={20} color="#3b82f6" /> Authentication Activity Metrics</h3>
                   <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginTop: "18px" }}>
                     <DataRow label="Successful Logins" value={currentStats?.authentication?.successfulLogins || 0} color="#10b981" />
                     <DataRow label="Failed Login Attempts" value={currentStats?.authentication?.failedLogins || 0} color="#ef4444" />
@@ -521,7 +560,7 @@ export function AdminControlCenter({ onClose }) {
                 <div style={cardStyle}>
                   <h3 style={cardTitleStyle}><ShieldAlert size={20} color="#ef4444" /> Security & System Summary</h3>
                   <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginTop: "18px" }}>
-                    <DataRow label="Active Server Sessions" value={currentStats?.system?.totalSessions || 0} color="#00f0ff" />
+                    <DataRow label="Active Server Sessions" value={currentStats?.system?.totalSessions || 0} color="#3b82f6" />
                     <DataRow label="Security Alerts & Incidents" value={currentStats?.system?.totalSecurityEvents || 0} color="#f59e0b" />
                     <DataRow label="Recorded Audit Logs" value={currentStats?.system?.totalAuditLogs || 0} color="#94a3b8" />
                     <DataRow label="Primary Authorized Owner" value="karthikhruth@gmail.com" color="#10b981" />
@@ -570,12 +609,12 @@ export function AdminControlCenter({ onClose }) {
                       <tr key={u.id} style={trStyle}>
                         <td style={tdStyle}>
                           <div style={{ fontWeight: 700, color: "#fff", fontSize: "14px" }}>{u.name}</div>
-                          <div style={{ fontSize: "12.5px", color: "#00f0ff" }}>{u.email}</div>
+                          <div style={{ fontSize: "12.5px", color: "#3b82f6" }}>{u.email}</div>
                           <div style={{ fontSize: "11px", color: "#64748b", marginTop: "2px" }}>ID: {u.id}</div>
                         </td>
                         <td style={tdStyle}>
                           {u.isAdmin ? (
-                            <span style={badgeStyle("#00f0ff")}>ADMIN</span>
+                            <span style={badgeStyle("#3b82f6")}>ADMIN</span>
                           ) : u.accountStatus === "suspended" ? (
                             <span style={badgeStyle("#ef4444")}>BANNED</span>
                           ) : u.isExpired ? (
@@ -598,7 +637,7 @@ export function AdminControlCenter({ onClose }) {
                         </td>
                         <td style={tdStyle}>
                           <div style={{ display: "flex", gap: "8px" }}>
-                            <button onClick={() => fetchUserDetails(u.id)} style={btnSmallStyle("#00f0ff")}>
+                            <button onClick={() => fetchUserDetails(u.id)} style={btnSmallStyle("#3b82f6")}>
                               <Eye size={14} /> Details
                             </button>
                             {!u.isAdmin && (
@@ -656,7 +695,7 @@ export function AdminControlCenter({ onClose }) {
                         <tr key={m.id} style={trStyle}>
                           <td style={tdStyle}>
                             <div style={{ fontWeight: 700, color: "#fff", fontSize: "14px" }}>{m.name}</div>
-                            <div style={{ fontSize: "12.5px", color: "#00f0ff" }}>{m.email}</div>
+                            <div style={{ fontSize: "12.5px", color: "#3b82f6" }}>{m.email}</div>
                           </td>
                           <td style={tdStyle}>
                             <div style={{ fontSize: "12.5px", color: "#94a3b8" }}>
@@ -701,7 +740,7 @@ export function AdminControlCenter({ onClose }) {
                       </td>
                       <td style={tdStyle}>
                         <div style={{ fontWeight: 700, color: "#fff" }}>{l.name || "N/A"}</div>
-                        <div style={{ fontSize: "12.5px", color: "#00f0ff" }}>{l.email || "N/A"}</div>
+                        <div style={{ fontSize: "12.5px", color: "#3b82f6" }}>{l.email || "N/A"}</div>
                       </td>
                       <td style={tdStyle}>
                         <span style={{ fontSize: "13px", fontWeight: 700, color: "#e2e8f0" }}>{l.type}</span>
@@ -742,7 +781,7 @@ export function AdminControlCenter({ onClose }) {
                       </td>
                       <td style={tdStyle}>
                         <div style={{ fontWeight: 700, color: "#fff" }}>{r.name || "Applicant"}</div>
-                        <div style={{ fontSize: "12.5px", color: "#00f0ff" }}>{r.email}</div>
+                        <div style={{ fontSize: "12.5px", color: "#3b82f6" }}>{r.email}</div>
                       </td>
                       <td style={tdStyle}>
                         <span style={{ fontSize: "13px", color: "#e2e8f0" }}>{r.type}</span>
@@ -782,7 +821,7 @@ export function AdminControlCenter({ onClose }) {
                       </td>
                       <td style={tdStyle}>
                         <div style={{ fontSize: "13px", color: "#e2e8f0", fontWeight: 600 }}>{c.userName}</div>
-                        <div style={{ fontSize: "12.5px", color: "#00f0ff" }}>{c.userEmail}</div>
+                        <div style={{ fontSize: "12.5px", color: "#3b82f6" }}>{c.userEmail}</div>
                       </td>
                       <td style={tdStyle}>
                         <span style={badgeStyle("#a855f7")}>{c.messageCount} msgs</span>
@@ -792,7 +831,7 @@ export function AdminControlCenter({ onClose }) {
                       </td>
                       <td style={tdStyle}>
                         <div style={{ display: "flex", gap: "6px" }}>
-                          <button onClick={() => handleExportChatTrigger(c.userId, "json")} style={btnSmallStyle("#00f0ff")}>JSON</button>
+                          <button onClick={() => handleExportChatTrigger(c.userId, "json")} style={btnSmallStyle("#3b82f6")}>JSON</button>
                           <button onClick={() => handleExportChatTrigger(c.userId, "csv")} style={btnSmallStyle("#10b981")}>CSV</button>
                           <button onClick={() => handleExportChatTrigger(c.userId, "html")} style={btnSmallStyle("#a855f7")}>PDF</button>
                         </div>
@@ -808,7 +847,7 @@ export function AdminControlCenter({ onClose }) {
           {activeTab === "exports" && (
             <div style={{ display: "flex", flexDirection: "column", gap: "24px", maxWidth: "650px" }}>
               <div style={cardStyle}>
-                <h3 style={cardTitleStyle}><Download size={20} color="#00f0ff" /> Admin Chat & Data Export Console</h3>
+                <h3 style={cardTitleStyle}><Download size={20} color="#3b82f6" /> Admin Chat & Data Export Console</h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "18px", marginTop: "20px" }}>
                   <div>
                     <label style={labelStyle}>Target User (Select specific user or exported all):</label>
@@ -832,21 +871,17 @@ export function AdminControlCenter({ onClose }) {
 
                   <button
                     onClick={() => handleExportChatTrigger(exportUserId, exportFormat)}
+                    className="btn-primary"
                     style={{
-                      padding: "14px",
-                      borderRadius: "10px",
-                      background: "linear-gradient(135deg, #00f0ff 0%, #7000ff 100%)",
-                      color: "#fff",
-                      fontWeight: 800,
-                      fontSize: "14px",
-                      border: "none",
-                      cursor: "pointer",
+                      padding: "12px",
+                      borderRadius: "8px",
+                      fontSize: "13.5px",
+                      fontWeight: 600,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                       gap: "10px",
-                      marginTop: "10px",
-                      boxShadow: "0 0 20px rgba(0, 240, 255, 0.4)"
+                      marginTop: "10px"
                     }}
                   >
                     <Download size={20} /> Export Conversations Now
@@ -874,10 +909,10 @@ export function AdminControlCenter({ onClose }) {
                     <tr key={u.id} style={trStyle}>
                       <td style={tdStyle}>
                         <div style={{ fontWeight: 700, color: "#fff" }}>{u.name}</div>
-                        <div style={{ fontSize: "12.5px", color: "#00f0ff" }}>{u.email}</div>
+                        <div style={{ fontSize: "12.5px", color: "#3b82f6" }}>{u.email}</div>
                       </td>
                       <td style={tdStyle}>
-                        <span style={badgeStyle(u.isAdmin ? "#00f0ff" : u.isExpired ? "#ef4444" : "#10b981")}>
+                        <span style={badgeStyle(u.isAdmin ? "#3b82f6" : u.isExpired ? "#ef4444" : "#10b981")}>
                           {u.accessStatusText}
                         </span>
                       </td>
@@ -958,7 +993,7 @@ export function AdminControlCenter({ onClose }) {
                             </span>
                           </td>
                           <td style={tdStyle}>
-                            <div style={{ fontSize: "12.5px", color: "#00f0ff" }}>{s.email || "N/A"}</div>
+                            <div style={{ fontSize: "12.5px", color: "#3b82f6" }}>{s.email || "N/A"}</div>
                           </td>
                           <td style={tdStyle}>
                             <div style={{ fontSize: "12.5px", color: "#e2e8f0" }}>{s.description}</div>
@@ -995,7 +1030,7 @@ export function AdminControlCenter({ onClose }) {
                         <div style={{ fontSize: "12.5px", color: "#94a3b8" }}>{new Date(a.timestamp).toLocaleString()}</div>
                       </td>
                       <td style={tdStyle}>
-                        <span style={{ fontSize: "13px", fontWeight: 700, color: "#00f0ff" }}>{a.action}</span>
+                        <span style={{ fontSize: "13px", fontWeight: 700, color: "#3b82f6" }}>{a.action}</span>
                       </td>
                       <td style={tdStyle}>
                         <div style={{ fontSize: "12.5px", color: "#e2e8f0" }}>{a.actorUserId}</div>
@@ -1017,11 +1052,11 @@ export function AdminControlCenter({ onClose }) {
           {activeTab === "system" && (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "24px" }}>
               <div style={cardStyle}>
-                <h3 style={cardTitleStyle}><Server size={20} color="#00f0ff" /> Server Environment</h3>
+                <h3 style={cardTitleStyle}><Server size={20} color="#3b82f6" /> Server Environment</h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "18px" }}>
-                  <DataRow label="Backend Engine" value="BRO AI Express BFF" />
+                  <DataRow label="Backend Engine" value="SAGW AI Express BFF" />
                   <DataRow label="Authorization Status" value="Server Authorized" color="#10b981" />
-                  <DataRow label="Authorized Admin Account" value="karthikhruth@gmail.com" color="#00f0ff" />
+                  <DataRow label="Authorized Admin Account" value="karthikhruth@gmail.com" color="#3b82f6" />
                   <DataRow label="Access Limit" value="Permanent / Unlimited Access" color="#a855f7" />
                 </div>
               </div>
@@ -1042,7 +1077,7 @@ export function AdminControlCenter({ onClose }) {
           {activeTab === "settings" && (
             <div style={{ maxWidth: "650px", display: "flex", flexDirection: "column", gap: "24px" }}>
               <div style={cardStyle}>
-                <h3 style={cardTitleStyle}><Settings size={20} color="#00f0ff" /> Administrator Configuration</h3>
+                <h3 style={cardTitleStyle}><Settings size={20} color="#3b82f6" /> Administrator Configuration</h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginTop: "20px" }}>
                   <div>
                     <label style={labelStyle}>Primary Authorized Administrator Email:</label>
@@ -1072,7 +1107,7 @@ export function AdminControlCenter({ onClose }) {
             </div>
 
             {loadingDetails || !userDetails ? (
-              <div style={{ padding: "48px", textAlign: "center", color: "#00f0ff", fontWeight: 600 }}>Loading user details...</div>
+              <div style={{ padding: "48px", textAlign: "center", color: "#3b82f6", fontWeight: 600 }}>Loading user details...</div>
             ) : (
               <div style={{ marginTop: "20px", display: "flex", flexDirection: "column", gap: "20px" }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
@@ -1082,7 +1117,7 @@ export function AdminControlCenter({ onClose }) {
                   </div>
                   <div>
                     <label style={labelStyle}>Email Address</label>
-                    <div style={{ fontWeight: 700, color: "#00f0ff", fontSize: "15px" }}>{userDetails.account.email}</div>
+                    <div style={{ fontWeight: 700, color: "#3b82f6", fontSize: "15px" }}>{userDetails.account.email}</div>
                   </div>
                   <div>
                     <label style={labelStyle}>Mobile Number</label>
@@ -1095,7 +1130,7 @@ export function AdminControlCenter({ onClose }) {
                 </div>
 
                 <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: "16px" }}>
-                  <h4 style={{ color: "#00f0ff", margin: "0 0 12px 0", fontSize: "15px", fontWeight: 700 }}>Access & Account Status</h4>
+                  <h4 style={{ color: "#3b82f6", margin: "0 0 12px 0", fontSize: "15px", fontWeight: 700 }}>Access & Account Status</h4>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                     <DataRow label="Access Status" value={userDetails.access.statusText} />
                     <DataRow label="Account Status" value={userDetails.account.accountStatus.toUpperCase()} color={userDetails.account.accountStatus === "suspended" ? "#ef4444" : "#10b981"} />
@@ -1162,68 +1197,65 @@ export function AdminControlCenter({ onClose }) {
   );
 }
 
-function MetricCard({ title, value, icon: Icon, color, subtext, pulse }) {
+function MetricCard({ title, value, icon: Icon, color = "var(--accent-primary)", subtext, pulse }) {
   return (
     <div style={{
-      background: "rgba(13, 20, 36, 0.75)",
-      backdropFilter: "blur(12px)",
-      border: `1px solid ${color}44`,
-      borderRadius: "16px",
-      padding: "22px",
+      background: "var(--bg-card, #131b2e)",
+      border: "1px solid var(--border-subtle, rgba(255, 255, 255, 0.08))",
+      borderRadius: "14px",
+      padding: "20px",
       display: "flex",
       flexDirection: "column",
-      gap: "12px",
-      boxShadow: `0 8px 32px rgba(0, 0, 0, 0.4)`
+      gap: "10px",
+      boxShadow: "var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.25))"
     }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontSize: "13px", color: "#94a3b8", fontWeight: 600 }}>{title}</span>
-        <div style={{ padding: "8px", borderRadius: "10px", background: `${color}15` }}>
-          <Icon size={22} color={color} />
+        <span style={{ fontSize: "12.5px", color: "var(--text-muted, #94a3b8)", fontWeight: 600 }}>{title}</span>
+        <div style={{ padding: "8px", borderRadius: "8px", background: "var(--bg-secondary, rgba(255,255,255,0.05))" }}>
+          <Icon size={20} color={color} />
         </div>
       </div>
-      <div style={{ fontSize: "32px", fontWeight: 800, color: "#fff", letterSpacing: "-0.5px" }}>
+      <div style={{ fontSize: "28px", fontWeight: 700, color: "var(--text-main, #f8fafc)", letterSpacing: "-0.5px" }}>
         {value}
       </div>
-      {subtext && <div style={{ fontSize: "12px", color: "#64748b" }}>{subtext}</div>}
+      {subtext && <div style={{ fontSize: "12px", color: "var(--text-muted, #64748b)" }}>{subtext}</div>}
     </div>
   );
 }
 
 function DataRow({ label, value, color }) {
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13.5px", padding: "6px 0", borderBottom: "1px dashed rgba(255,255,255,0.06)" }}>
-      <span style={{ color: "#94a3b8" }}>{label}</span>
-      <span style={{ fontWeight: 700, color: color || "#fff" }}>{value}</span>
+    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", padding: "8px 0", borderBottom: "1px solid var(--border-subtle, rgba(255,255,255,0.06))" }}>
+      <span style={{ color: "var(--text-muted, #94a3b8)" }}>{label}</span>
+      <span style={{ fontWeight: 600, color: color || "var(--text-main, #f8fafc)" }}>{value}</span>
     </div>
   );
 }
 
 const cardStyle = {
-  background: "rgba(13, 20, 36, 0.75)",
-  backdropFilter: "blur(12px)",
-  border: "1px solid rgba(255, 255, 255, 0.08)",
-  borderRadius: "16px",
-  padding: "24px",
-  boxShadow: "0 8px 32px rgba(0,0,0,0.4)"
+  background: "var(--bg-card, #131b2e)",
+  border: "1px solid var(--border-subtle, rgba(255, 255, 255, 0.08))",
+  borderRadius: "14px",
+  padding: "22px",
+  boxShadow: "var(--shadow-sm, 0 4px 16px rgba(0,0,0,0.25))"
 };
 
 const cardTitleStyle = {
   margin: 0,
-  fontSize: "16px",
-  fontWeight: 800,
-  color: "#fff",
+  fontSize: "15px",
+  fontWeight: 700,
+  color: "var(--text-main, #f8fafc)",
   display: "flex",
   alignItems: "center",
   gap: "10px"
 };
 
 const tableContainerStyle = {
-  background: "rgba(13, 20, 36, 0.75)",
-  backdropFilter: "blur(12px)",
-  border: "1px solid rgba(255, 255, 255, 0.08)",
-  borderRadius: "16px",
+  background: "var(--bg-card, #131b2e)",
+  border: "1px solid var(--border-subtle, rgba(255, 255, 255, 0.08))",
+  borderRadius: "14px",
   overflow: "hidden",
-  boxShadow: "0 8px 32px rgba(0,0,0,0.4)"
+  boxShadow: "var(--shadow-sm, 0 4px 16px rgba(0,0,0,0.25))"
 };
 
 const tableStyle = {
@@ -1233,95 +1265,96 @@ const tableStyle = {
 };
 
 const thStyle = {
-  background: "rgba(0, 0, 0, 0.5)",
-  padding: "16px 20px",
-  fontSize: "12px",
-  fontWeight: 800,
-  color: "#94a3b8",
-  borderBottom: "1px solid rgba(255, 255, 255, 0.08)",
+  background: "var(--bg-secondary, rgba(0, 0, 0, 0.3))",
+  padding: "14px 18px",
+  fontSize: "11.5px",
+  fontWeight: 700,
+  color: "var(--text-muted, #94a3b8)",
+  borderBottom: "1px solid var(--border-subtle, rgba(255, 255, 255, 0.08))",
   textTransform: "uppercase",
-  letterSpacing: "0.8px"
+  letterSpacing: "0.5px"
 };
 
 const trStyle = {
-  borderBottom: "1px solid rgba(255, 255, 255, 0.04)"
+  borderBottom: "1px solid var(--border-subtle, rgba(255, 255, 255, 0.05))"
 };
 
 const tdStyle = {
-  padding: "16px 20px",
-  fontSize: "13.5px"
+  padding: "14px 18px",
+  fontSize: "13px",
+  color: "var(--text-main, #f8fafc)"
 };
 
 const inputStyle = {
   width: "100%",
-  padding: "11px 16px 11px 42px",
-  borderRadius: "10px",
-  background: "rgba(0,0,0,0.4)",
-  border: "1px solid rgba(255,255,255,0.15)",
-  color: "#fff",
-  fontSize: "13.5px",
+  padding: "10px 14px 10px 38px",
+  borderRadius: "8px",
+  background: "var(--bg-input, rgba(0,0,0,0.3))",
+  border: "1px solid var(--border-subtle, rgba(255,255,255,0.12))",
+  color: "var(--text-main, #f8fafc)",
+  fontSize: "13px",
   outline: "none",
   boxSizing: "border-box"
 };
 
 const selectStyle = {
-  padding: "11px 16px",
-  borderRadius: "10px",
-  background: "#0a101e",
-  border: "1px solid rgba(255,255,255,0.15)",
-  color: "#fff",
-  fontSize: "13.5px",
+  padding: "9px 14px",
+  borderRadius: "8px",
+  background: "var(--bg-card, #131b2e)",
+  border: "1px solid var(--border-subtle, rgba(255,255,255,0.15))",
+  color: "var(--text-main, #f8fafc)",
+  fontSize: "13px",
   outline: "none"
 };
 
 const labelStyle = {
   display: "block",
-  fontSize: "12.5px",
-  color: "#94a3b8",
-  marginBottom: "8px",
-  fontWeight: 700
+  fontSize: "12px",
+  color: "var(--text-muted, #94a3b8)",
+  marginBottom: "6px",
+  fontWeight: 600
 };
 
 const badgeStyle = (color) => ({
   fontSize: "11px",
-  fontWeight: 800,
-  padding: "4px 10px",
-  borderRadius: "14px",
-  background: `${color}22`,
+  fontWeight: 600,
+  padding: "3px 8px",
+  borderRadius: "6px",
+  background: `${color}18`,
   color: color,
-  border: `1px solid ${color}44`,
+  border: `1px solid ${color}33`,
   display: "inline-block",
-  letterSpacing: "0.5px"
+  letterSpacing: "0.2px"
 });
 
 const btnSmallStyle = (color) => ({
-  padding: "6px 12px",
-  borderRadius: "8px",
-  background: `${color}20`,
-  border: `1px solid ${color}44`,
+  padding: "5px 10px",
+  borderRadius: "6px",
+  background: `${color}18`,
+  border: `1px solid ${color}33`,
   color: color,
   fontSize: "12px",
-  fontWeight: 700,
+  fontWeight: 600,
   cursor: "pointer",
   display: "inline-flex",
   alignItems: "center",
   gap: "5px",
-  transition: "all 0.2s"
+  transition: "all 0.15s ease"
 });
 
 const btnStyle = (color) => ({
-  padding: "9px 18px",
-  borderRadius: "9px",
-  background: `${color}20`,
-  border: `1px solid ${color}44`,
+  padding: "8px 16px",
+  borderRadius: "8px",
+  background: `${color}18`,
+  border: `1px solid ${color}33`,
   color: color,
-  fontSize: "13.5px",
-  fontWeight: 700,
+  fontSize: "13px",
+  fontWeight: 600,
   cursor: "pointer",
   display: "inline-flex",
   alignItems: "center",
-  gap: "8px",
-  transition: "all 0.2s"
+  gap: "7px",
+  transition: "all 0.15s ease"
 });
 
 const modalBackdropStyle = {
@@ -1330,8 +1363,8 @@ const modalBackdropStyle = {
   left: 0,
   right: 0,
   bottom: 0,
-  background: "rgba(0, 0, 0, 0.85)",
-  backdropFilter: "blur(10px)",
+  background: "rgba(0, 0, 0, 0.7)",
+  backdropFilter: "blur(6px)",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -1339,9 +1372,9 @@ const modalBackdropStyle = {
 };
 
 const modalBoxStyle = {
-  background: "#0a101e",
-  border: "1px solid rgba(0, 240, 255, 0.4)",
-  borderRadius: "20px",
+  background: "var(--bg-card, #131b2e)",
+  border: "1px solid var(--border-subtle, rgba(255, 255, 255, 0.12))",
+  borderRadius: "16px",
   padding: "28px",
-  boxShadow: "0 0 50px rgba(0, 240, 255, 0.2)"
+  boxShadow: "var(--shadow-lg, 0 16px 48px rgba(0, 0, 0, 0.45))"
 };

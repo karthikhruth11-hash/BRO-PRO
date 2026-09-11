@@ -175,6 +175,7 @@ export async function executePCACACycle({ query, intentHandler }) {
     provider: "JARVIS",
     latencyMs: rawResult.latencyMs || 0,
     tokensUsed: rawResult.tokensUsed || 0,
+    sources: rawResult.sources || [],
     pcacaState: {
       sessionState: globalStateManager.getState(),
       rankedSourcesCount: rankedContext.rankedSources.length

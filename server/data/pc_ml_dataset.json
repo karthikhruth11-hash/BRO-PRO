@@ -1,8 +1,14 @@
 {
-  "totalDocuments": 55,
-  "totalWordsIndexed": 30939,
-  "lastTrainedAt": "2026-09-03T08:46:54.156Z",
+  "totalDocuments": 57,
+  "totalWordsIndexed": 28973,
+  "lastTrainedAt": "2026-09-08T09:48:23.935Z",
   "knowledgeBlocks": [
+    {
+      "file": "api\\index.js",
+      "ext": ".js",
+      "snippet": "import app from \"../server/index.js\";\n\nexport default app;\n",
+      "wordCount": 8
+    },
     {
       "file": "client\\index.html",
       "ext": ".html",
@@ -16,16 +22,16 @@
       "wordCount": 42
     },
     {
-      "file": "client\\src\\App.jsx",
-      "ext": ".jsx",
-      "snippet": "import React, { useState, useEffect } from 'react';\nimport Sidebar from './components/Sidebar';\nimport PersonalitySelector from './components/PersonalitySelector';\nimport AgentTools from './components/AgentTools';\nimport ChatGPTConsole from './components/ChatGPTConsole';\nimport RightContextPanel from './components/RightContextPanel';\nimport TelemetryPanel from './components/TelemetryPanel';\nimport FileSystemPanel from './components/FileSystemPanel';\nimport TrainingPanel from './components/TrainingPanel';\nimport CustomVoiceStudio from './components/CustomVoiceStudio';\nimport TerminalModal from './components/TerminalModal';\nimport CalculatorModal from './components/CalculatorModal';\nimport SettingsModal from './components/SettingsModal';\nimport TeamSection from './components/TeamSection';\nimport { sendChatMessage } from './services/apiClient';\nimport { streamChatResponse } from './services/streamingClient';\nimport { soundFx } from './services/soundFx';\nimport { speechEngine } from './ser",
-      "wordCount": 767
-    },
-    {
       "file": "client\\src\\components\\AgentTools.jsx",
       "ext": ".jsx",
       "snippet": "import React from 'react';\nimport { Terminal, HardDrive, Cpu, ShieldCheck, CheckCircle, AlertTriangle } from 'lucide-react';\n\nexport default function AgentTools({ activeTool, lastExecution }) {\n  const tools = [\n    { id: 'open_app', name: 'App Launcher', desc: 'Opens allow-listed OS desktop applications', icon: HardDrive, color: '#00f0ff' },\n    { id: 'run_terminal', name: 'Terminal Execution', desc: 'Executes approved CLI shell commands', icon: Terminal, color: '#10b981' },\n    { id: 'get_telemetry', name: 'OS Telemetry', desc: 'Reads live system CPU, RAM, and hardware metrics', icon: Cpu, color: '#f59e0b' },\n    { id: 'read_files', name: 'File Explorer', desc: 'Reads virtual/local file system paths safely', icon: ShieldCheck, color: '#8b5cf6' }\n  ];\n\n  return (\n    <div style={{\n      padding: '16px',\n      background: 'rgba(13, 17, 26, 0.6)',\n      borderBottom: '1px solid var(--border-subtle)',\n      display: 'flex',\n      alignItems: 'center',\n      justifyContent: 'space-between",
       "wordCount": 289
+    },
+    {
+      "file": "client\\src\\components\\AuthModule\\AdminDashboardModal.jsx",
+      "ext": ".jsx",
+      "snippet": "import React from \"react\";\nimport { AdminControlCenter } from \"./AdminControlCenter\";\n\nclass AdminErrorBoundary extends React.Component {\n  constructor(props) {\n    super(props);\n    this.state = { hasError: false, error: null };\n  }\n\n  static getDerivedStateFromError(error) {\n    return { hasError: true, error };\n  }\n\n  componentDidCatch(error, errorInfo) {\n    console.error(\"Admin Control Center Error Boundary Caught:\", error, errorInfo);\n  }\n\n  render() {\n    if (this.state.hasError) {\n      return (\n        <div style={{\n          padding: \"40px\",\n          color: \"#f87171\",\n          background: \"#070a12\",\n          width: \"100vw\",\n          height: \"100vh\",\n          display: \"flex\",\n          flexDirection: \"column\",\n          alignItems: \"center\",\n          justifyContent: \"center\",\n          fontFamily: \"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif\"\n        }}>\n          <h2 style={{ color: \"#ef4444\", marginBottom: \"12px\", fontSize: \"22px\" }}>Admin Control",
+      "wordCount": 251
     },
     {
       "file": "client\\src\\components\\CalculatorModal.jsx",
@@ -36,8 +42,8 @@
     {
       "file": "client\\src\\components\\ChatGPTConsole.jsx",
       "ext": ".jsx",
-      "snippet": "import React, { useState, useRef, useEffect } from 'react';\nimport { \n  Send, \n  Mic, \n  MicOff, \n  Volume2, \n  Sparkles, \n  Image as ImageIcon, \n  Copy, \n  Check, \n  BarChart2, \n  GitCommit, \n  Paperclip,\n  Square,\n  RotateCcw,\n  ThumbsUp,\n  ThumbsDown,\n  Menu,\n  ChevronDown,\n  PanelRight,\n  Code,\n  FileText,\n  HelpCircle,\n  Compass,\n  Lightbulb,\n  ExternalLink,\n  Search,\n  Globe,\n  CheckCircle2,\n  MessageSquare,\n  Edit3\n} from 'lucide-react';\nimport { soundFx } from '../services/soundFx';\nimport { speechEngine } from '../services/speech';\n\n// Interactive WhatsApp Action Card Component Renderer\nfunction RenderWhatsAppCard({ contact, messageText, onSendMessage }) {\n  const [isSent, setIsSent] = useState(false);\n\n  const handleSend = () => {\n    soundFx.playSend();\n    setIsSent(true);\n    setTimeout(() => {\n      onSendMessage(`[System Confirmation: WhatsApp Message successfully sent to ${contact}: \"${messageText}\"]`);\n    }, 800);\n  };\n\n  return (\n    <div style={{\n      margin: '16px",
-      "wordCount": 3416
+      "snippet": "import React, { useState, useRef, useEffect } from 'react';\nimport { \n  Send, \n  Mic, \n  MicOff, \n  Volume2, \n  Sparkles, \n  Image as ImageIcon, \n  Copy, \n  Check, \n  BarChart2, \n  GitCommit, \n  Paperclip,\n  Square,\n  RotateCcw,\n  ThumbsUp,\n  ThumbsDown,\n  Menu,\n  ChevronDown,\n  PanelRight,\n  Code,\n  FileText,\n  HelpCircle,\n  Compass,\n  Lightbulb,\n  ExternalLink,\n  Search,\n  Globe,\n  CheckCircle2,\n  MessageSquare,\n  Edit3,\n  Download,\n  FileSpreadsheet\n} from 'lucide-react';\nimport { soundFx } from '../services/soundFx';\nimport { speechEngine } from '../services/speech';\n\n// Interactive WhatsApp Action Card Component Renderer\nfunction RenderWhatsAppCard({ contact, messageText, onSendMessage }) {\n  const [isSent, setIsSent] = useState(false);\n\n  const handleSend = () => {\n    soundFx.playSend();\n    setIsSent(true);\n    setTimeout(() => {\n      onSendMessage(`[System Confirmation: WhatsApp Message successfully sent to ${contact}: \"${messageText}\"]`);\n    }, 800);\n  };\n\n  return (\n    <d",
+      "wordCount": 4123
     },
     {
       "file": "client\\src\\components\\CustomVoiceStudio.jsx",
@@ -72,26 +78,14 @@
     {
       "file": "client\\src\\components\\Sidebar.jsx",
       "ext": ".jsx",
-      "snippet": "import React, { useState } from 'react';\nimport { \n  MessageSquare, \n  Cpu, \n  Folder, \n  Mic, \n  Sliders, \n  Terminal, \n  Calculator, \n  Settings, \n  Plus, \n  Trash2, \n  Bot,\n  Sun,\n  Moon,\n  Search,\n  X,\n  PanelLeftClose,\n  PanelLeftOpen,\n  Pin,\n  PinOff,\n  Clock,\n  Users,\n  Brain\n} from 'lucide-react';\n\nexport default function Sidebar({\n  activeView,\n  setActiveView,\n  sessions,\n  activeSessionId,\n  setActiveSessionId,\n  createNewSession,\n  clearHistory,\n  persona,\n  onOpenTerminal,\n  onOpenCalculator,\n  onOpenSettings,\n  isServerConnected,\n  theme,\n  toggleTheme,\n  isMobileOpen,\n  onCloseMobile,\n  isCollapsed,\n  onToggleCollapse\n}) {\n  const [searchQuery, setSearchQuery] = useState('');\n  const [pinnedSessionIds, setPinnedSessionIds] = useState([]);\n\n  const togglePinSession = (e, id) => {\n    e.stopPropagation();\n    setPinnedSessionIds(prev => \n      prev.includes(id) ? prev.filter(pId => pId !== id) : [...prev, id]\n    );\n  };\n\n  const filteredSessions = sessions.filter(session ",
-      "wordCount": 1585
-    },
-    {
-      "file": "client\\src\\components\\TeamSection.jsx",
-      "ext": ".jsx",
-      "snippet": "import React, { useState, useEffect } from 'react';\nimport { Users, Github, Linkedin, Code, ShieldCheck, Sparkles, Plus, Edit2, Check } from 'lucide-react';\n\nexport default function TeamSection() {\n  const [team, setTeam] = useState(null);\n  const [loading, setLoading] = useState(true);\n  const [isEditing, setIsEditing] = useState(false);\n  const [editedGroupName, setEditedGroupName] = useState('');\n\n  const AUTH_TOKEN = \"wednesday-secret-local-handshake-token-2026\";\n  const API_BASE = \"http://127.0.0.1:5001/api\";\n\n  useEffect(() => {\n    fetchTeam();\n  }, []);\n\n  const fetchTeam = async () => {\n    try {\n      setLoading(true);\n      const res = await fetch(`${API_BASE}/team`, {\n        headers: { 'x-wednesday-handshake': AUTH_TOKEN }\n      });\n      const data = await res.json();\n      if (data.success && data.team) {\n        setTeam(data.team);\n        setEditedGroupName(data.team.groupName || '');\n      }\n    } catch (e) {\n      console.error(\"Failed to fetch team details:\", e);\n  ",
-      "wordCount": 560
+      "snippet": "import React, { useState } from 'react';\nimport { \n  MessageSquare, \n  Cpu, \n  Folder, \n  Mic, \n  Sliders, \n  Terminal, \n  Calculator, \n  Settings, \n  Plus, \n  Trash2, \n  Bot,\n  Sun,\n  Moon,\n  Search,\n  X,\n  PanelLeftClose,\n  PanelLeftOpen,\n  Pin,\n  PinOff,\n  Clock,\n  Users,\n  Brain,\n  Shield\n} from 'lucide-react';\n\nexport default function Sidebar({\n  activeView,\n  setActiveView,\n  sessions,\n  activeSessionId,\n  setActiveSessionId,\n  createNewSession,\n  clearHistory,\n  deleteSession,\n  persona,\n  onOpenTerminal,\n  onOpenCalculator,\n  onOpenSettings,\n  isServerConnected,\n  theme,\n  toggleTheme,\n  isMobileOpen,\n  onCloseMobile,\n  isCollapsed,\n  onToggleCollapse,\n  currentUser,\n  onOpenAuth,\n  onOpenAdmin,\n  onLogout\n}) {\n  const [searchQuery, setSearchQuery] = useState('');\n  const [pinnedSessionIds, setPinnedSessionIds] = useState([]);\n\n  const togglePinSession = (e, id) => {\n    e.stopPropagation();\n    setPinnedSessionIds(prev => \n      prev.includes(id) ? prev.filter(pId => pId !== i",
+      "wordCount": 2009
     },
     {
       "file": "client\\src\\components\\TelemetryPanel.jsx",
       "ext": ".jsx",
       "snippet": "import React, { useState, useEffect } from 'react';\nimport { Cpu, HardDrive, Zap, Database, RefreshCw, Trash2, Brain } from 'lucide-react';\nimport { fetchTelemetry, fetchMemoryFacts, deleteMemoryFact, clearMemoryFacts } from '../services/apiClient';\n\nexport default function TelemetryPanel() {\n  const [telemetryData, setTelemetryData] = useState(null);\n  const [memoryFacts, setMemoryFacts] = useState([]);\n  const [loading, setLoading] = useState(true);\n\n  const loadAllMetrics = async () => {\n    setLoading(true);\n    const tRes = await fetchTelemetry();\n    if (tRes.success) setTelemetryData(tRes);\n\n    const mRes = await fetchMemoryFacts();\n    if (mRes.success) setMemoryFacts(mRes.facts);\n    setLoading(false);\n  };\n\n  useEffect(() => {\n    loadAllMetrics();\n    const interval = setInterval(loadAllMetrics, 5000);\n    return () => clearInterval(interval);\n  }, []);\n\n  const handleDeleteFact = async (id) => {\n    await deleteMemoryFact(id);\n    setMemoryFacts(memoryFacts.filter(f => f.i",
       "wordCount": 721
-    },
-    {
-      "file": "client\\src\\components\\TerminalModal.jsx",
-      "ext": ".jsx",
-      "snippet": "import React, { useState } from 'react';\nimport { Terminal, X, Play, ShieldAlert } from 'lucide-react';\n\nexport default function TerminalModal({ onClose }) {\n  const [cmdInput, setCmdInput] = useState('');\n  const [history, setHistory] = useState([\n    { type: 'sys', text: 'BRO AI Terminal Sandbox v2.0.0' },\n    { type: 'sys', text: 'Allow-listed commands: dir, tasklist, systeminfo, ipconfig, node -v, git status' }\n  ]);\n\n  const handleRun = async (e) => {\n    e.preventDefault();\n    if (!cmdInput.trim()) return;\n\n    const userCmd = cmdInput;\n    setCmdInput('');\n    setHistory(prev => [...prev, { type: 'user', text: `$ ${userCmd}` }]);\n\n    try {\n      const res = await fetch('/api/chat', {\n        method: 'POST',\n        headers: {\n          'Content-Type': 'application/json',\n          'x-wednesday-token': 'wednesday-secret-local-handshake-token-2026'\n        },\n        body: JSON.stringify({ message: `exec ${userCmd}`, persona: 'jarvis' })\n      });\n      const data = await res.js",
-      "wordCount": 335
     },
     {
       "file": "client\\src\\components\\TrainingPanel.jsx",
@@ -108,14 +102,8 @@
     {
       "file": "client\\src\\main.jsx",
       "ext": ".jsx",
-      "snippet": "import React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport App from './App';\nimport './index.css';\n\nReactDOM.createRoot(document.getElementById('root')).render(\n  <React.StrictMode>\n    <App />\n  </React.StrictMode>\n);\n",
-      "wordCount": 21
-    },
-    {
-      "file": "client\\src\\services\\apiClient.js",
-      "ext": ".js",
-      "snippet": "const API_BASE = '/api';\nconst AUTH_TOKEN = 'wednesday-secret-local-handshake-token-2026';\n\nexport async function sendChatMessage(message, persona = 'jarvis') {\n  try {\n    const groqKey = localStorage.getItem('wednesday_groq_key') || '';\n    const openaiKey = localStorage.getItem('wednesday_openai_key') || '';\n    const geminiKey = localStorage.getItem('wednesday_gemini_key') || '';\n\n    const res = await fetch(`${API_BASE}/chat`, {\n      method: 'POST',\n      headers: {\n        'Content-Type': 'application/json',\n        'x-wednesday-token': AUTH_TOKEN\n      },\n      body: JSON.stringify({\n        message,\n        persona,\n        options: {\n          clientKeys: { groqKey, openaiKey, geminiKey }\n        }\n      })\n    });\n    return await res.json();\n  } catch (err) {\n    return {\n      success: false,\n      response: `Failed to connect to local BRO AI server backend: ${err.message}`,\n      provider: 'Offline Client Error'\n    };\n  }\n}\n\nexport async function fetchTelemetry() {\n  try",
-      "wordCount": 236
+      "snippet": "import React from 'react';\nimport ReactDOM from 'react-dom/client';\nimport App from './App';\nimport './index.css';\n\nclass RootErrorBoundary extends React.Component {\n  constructor(props) {\n    super(props);\n    this.state = { hasError: false, error: null };\n  }\n\n  static getDerivedStateFromError(error) {\n    return { hasError: true, error };\n  }\n\n  componentDidCatch(error, errorInfo) {\n    console.error(\"Global Root Error Caught:\", error, errorInfo);\n  }\n\n  handleReset = () => {\n    try {\n      localStorage.removeItem('wednesday_sessions');\n      localStorage.removeItem('wednesday_active_session_id');\n      localStorage.removeItem('bro_guest_start');\n    } catch (e) {}\n    window.location.reload();\n  };\n\n  render() {\n    if (this.state.hasError) {\n      return (\n        <div style={{\n          minHeight: '100vh',\n          width: '100vw',\n          background: '#070a12',\n          color: '#f8fafc',\n          display: 'flex',\n          flexDirection: 'column',\n          alignItems: 'cen",
+      "wordCount": 267
     },
     {
       "file": "client\\src\\services\\gestureEngine.js",
@@ -142,28 +130,28 @@
       "wordCount": 190
     },
     {
-      "file": "client\\src\\services\\streamingClient.js",
-      "ext": ".js",
-      "snippet": "const AUTH_TOKEN = \"wednesday-secret-local-handshake-token-2026\";\nconst API_BASE = \"http://127.0.0.1:5001/api\";\n\nexport async function streamChatResponse({\n  message,\n  conversationId,\n  persona,\n  options,\n  attachments,\n  onChunk,\n  onStatus,\n  onDone,\n  onError,\n  signal\n}) {\n  try {\n    const response = await fetch(`${API_BASE}/chat/stream`, {\n      method: \"POST\",\n      headers: {\n        \"Content-Type\": \"application/json\",\n        \"x-wednesday-handshake\": AUTH_TOKEN\n      },\n      body: JSON.stringify({\n        message,\n        conversationId,\n        persona,\n        options,\n        attachments\n      }),\n      signal\n    });\n\n    if (!response.ok) {\n      throw new Error(`Server returned status ${response.status}`);\n    }\n\n    const reader = response.body.getReader();\n    const decoder = new TextDecoder(\"utf-8\");\n    let buffer = \"\";\n\n    while (true) {\n      const { done, value } = await reader.read();\n      if (done) break;\n\n      buffer += decoder.decode(value, { stream: tru",
-      "wordCount": 212
-    },
-    {
       "file": "client\\vite.config.js",
       "ext": ".js",
-      "snippet": "import { defineConfig } from 'vite';\nimport react from '@vitejs/plugin-react';\n\nexport default defineConfig({\n  plugins: [react()],\n  server: {\n    port: 3000,\n    proxy: {\n      '/api': {\n        target: 'http://127.0.0.1:5001',\n        changeOrigin: true,\n        secure: false\n      }\n    }\n  }\n});\n",
+      "snippet": "import { defineConfig } from 'vite';\r\nimport react from '@vitejs/plugin-react';\r\n\r\nexport default defineConfig({\r\n  plugins: [react()],\r\n  server: {\r\n    port: 3000,\r\n    proxy: {\r\n      '/api': {\r\n        target: 'http://127.0.0.1:5001',\r\n        changeOrigin: true,\r\n        secure: false\r\n      }\r\n    }\r\n  }\r\n});\r\n",
       "wordCount": 34
-    },
-    {
-      "file": "package-lock.json",
-      "ext": ".json",
-      "snippet": "{\n  \"name\": \"wednesday-bro-ai-pro\",\n  \"version\": \"2.0.0\",\n  \"lockfileVersion\": 3,\n  \"requires\": true,\n  \"packages\": {\n    \"\": {\n      \"name\": \"wednesday-bro-ai-pro\",\n      \"version\": \"2.0.0\",\n      \"devDependencies\": {\n        \"concurrently\": \"^8.2.2\"\n      }\n    },\n    \"node_modules/@babel/runtime\": {\n      \"version\": \"7.29.7\",\n      \"resolved\": \"https://registry.npmjs.org/@babel/runtime/-/runtime-7.29.7.tgz\",\n      \"integrity\": \"sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==\",\n      \"dev\": true,\n      \"license\": \"MIT\",\n      \"engines\": {\n        \"node\": \">=6.9.0\"\n      }\n    },\n    \"node_modules/ansi-regex\": {\n      \"version\": \"5.0.1\",\n      \"resolved\": \"https://registry.npmjs.org/ansi-regex/-/ansi-regex-5.0.1.tgz\",\n      \"integrity\": \"sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==\",\n      \"dev\": true,\n      \"license\": \"MIT\",\n      \"engines\": {\n        \"node\": \">=8\"\n      }\n    },\n    \"n",
-      "wordCount": 675
     },
     {
       "file": "package.json",
       "ext": ".json",
-      "snippet": "{\n  \"name\": \"wednesday-bro-ai-pro\",\n  \"version\": \"2.0.0\",\n  \"private\": true,\n  \"description\": \"BRO AI (W.E.D.N.E.S.D.A.Y. Pro) - Production-Grade Personal AI Assistant\",\n  \"scripts\": {\n    \"start\": \"node server/index.js\",\n    \"server\": \"node server/index.js\",\n    \"client\": \"npm --prefix client run dev\",\n    \"dev\": \"concurrently \\\"npm run server\\\" \\\"npm run client\\\"\",\n    \"build\": \"npm --prefix client run build\"\n  },\n  \"devDependencies\": {\n    \"concurrently\": \"^8.2.2\"\n  }\n}\n",
-      "wordCount": 53
+      "snippet": "{\n  \"name\": \"wednesday-bro-ai-pro\",\n  \"version\": \"2.0.0\",\n  \"private\": true,\n  \"description\": \"BRO AI (W.E.D.N.E.S.D.A.Y. Pro) - Production-Grade Personal AI Assistant\",\n  \"homepage\": \"https://karthikhruth11-hash.github.io/BRO-PRO\",\n  \"scripts\": {\n    \"start\": \"node server/index.js\",\n    \"server\": \"node server/index.js\",\n    \"client\": \"npm --prefix client run dev\",\n    \"dev\": \"concurrently \\\"npm run server\\\" \\\"npm run client\\\"\",\n    \"build\": \"npm --prefix client run build\",\n    \"predeploy\": \"npm run build\",\n    \"deploy\": \"gh-pages -d client/dist\"\n  },\n  \"devDependencies\": {\n    \"concurrently\": \"^8.2.2\",\n    \"gh-pages\": \"^6.3.0\"\n  }\n}\n",
+      "wordCount": 65
+    },
+    {
+      "file": "README.md",
+      "ext": ".md",
+      "snippet": "# BRO AI (W.E.D.N.E.S.D.A.Y. Pro)\n\n> **Production-Grade Personal AI Assistant & Advanced Admin Control Center**\n\nBRO AI is an intelligent, multi-persona conversational platform built with modern web technologies, multi-LLM orchestration, real-time telemetry, and a protected administrative control dashboard.\n\n---\n\n## 🌟 Key Features\n\n### 🤖 Multi-LLM Intelligence & Persona Engine\n- **Flexible Models**: Multi-LLM Ensemble, GPT-4o, Claude 3.5 Sonnet, Llama 3, Gemini 1.5 Pro.\n- **Custom Personas**: Jarvis, Wednesday, Cyberpunk, Master Educator, Code Architect.\n- **Real-Time Memory Isolation**: User-specific memory bank and isolated session management.\n\n### 🛡️ Protected Admin Control Center (Admin-Only)\n- Dedicated administrative panel for server-authorized admin (`karthikhruth@gmail.com`).\n- **Live User Monitoring**: Real-time tracked active/online members with heartbeat detection.\n- **User Governance**: One-click account ban, unban, and removal safeguards.\n- **Audit & Security**: Real-ti",
+      "wordCount": 253
+    },
+    {
+      "file": "server\\agent\\hermesAgent.js",
+      "ext": ".js",
+      "snippet": "import { toolRegistry } from \"../core/toolRegistry.js\";\n\nexport class HermesAgent {\n  constructor() {\n    this.enabled = process.env.HERMES_ENABLED !== \"false\";\n    this.topicHistory = []; // Tracks [{ topic, question, answerSnippet, timestamp }]\n    this.currentTopic = null;\n    this.previousTopic = null;\n    this.lastQuestion = null;\n    this.lastOpenedApp = null;\n  }\n\n  isAgentRequired(prompt) {\n    if (!this.enabled || !prompt) return false;\n    const pLower = prompt.toLowerCase().trim();\n\n    // 1. Topic & Question Memory Recall Triggers\n    const memoryTriggers = [\n      \"previous topic\",\n      \"what was the topic\",\n      \"what topic\",\n      \"last question\",\n      \"previous question\",\n      \"what did i ask\",\n      \"what did we talk about\",\n      \"what were we talking about\",\n      \"what was i asking\",\n      \"remember what i asked\",\n      \"remind me what we discussed\",\n      \"earlier question\",\n      \"topic we were discussing\",\n      \"topic we discussed\",\n      \"topic what i ask\",",
+      "wordCount": 968
     },
     {
       "file": "server\\core\\codeEngine.js",
@@ -178,28 +166,16 @@
       "wordCount": 157
     },
     {
-      "file": "server\\core\\intentRouter.js",
-      "ext": ".js",
-      "snippet": "import os from \"os\";\nimport { getPersonaPrompt } from \"./personaEngine.js\";\nimport { analyzeEmotion } from \"./emotionEngine.js\";\nimport { getUserFacts, getUserProfile, getFormattedUserProfile, getProjectProfile, getAllProjects, extractAndStoreFacts, updateProjectProfile } from \"./memoryStore.js\";\nimport { toolRegistry } from \"./toolRegistry.js\";\nimport { dispatchLLMRequest } from \"./providerGateway.js\";\nimport { executePCACACycle, globalStateManager } from \"./pcacaEngine.js\";\nimport { detectProgrammingLanguage, classifyProgrammingIntent, formatCodeResponse, globalCodeState } from \"./codeEngine.js\";\nimport { pcDataTrainer } from \"./pcDataTrainerEngine.js\";\n\nfunction getSystemEnvironmentInfo() {\n  const now = new Date();\n  const days = [\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\"];\n  const dayName = days[now.getDay()];\n  const dateStr = now.toLocaleDateString(\"en-US\", { year: 'numeric', month: 'long', day: 'numeric' });\n  const timeStr = now.toLocaleTimeS",
-      "wordCount": 2629
-    },
-    {
       "file": "server\\core\\memoryStore.js",
       "ext": ".js",
       "snippet": "import fs from \"fs\";\nimport path from \"path\";\nimport { fileURLToPath } from \"url\";\n\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = path.dirname(__filename);\n\nconst MEMORY_FILE = path.join(__dirname, \"../data/memoryStore.json\");\n\n// Ensure data directory exists\nconst dataDir = path.dirname(MEMORY_FILE);\nif (!fs.existsSync(dataDir)) {\n  fs.mkdirSync(dataDir, { recursive: true });\n}\n\nfunction loadMemory() {\n  if (!fs.existsSync(MEMORY_FILE)) {\n    const initial = {\n      userProfile: {\n        personal: {\n          callsign: \"Boss\",\n          name: \"Karthik\",\n          education: \"Computer Science & Engineering\",\n          background: \"AI Systems & Full-Stack Web Development\"\n        },\n        skills: [\"JavaScript (ES6+)\", \"React.js\", \"Node.js / Express\", \"Python\", \"AI Agent Systems\", \"TailwindCSS / Vanilla CSS\"],\n        learning: [\"Persistent Memory Architecture\", \"Multi-LLM Synthesis\", \"Autonomous AI Agents\"],\n        goals: [\"Build World-Class Next-Gen BRO AI As",
-      "wordCount": 921
+      "wordCount": 1006
     },
     {
       "file": "server\\core\\pcacaEngine.js",
       "ext": ".js",
       "snippet": "import { getUserFacts, getUserProfile, getProjectProfile, getAllProjects } from \"./memoryStore.js\";\n\n// PCACA — Persistent Contextual Autoregressive Conversation Architecture\n// 3-Layer Universal Engine Implementation\n\nexport class ConversationStateManager {\n  constructor() {\n    this.sessionState = {\n      conversationId: `conv-${Date.now()}`,\n      userId: \"user-boss\",\n      sessionId: `sess-${Date.now()}`,\n      currentTopic: null,\n      subtopic: null,\n      previousTopics: [],\n      activeEntity: null,\n      activeEntitiesList: [],\n      userIntent: \"GENERAL\",\n      currentTask: null,\n      pendingTasks: [],\n      completedTasks: [],\n      recentMessages: [],\n      importantContext: [],\n      longTermMemoryRefs: [],\n      activeThreadId: \"default\",\n      threads: {}\n    };\n  }\n\n  getState() {\n    return this.sessionState;\n  }\n\n  updateTopic(newTopic) {\n    if (newTopic && newTopic !== this.sessionState.currentTopic) {\n      if (this.sessionState.currentTopic) {\n        this.sessio",
       "wordCount": 558
-    },
-    {
-      "file": "server\\core\\pcDataTrainerEngine.js",
-      "ext": ".js",
-      "snippet": "import fs from \"fs\";\nimport path from \"path\";\n\nclass PCDataTrainerEngine {\n  constructor() {\n    this.datasetPath = path.join(process.cwd(), \"server\", \"data\", \"pc_ml_dataset.json\");\n    this.memoryIndex = {\n      totalDocuments: 0,\n      totalWordsIndexed: 0,\n      lastTrainedAt: null,\n      knowledgeBlocks: []\n    };\n    this.loadDataset();\n  }\n\n  loadDataset() {\n    try {\n      if (fs.existsSync(this.datasetPath)) {\n        const raw = fs.readFileSync(this.datasetPath, \"utf-8\");\n        this.memoryIndex = JSON.parse(raw);\n      }\n    } catch (e) {\n      console.error(\"Failed to load PC ML Dataset:\", e.message);\n    }\n  }\n\n  saveDataset() {\n    try {\n      const dir = path.dirname(this.datasetPath);\n      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });\n      fs.writeFileSync(this.datasetPath, JSON.stringify(this.memoryIndex, null, 2), \"utf-8\");\n    } catch (e) {\n      console.error(\"Failed to save PC ML Dataset:\", e.message);\n    }\n  }\n\n  async trainFromDirectory(dirP",
-      "wordCount": 389
     },
     {
       "file": "server\\core\\personaEngine.js",
@@ -210,8 +186,8 @@
     {
       "file": "server\\core\\providerGateway.js",
       "ext": ".js",
-      "snippet": "import dotenv from \"dotenv\";\ndotenv.config();\n\nconst cache = new Map();\n\nlet apiUsageStats = {\n  totalRequests: 0,\n  cacheHits: 0,\n  providerHits: {\n    groq: 0,\n    openai: 0,\n    gemini: 0,\n    ensemble: 0,\n    fallback: 0\n  },\n  estimatedTokensUsed: 0,\n  totalLatencyMs: 0\n};\n\n// Curated HD Subject-Accurate Photo Dictionary for Physical World Topics\nconst EXACT_TOPIC_IMAGES = {\n  moon: {\n    main: \"https://images.unsplash.com/photo-1522030299830-a6b5a21010c6?auto=format&fit=crop&w=1000&q=80\",\n    side1: \"https://images.unsplash.com/photo-1532693322450-2cb5c511067d?auto=format&fit=crop&w=600&q=80\",\n    side2: \"https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=600&q=80\",\n    count: 12,\n    caption: \"The Moon — Earth's Natural Satellite in Lunar Orbit\"\n  },\n  earth: {\n    main: \"https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=1000&q=80\",\n    side1: \"https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=for",
-      "wordCount": 2787
+      "snippet": "import { hermesAgent } from \"../agent/hermesAgent.js\";\nimport { hybridRouter } from \"../router/hybridRouter.js\";\n\nconst cache = new Map();\n\nlet apiUsageStats = {\n  totalRequests: 0,\n  cacheHits: 0,\n  providerHits: {\n    groq: 0,\n    openai: 0,\n    gemini: 0,\n    ensemble: 0,\n    fallback: 0\n  },\n  estimatedTokensUsed: 0,\n  totalLatencyMs: 0\n};\n\n// Curated HD Subject-Accurate Photo Dictionary for Physical World Topics\nconst EXACT_TOPIC_IMAGES = {\n  moon: {\n    main: \"https://images.unsplash.com/photo-1522030299830-a6b5a21010c6?auto=format&fit=crop&w=1000&q=80\",\n    side1: \"https://images.unsplash.com/photo-1532693322450-2cb5c511067d?auto=format&fit=crop&w=600&q=80\",\n    side2: \"https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=600&q=80\",\n    count: 12,\n    caption: \"The Moon — Earth's Natural Satellite in Lunar Orbit\"\n  },\n  earth: {\n    main: \"https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=1000&q=80\",\n    side1: \"ht",
+      "wordCount": 3780
     },
     {
       "file": "server\\core\\toolRegistry.js",
@@ -220,70 +196,112 @@
       "wordCount": 141
     },
     {
-      "file": "server\\data\\db.js",
+      "file": "server\\modules\\fileGenerator.js",
       "ext": ".js",
-      "snippet": "import fs from 'fs';\nimport path from 'path';\nimport { fileURLToPath } from 'url';\n\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = path.dirname(__filename);\nconst DB_FILE = path.join(__dirname, 'store.json');\n\nconst INITIAL_DATA = {\n  users: [\n    {\n      id: \"usr_default\",\n      name: \"Demo User\",\n      email: \"user@example.com\",\n      createdDate: new Date().toISOString()\n    }\n  ],\n  conversations: [\n    {\n      id: \"conv_default\",\n      userId: \"usr_default\",\n      title: \"Welcome Conversation\",\n      createdDate: new Date().toISOString(),\n      updatedDate: new Date().toISOString()\n    }\n  ],\n  messages: [\n    {\n      id: \"msg_welcome\",\n      conversationId: \"conv_default\",\n      role: \"assistant\",\n      content: \"Hello! I am your **W.E.D.N.E.S.D.A.Y. Pro Personal AI Assistant**. How can I help you today? You can ask general questions, upload files, request web search, ask for code, or generate images!\",\n      createdDate: new Date().toISOString()\n    }\n  ],\n",
-      "wordCount": 643
-    },
-    {
-      "file": "server\\data\\memoryStore.json",
-      "ext": ".json",
-      "snippet": "{\n  \"userProfile\": {\n    \"personal\": {\n      \"callsign\": \"Boss\",\n      \"name\": \"Karthik\",\n      \"education\": \"Computer Science & Engineering\",\n      \"background\": \"AI Systems & Full-Stack Web Architecture\"\n    },\n    \"skills\": [\n      \"JavaScript (ES6+)\",\n      \"React.js & Vite\",\n      \"Node.js / Express Architecture\",\n      \"Python AI Development\",\n      \"Multi-LLM Ensemble Gateway\",\n      \"5-Layer Persistent Memory Architecture\"\n    ],\n    \"learning\": [\n      \"Autonomous AI Multi-Agent Systems\",\n      \"Persistent Context Memory Networks\",\n      \"Full-Stack Web App Engineering\"\n    ],\n    \"goals\": [\n      \"Build World-Class Next-Gen BRO AI Assistant\",\n      \"Master Deep Research Synthesis & Intelligent Context Memory\"\n    ],\n    \"preferences\": {\n      \"communicationStyle\": \"Structured, Direct & High-Precision\",\n      \"themeStyle\": \"Modern Dark Glassmorphism\",\n      \"outputPreference\": \"Markdown Tables, Clear Headings, Zero Filler\"\n    }\n  },\n  \"projects\": {\n    \"bro_ai_pro\": {\n      \"",
-      "wordCount": 298
-    },
-    {
-      "file": "server\\data\\store.json",
-      "ext": ".json",
-      "snippet": "{\n  \"users\": [\n    {\n      \"id\": \"usr_default\",\n      \"name\": \"Demo User\",\n      \"email\": \"user@example.com\",\n      \"createdDate\": \"2026-09-01T04:42:07.963Z\"\n    }\n  ],\n  \"conversations\": [\n    {\n      \"id\": \"conv_default\",\n      \"userId\": \"usr_default\",\n      \"title\": \"Welcome Conversation\",\n      \"createdDate\": \"2026-09-01T04:42:07.963Z\",\n      \"updatedDate\": \"2026-09-03T08:44:03.713Z\"\n    }\n  ],\n  \"messages\": [\n    {\n      \"id\": \"msg_welcome\",\n      \"conversationId\": \"conv_default\",\n      \"role\": \"assistant\",\n      \"content\": \"Hello! I am your **W.E.D.N.E.S.D.A.Y. Pro Personal AI Assistant**. How can I help you today? You can ask general questions, upload files, request web search, ask for code, or generate images!\",\n      \"createdDate\": \"2026-09-01T04:42:07.964Z\"\n    },\n    {\n      \"id\": \"msg_1788237753621_y90f\",\n      \"conversationId\": \"conv_default\",\n      \"role\": \"user\",\n      \"content\": \"html css\",\n      \"meta\": {},\n      \"createdDate\": \"2026-09-01T04:42:33.621Z\"\n    },\n    {\n ",
-      "wordCount": 4105
-    },
-    {
-      "file": "server\\index.js",
-      "ext": ".js",
-      "snippet": "import express from \"express\";\nimport cors from \"cors\";\nimport dotenv from \"dotenv\";\nimport { authMiddleware } from \"./security/authMiddleware.js\";\nimport chatRoutes from \"./routes/chat.js\";\nimport systemRoutes from \"./routes/system.js\";\nimport telemetryRoutes from \"./routes/telemetry.js\";\nimport memoryRoutes from \"./routes/memory.js\";\nimport authRoutes from \"./routes/auth.js\";\nimport filesRoutes from \"./routes/files.js\";\nimport teamRoutes from \"./routes/team.js\";\n\ndotenv.config();\n\nconst app = express();\nconst PORT = process.env.PORT || 5001;\n\n// Middleware\napp.use(cors({ origin: true, credentials: true }));\napp.use(express.json({ limit: \"50mb\" }));\napp.use(express.urlencoded({ extended: true, limit: \"50mb\" }));\n\n// Public Health Check Endpoint\napp.get(\"/api/health\", (req, res) => {\n  res.json({\n    status: \"online\",\n    service: \"BRO AI (W.E.D.N.E.S.D.A.Y. Pro) Backend BFF\",\n    version: \"2.0.0\",\n    timestamp: new Date().toISOString()\n  });\n});\n\n// Hardened local auth handshake for ",
-      "wordCount": 166
-    },
-    {
-      "file": "server\\package-lock.json",
-      "ext": ".json",
-      "snippet": "{\n  \"name\": \"wednesday-server\",\n  \"version\": \"2.0.0\",\n  \"lockfileVersion\": 3,\n  \"requires\": true,\n  \"packages\": {\n    \"\": {\n      \"name\": \"wednesday-server\",\n      \"version\": \"2.0.0\",\n      \"dependencies\": {\n        \"cors\": \"^2.8.5\",\n        \"dotenv\": \"^16.4.5\",\n        \"express\": \"^4.19.2\",\n        \"node-os-utils\": \"^1.3.7\"\n      }\n    },\n    \"node_modules/accepts\": {\n      \"version\": \"1.3.8\",\n      \"resolved\": \"https://registry.npmjs.org/accepts/-/accepts-1.3.8.tgz\",\n      \"integrity\": \"sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==\",\n      \"license\": \"MIT\",\n      \"dependencies\": {\n        \"mime-types\": \"~2.1.34\",\n        \"negotiator\": \"0.6.3\"\n      },\n      \"engines\": {\n        \"node\": \">= 0.6\"\n      }\n    },\n    \"node_modules/array-flatten\": {\n      \"version\": \"1.1.1\",\n      \"resolved\": \"https://registry.npmjs.org/array-flatten/-/array-flatten-1.1.1.tgz\",\n      \"integrity\": \"sha512-PCVAQswWemu6UdxsDFFX/+gVeYqKAod3D3UVm91jHwynguOwAvYP",
-      "wordCount": 1625
+      "snippet": "import fs from \"fs\";\nimport path from \"path\";\nimport { fileURLToPath } from \"url\";\nimport PDFDocument from \"pdfkit\";\nimport { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, HeadingLevel, AlignmentType, WidthType, BorderStyle } from \"docx\";\nimport * as XLSX from \"xlsx\";\n\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = path.dirname(__filename);\nconst GENERATED_DIR = path.join(__dirname, \"..\", \"uploads\", \"generated\");\n\n// Ensure output directory exists\nif (!fs.existsSync(GENERATED_DIR)) {\n  fs.mkdirSync(GENERATED_DIR, { recursive: true });\n}\n\n/**\n * Intelligent parser to extract headings, paragraphs, bullet points, and tables from markdown/text\n */\nexport function parseContentToStructuredBlocks(rawText) {\n  if (!rawText) return { title: \"BRO AI Report\", blocks: [], tables: [] };\n\n  // Normalize compact markdown tables and whitespace\n  let preprocessed = rawText\n    .replace(/\\r\\n/g, \"\\n\")\n    .replace(/\\r/g, \"\\n\");\n\n  // If text starts with non-tabl",
+      "wordCount": 1982
     },
     {
       "file": "server\\package.json",
       "ext": ".json",
-      "snippet": "{\n  \"name\": \"wednesday-server\",\n  \"version\": \"2.0.0\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"start\": \"node index.js\"\n  },\n  \"dependencies\": {\n    \"cors\": \"^2.8.5\",\n    \"dotenv\": \"^16.4.5\",\n    \"express\": \"^4.19.2\",\n    \"node-os-utils\": \"^1.3.7\"\n  }\n}\n",
-      "wordCount": 30
+      "snippet": "{\n  \"name\": \"wednesday-server\",\n  \"version\": \"2.0.0\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"main\": \"index.js\",\n  \"scripts\": {\n    \"start\": \"node index.js\"\n  },\n  \"dependencies\": {\n    \"cors\": \"^2.8.5\",\n    \"docx\": \"^9.7.1\",\n    \"dotenv\": \"^16.4.5\",\n    \"express\": \"^4.19.2\",\n    \"node-os-utils\": \"^1.3.7\",\n    \"nodemailer\": \"^10.0.0\",\n    \"pdfkit\": \"^0.20.2\",\n    \"xlsx\": \"^0.18.5\"\n  }\n}\n",
+      "wordCount": 38
+    },
+    {
+      "file": "server\\providers\\baseProvider.js",
+      "ext": ".js",
+      "snippet": "export class BaseProvider {\n  constructor(name) {\n    this.name = name;\n  }\n\n  async isAvailable() {\n    return false;\n  }\n\n  async discoverModels() {\n    return [];\n  }\n\n  async generate({ prompt, systemPrompt, tools, temperature = 0.7, maxTokens, stream = false }) {\n    throw new Error(`generate() method not implemented for provider ${this.name}`);\n  }\n}\n",
+      "wordCount": 48
+    },
+    {
+      "file": "server\\providers\\geminiProvider.js",
+      "ext": ".js",
+      "snippet": "import { BaseProvider } from \"./baseProvider.js\";\n\nexport class GeminiProvider extends BaseProvider {\n  constructor(apiKey = null) {\n    super(\"Gemini\");\n    this.apiKey = apiKey;\n    this.model = \"gemini-3.6-flash\";\n  }\n\n  getApiKey() {\n    return this.apiKey || process.env.GEMINI_API_KEY;\n  }\n\n  async isAvailable() {\n    const key = this.getApiKey();\n    return Boolean(key && key.length > 10);\n  }\n\n  async discoverModels() {\n    return [{ name: this.model, provider: \"google\" }];\n  }\n\n  async generate({ prompt, systemPrompt, temperature = 0.7 }) {\n    const key = this.getApiKey();\n    if (!key) throw new Error(\"Gemini API key not configured\");\n\n    const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:generateContent?key=${key}`;\n    const fullText = systemPrompt ? `[System Directive: ${systemPrompt}]\\nUser: ${prompt}` : prompt;\n\n    const res = await fetch(url, {\n      method: \"POST\",\n      headers: { \"Content-Type\": \"application/json\" },\n      body: JSON",
+      "wordCount": 162
+    },
+    {
+      "file": "server\\providers\\groqProvider.js",
+      "ext": ".js",
+      "snippet": "import { BaseProvider } from \"./baseProvider.js\";\n\nexport class GroqProvider extends BaseProvider {\n  constructor(apiKey = null) {\n    super(\"Groq\");\n    this.apiKey = apiKey;\n    this.models = [\"openai/gpt-oss-120b\", \"qwen/qwen3.8-27b\", \"groq/compound\"];\n  }\n\n  getApiKey() {\n    return this.apiKey || process.env.GROQ_API_KEY;\n  }\n\n  async isAvailable() {\n    const key = this.getApiKey();\n    return Boolean(key && key.startsWith(\"gsk_\"));\n  }\n\n  async discoverModels() {\n    return this.models.map(m => ({ name: m, provider: \"groq\" }));\n  }\n\n  async generate({ prompt, systemPrompt, model = \"openai/gpt-oss-120b\", temperature = 0.7 }) {\n    const key = this.getApiKey();\n    if (!key) throw new Error(\"Groq API key not configured\");\n\n    const res = await fetch(\"https://api.groq.com/openai/v1/chat/completions\", {\n      method: \"POST\",\n      headers: {\n        \"Authorization\": `Bearer ${key}`,\n        \"Content-Type\": \"application/json\"\n      },\n      body: JSON.stringify({\n        model,\n    ",
+      "wordCount": 167
+    },
+    {
+      "file": "server\\providers\\ollamaProvider.js",
+      "ext": ".js",
+      "snippet": "import { BaseProvider } from \"./baseProvider.js\";\n\nexport class OllamaProvider extends BaseProvider {\n  constructor(baseURL = process.env.OLLAMA_BASE_URL || \"http://localhost:11434\") {\n    super(\"Ollama\");\n    this.baseURL = baseURL;\n  }\n\n  async isAvailable() {\n    try {\n      const res = await fetch(`${this.baseURL}/api/tags`, { signal: AbortSignal.timeout(2000) });\n      return res.ok;\n    } catch (e) {\n      return false;\n    }\n  }\n\n  async discoverModels() {\n    try {\n      const res = await fetch(`${this.baseURL}/api/tags`, { signal: AbortSignal.timeout(3000) });\n      if (!res.ok) return [];\n      const data = await res.json();\n      if (!data.models) return [];\n      return data.models.map(m => ({\n        name: m.name,\n        size: m.size,\n        modifiedAt: m.modified_at,\n        provider: \"ollama\"\n      }));\n    } catch (e) {\n      return [];\n    }\n  }\n\n  async generate({ prompt, systemPrompt, model = \"llama3\", temperature = 0.7 }) {\n    try {\n      const res = await fetch(",
+      "wordCount": 206
+    },
+    {
+      "file": "server\\providers\\openaiProvider.js",
+      "ext": ".js",
+      "snippet": "import { BaseProvider } from \"./baseProvider.js\";\n\nexport class OpenAIProvider extends BaseProvider {\n  constructor(apiKey = null) {\n    super(\"OpenAI\");\n    this.apiKey = apiKey;\n    this.model = \"gpt-4o-mini\";\n  }\n\n  getApiKey() {\n    return this.apiKey || process.env.OPENAI_API_KEY;\n  }\n\n  async isAvailable() {\n    const key = this.getApiKey();\n    return Boolean(key && key.startsWith(\"sk-\"));\n  }\n\n  async discoverModels() {\n    return [{ name: \"gpt-4o-mini\", provider: \"openai\" }, { name: \"gpt-4o\", provider: \"openai\" }];\n  }\n\n  async generate({ prompt, systemPrompt, model = \"gpt-4o-mini\", temperature = 0.7 }) {\n    const key = this.getApiKey();\n    if (!key) throw new Error(\"OpenAI API key not configured\");\n\n    const res = await fetch(\"https://api.openai.com/v1/chat/completions\", {\n      method: \"POST\",\n      headers: {\n        \"Authorization\": `Bearer ${key}`,\n        \"Content-Type\": \"application/json\"\n      },\n      body: JSON.stringify({\n        model,\n        messages: [\n      ",
+      "wordCount": 169
+    },
+    {
+      "file": "server\\router\\fallbackManager.js",
+      "ext": ".js",
+      "snippet": "export class FallbackManager {\n  constructor(maxRetries = parseInt(process.env.MAX_MODEL_RETRIES || \"2\", 10)) {\n    this.maxRetries = maxRetries;\n  }\n\n  async executeWithFallback(primaryModel, candidateChain, executeFn) {\n    let lastError = null;\n    const tried = [];\n\n    const queue = [primaryModel, ...candidateChain.filter(m => m !== primaryModel)];\n\n    for (let attempt = 0; attempt <= this.maxRetries && attempt < queue.length; attempt++) {\n      const targetModel = queue[attempt];\n      tried.push(targetModel);\n\n      try {\n        const result = await executeFn(targetModel);\n        if (result && result.text) {\n          return {\n            ...result,\n            fallbackUsed: attempt > 0,\n            triedModels: tried\n          };\n        }\n      } catch (err) {\n        lastError = err;\n        console.warn(`[FallbackManager] Model ${targetModel} failed: ${err.message}. Retrying...`);\n      }\n    }\n\n    throw new Error(`All candidate models failed. Last error: ${lastError?.me",
+      "wordCount": 115
+    },
+    {
+      "file": "server\\router\\featureExtractor.js",
+      "ext": ".js",
+      "snippet": "export function extractRequestFeatures(prompt, options = {}) {\n  if (!prompt || typeof prompt !== \"string\") {\n    return {\n      taskType: \"casual\",\n      complexity: 0.2,\n      codingScore: 0,\n      reasoningScore: 0,\n      mathScore: 0,\n      writingScore: 0.5,\n      visionRequired: false,\n      toolRequired: false,\n      browserRequired: false,\n      computerUseRequired: false,\n      contextLength: 0,\n      urgency: 0.5,\n      vector: [0.2, 0, 0, 0, 0.5, 0, 0, 0, 0, 0.5]\n    };\n  }\n\n  const pLower = prompt.toLowerCase();\n\n  const codingKeywords = [\"code\", \"function\", \"write\", \"python\", \"javascript\", \"c++\", \"java\", \"sql\", \"html\", \"css\", \"script\", \"bug\", \"error\", \"debug\", \"class\"];\n  const reasoningKeywords = [\"explain\", \"why\", \"compare\", \"analyze\", \"architecture\", \"algorithm\", \"eval\", \"evaluation\", \"pros and cons\", \"investigate\"];\n  const mathKeywords = [\"add\", \"sum\", \"multiply\", \"divide\", \"calculate\", \"equation\", \"formula\", \"integral\", \"derivative\", \"math\", \"matrix\", \"algebra\"];\n  c",
+      "wordCount": 345
+    },
+    {
+      "file": "server\\router\\hybridRouter.js",
+      "ext": ".js",
+      "snippet": "import { modelRegistry } from \"./modelRegistry.js\";\nimport { extractRequestFeatures } from \"./featureExtractor.js\";\nimport { randomForestRouter } from \"./randomForestRouter.js\";\nimport { fallbackManager } from \"./fallbackManager.js\";\n\nexport class HybridRouter {\n  async routeAndExecute({ prompt, systemPrompt, options = {}, executeProviderFn }) {\n    // Sync local Ollama models if online\n    await modelRegistry.syncLocalOllamaModels();\n\n    const features = extractRequestFeatures(prompt, options);\n    const allModels = modelRegistry.getAllModels();\n\n    // 1. Hard Capability Filtering\n    let validModels = allModels.filter(m => {\n      const spec = modelRegistry.getModel(m.name);\n      if (!spec) return false;\n\n      if (features.visionRequired && !spec.visionSupport) return false;\n      if (features.toolRequired && !spec.toolSupport && spec.provider !== \"ollama\") return false;\n      if (features.contextLength > spec.contextLength) return false;\n\n      return true;\n    });\n\n    if (vali",
+      "wordCount": 266
+    },
+    {
+      "file": "server\\router\\modelRegistry.js",
+      "ext": ".js",
+      "snippet": "import { ollamaProvider } from \"../providers/ollamaProvider.js\";\nimport { groqProvider } from \"../providers/groqProvider.js\";\nimport { geminiProvider } from \"../providers/geminiProvider.js\";\nimport { openaiProvider } from \"../providers/openaiProvider.js\";\n\nexport class ModelRegistry {\n  constructor() {\n    this.models = {\n      \"openai/gpt-oss-120b\": {\n        provider: \"groq\",\n        adapter: groqProvider,\n        capabilities: [\"chat\", \"coding\", \"reasoning\", \"math\"],\n        contextLength: 131072,\n        costInput: 0.0001,\n        costOutput: 0.0001,\n        latencyScore: 0.95,\n        qualityScore: 0.96,\n        toolSupport: true,\n        visionSupport: false\n      },\n      \"qwen/qwen3.8-27b\": {\n        provider: \"groq\",\n        adapter: groqProvider,\n        capabilities: [\"chat\", \"coding\", \"reasoning\"],\n        contextLength: 32768,\n        costInput: 0.0001,\n        costOutput: 0.0001,\n        latencyScore: 0.98,\n        qualityScore: 0.92,\n        toolSupport: true,\n        vi",
+      "wordCount": 243
+    },
+    {
+      "file": "server\\router\\randomForestRouter.js",
+      "ext": ".js",
+      "snippet": "// Random Forest Model Selection Engine for BRO AI Multi-LLM Orchestration\nexport class DecisionTree {\n  constructor(featureIndex, threshold, left, right, prediction = null) {\n    this.featureIndex = featureIndex;\n    this.threshold = threshold;\n    this.left = left;\n    this.right = right;\n    this.prediction = prediction;\n  }\n\n  predict(vector) {\n    if (this.prediction !== null) return this.prediction;\n    if (vector[this.featureIndex] <= this.threshold) {\n      return this.left.predict(vector);\n    }\n    return this.right.predict(vector);\n  }\n}\n\nexport class RandomForestRouter {\n  constructor() {\n    this.trees = this.buildInitialTrees();\n    this.telemetryLogs = [];\n  }\n\n  buildInitialTrees() {\n    // Tree 1: Coding & Math Specialization\n    const tree1 = new DecisionTree(1, 0.5,\n      new DecisionTree(3, 0.5, null, null, \"gemini-3.6-flash\"), // Low coding, low math\n      new DecisionTree(1, 0.8, null, null, \"openai/gpt-oss-120b\"), // High coding\n      null\n    );\n\n    // Tree 2: ",
+      "wordCount": 301
     },
     {
       "file": "server\\routes\\auth.js",
       "ext": ".js",
-      "snippet": "import express from \"express\";\nimport { db } from \"../data/db.js\";\n\nconst router = express.Router();\n\n// Get current user session\nrouter.get(\"/me\", (req, res) => {\n  const users = db.read().users || [];\n  const user = users[0] || { id: \"usr_default\", name: \"Demo User\", email: \"user@example.com\" };\n  res.json({ success: true, user });\n});\n\n// Login endpoint\nrouter.post(\"/login\", (req, res) => {\n  const { email, password } = req.body;\n  if (!email) {\n    return res.status(400).json({ success: false, error: \"Email is required\" });\n  }\n\n  const users = db.read().users || [];\n  let user = users.find(u => u.email.toLowerCase() === email.toLowerCase());\n\n  if (!user) {\n    user = {\n      id: \"usr_\" + Date.now(),\n      name: email.split(\"@\")[0],\n      email: email,\n      createdDate: new Date().toISOString()\n    };\n    const data = db.read();\n    data.users.push(user);\n    db.write(data);\n  }\n\n  res.json({\n    success: true,\n    token: \"token_\" + Date.now(),\n    user\n  });\n});\n\n// Register end",
-      "wordCount": 233
+      "snippet": "import express from \"express\";\nimport { db } from \"../data/db.js\";\nimport { authManager, isAuthorizedAdminEmail } from \"../modules/authManager.js\";\nimport authManagerRoutes from \"./authManagerRoutes.js\";\n\nconst router = express.Router();\n\n// Helper to get client IP\nconst getClientIp = (req) => {\n  return req.headers[\"x-forwarded-for\"]?.split(\",\")[0].trim() || req.socket.remoteAddress || \"127.0.0.1\";\n};\n\n// 1. Get current user session (LINKED to authManager + fallback to db)\nrouter.get(\"/me\", async (req, res) => {\n  try {\n    const authHeader = req.headers.authorization || \"\";\n    const token = authHeader.replace(\"Bearer \", \"\").trim() || req.query.token;\n\n    if (token) {\n      const data = authManager.read();\n      const session = data.sessions.find(s => s.token === token);\n      if (session) {\n        const user = data.users.find(u => u.id === session.userId);\n        if (user) {\n          const sanitized = authManager.sanitizeUser(user);\n          const trialInfo = authManager.checkU",
+      "wordCount": 602
+    },
+    {
+      "file": "server\\routes\\authManagerRoutes.js",
+      "ext": ".js",
+      "snippet": "import express from \"express\";\nimport { authManager, isAuthorizedAdminEmail } from \"../modules/authManager.js\";\n\nconst router = express.Router();\n\nconst getClientIp = (req) => {\n  return req.headers[\"x-forwarded-for\"] || req.socket.remoteAddress || \"127.0.0.1\";\n};\n\n// Helper middleware to extract user from session token\nconst getAuthUser = (req) => {\n  const authHeader = req.headers.authorization || \"\";\n  let token = authHeader.replace(\"Bearer \", \"\").trim();\n  if (!token && req.query && req.query.token) {\n    token = req.query.token.trim();\n  }\n  if (!token) return null;\n  const data = authManager.read();\n  let session = data.sessions ? data.sessions.find(s => s.token === token) : null;\n  let user = null;\n  if (session) {\n    user = data.users.find(u => u.id === session.userId);\n  }\n  // Serverless fallback: If container restarted and cleared memory session list, match master admin\n  if (!user && data.users) {\n    user = data.users.find(u => u && isAuthorizedAdminEmail(u.email));\n  }\n ",
+      "wordCount": 1614
     },
     {
       "file": "server\\routes\\chat.js",
       "ext": ".js",
-      "snippet": "import express from \"express\";\nimport { processUserIntent } from \"../core/intentRouter.js\";\nimport { db } from \"../data/db.js\";\n\nconst router = express.Router();\n\n// Fetch all conversations\nrouter.get(\"/conversations\", (req, res) => {\n  try {\n    const conversations = db.getConversations();\n    res.json({ success: true, conversations });\n  } catch (err) {\n    res.status(500).json({ success: false, error: err.message });\n  }\n});\n\n// Create new conversation\nrouter.post(\"/conversations\", (req, res) => {\n  try {\n    const { title } = req.body;\n    const conv = db.createConversation(title || \"New Conversation\");\n    res.json({ success: true, conversation: conv });\n  } catch (err) {\n    res.status(500).json({ success: false, error: err.message });\n  }\n});\n\n// Rename conversation\nrouter.put(\"/conversations/:id\", (req, res) => {\n  try {\n    const { id } = req.params;\n    const { title } = req.body;\n    const conv = db.updateConversation(id, title);\n    res.json({ success: true, conversation: c",
-      "wordCount": 528
+      "snippet": "import express from \"express\";\nimport { processUserIntent } from \"../core/intentRouter.js\";\nimport { db } from \"../data/db.js\";\nimport { authManager } from \"../modules/authManager.js\";\nimport { hermesAgent } from \"../agent/hermesAgent.js\";\n\nconst router = express.Router();\n\nconst getAuthUserFromReq = (req) => {\n  const authHeader = req.headers.authorization || \"\";\n  const token = authHeader.replace(\"Bearer \", \"\").trim();\n  if (!token) return null;\n  try {\n    const data = authManager.read();\n    const session = data.sessions.find(s => s.token === token);\n    if (!session) return null;\n    return data.users.find(u => u.id === session.userId) || null;\n  } catch (e) {\n    return null;\n  }\n};\n\n// Fetch all conversations\nrouter.get(\"/conversations\", (req, res) => {\n  try {\n    const authUser = getAuthUserFromReq(req);\n    const userId = authUser ? authUser.id : \"usr_default\";\n    const conversations = db.getConversations(userId);\n    res.json({ success: true, conversations });\n  } catch (er",
+      "wordCount": 735
     },
     {
       "file": "server\\routes\\files.js",
       "ext": ".js",
-      "snippet": "import express from \"express\";\nimport { db } from \"../data/db.js\";\n\nconst router = express.Router();\n\n// Get uploaded files list\nrouter.get(\"/\", (req, res) => {\n  try {\n    const files = db.getFiles();\n    res.json({ success: true, files });\n  } catch (err) {\n    res.status(500).json({ success: false, error: err.message });\n  }\n});\n\n// Upload/Process file endpoint\nrouter.post(\"/upload\", (req, res) => {\n  try {\n    const { filename, fileType, content, base64 } = req.body;\n    if (!filename) {\n      return res.status(400).json({ success: false, error: \"Filename is required\" });\n    }\n\n    const newFile = db.addFile({\n      filename,\n      fileType: fileType || \"document\",\n      content: content || (base64 ? `[Binary Image Data: ${filename}]` : \"\"),\n      storagePath: `/uploads/${filename}`\n    });\n\n    res.json({\n      success: true,\n      file: newFile\n    });\n  } catch (err) {\n    res.status(500).json({ success: false, error: err.message });\n  }\n});\n\nexport default router;\n",
-      "wordCount": 125
+      "snippet": "import express from \"express\";\nimport fs from \"fs\";\nimport path from \"path\";\nimport { fileURLToPath } from \"url\";\nimport { db } from \"../data/db.js\";\nimport { generateOnDemandFile } from \"../modules/fileGenerator.js\";\n\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = path.dirname(__filename);\nconst GENERATED_DIR = path.join(__dirname, \"..\", \"uploads\", \"generated\");\n\nconst router = express.Router();\n\n// Get uploaded files list\nrouter.get(\"/\", (req, res) => {\n  try {\n    const files = db.getFiles();\n    res.json({ success: true, files });\n  } catch (err) {\n    res.status(500).json({ success: false, error: err.message });\n  }\n});\n\n// Download generated file endpoint with Auto-Healing Fallback\nrouter.get(\"/download/:filename\", async (req, res) => {\n  try {\n    const { filename } = req.params;\n    if (!filename || filename.includes(\"..\") || filename.includes(\"/\") || filename.includes(\"\\\\\")) {\n      return res.status(400).json({ success: false, error: \"Invalid filename\" }",
+      "wordCount": 531
     },
     {
       "file": "server\\routes\\memory.js",
       "ext": ".js",
-      "snippet": "import express from \"express\";\nimport { db } from \"../data/db.js\";\n\nconst router = express.Router();\n\nrouter.get(\"/facts\", (req, res) => {\n  try {\n    const memories = db.getMemories();\n    res.json({ success: true, facts: memories });\n  } catch (e) {\n    res.status(500).json({ success: false, error: e.message });\n  }\n});\n\nrouter.post(\"/facts\", (req, res) => {\n  try {\n    const { fact, tag, content } = req.body;\n    const text = fact || content;\n    if (!text) return res.status(400).json({ success: false, message: \"Memory content required.\" });\n    const newMemory = db.addMemory(text);\n    res.json({ success: true, fact: newMemory });\n  } catch (e) {\n    res.status(500).json({ success: false, error: e.message });\n  }\n});\n\nrouter.delete(\"/facts/:id\", (req, res) => {\n  try {\n    const { id } = req.params;\n    const removed = db.deleteMemory(id);\n    res.json({ success: removed, message: removed ? \"Memory deleted.\" : \"Memory not found.\" });\n  } catch (e) {\n    res.status(500).json({ succe",
-      "wordCount": 179
+      "snippet": "import express from \"express\";\nimport { db } from \"../data/db.js\";\nimport { authManager } from \"../modules/authManager.js\";\n\nconst router = express.Router();\n\nconst getAuthUserId = (req) => {\n  const authHeader = req.headers.authorization || \"\";\n  const token = authHeader.replace(\"Bearer \", \"\").trim();\n  if (!token) return \"guest_default\";\n  try {\n    const data = authManager.read();\n    const session = data.sessions.find(s => s.token === token);\n    if (!session) return \"guest_default\";\n    return session.userId;\n  } catch (e) {\n    return \"guest_default\";\n  }\n};\n\nrouter.get(\"/facts\", (req, res) => {\n  try {\n    const userId = getAuthUserId(req);\n    const memories = db.getMemories(userId);\n    res.json({ success: true, facts: memories });\n  } catch (e) {\n    res.status(500).json({ success: false, error: e.message });\n  }\n});\n\nrouter.post(\"/facts\", (req, res) => {\n  try {\n    const userId = getAuthUserId(req);\n    const { fact, tag, content } = req.body;\n    const text = fact || conte",
+      "wordCount": 257
     },
     {
       "file": "server\\routes\\system.js",
       "ext": ".js",
-      "snippet": "import express from \"express\";\nimport { toolRegistry } from \"../core/toolRegistry.js\";\n\nconst router = express.Router();\n\nimport { pcDataTrainer } from \"../core/pcDataTrainerEngine.js\";\n\nrouter.get(\"/tools\", (req, res) => {\n  res.json({ success: true, tools: toolRegistry.getAllTools() });\n});\n\nrouter.post(\"/execute\", async (req, res) => {\n  try {\n    const { toolName, params } = req.body;\n    const result = await toolRegistry.executeTool(toolName, params);\n    res.json(result);\n  } catch (err) {\n    res.status(500).json({ success: false, message: err.message });\n  }\n});\n\nrouter.post(\"/train\", async (req, res) => {\n  try {\n    const result = await pcDataTrainer.trainFromDirectory();\n    res.json({ success: true, training: result });\n  } catch (err) {\n    res.status(500).json({ success: false, message: err.message });\n  }\n});\n\nrouter.get(\"/dataset-stats\", (req, res) => {\n  res.json({ success: true, stats: pcDataTrainer.getDatasetSummary() });\n});\n\nexport default router;\n",
-      "wordCount": 113
+      "snippet": "import express from \"express\";\nimport { toolRegistry } from \"../core/toolRegistry.js\";\n\nconst router = express.Router();\n\nimport { pcDataTrainer } from \"../core/pcDataTrainerEngine.js\";\n\nrouter.get(\"/tools\", (req, res) => {\n  res.json({ success: true, tools: toolRegistry.getAllTools() });\n});\n\nrouter.post(\"/execute\", async (req, res) => {\n  try {\n    const { toolName, params } = req.body;\n    const result = await toolRegistry.executeTool(toolName, params);\n    res.json(result);\n  } catch (err) {\n    res.status(500).json({ success: false, message: err.message });\n  }\n});\n\nrouter.post(\"/train\", async (req, res) => {\n  try {\n    const result = await pcDataTrainer.trainFromDirectory();\n    res.json({ success: true, training: result });\n  } catch (err) {\n    res.status(500).json({ success: false, message: err.message });\n  }\n});\n\nimport { ollamaProvider } from \"../providers/ollamaProvider.js\";\nimport { groqProvider } from \"../providers/groqProvider.js\";\nimport { geminiProvider } from \"../pr",
+      "wordCount": 285
     },
     {
       "file": "server\\routes\\team.js",
@@ -296,18 +314,6 @@
       "ext": ".js",
       "snippet": "import express from \"express\";\nimport { toolRegistry } from \"../core/toolRegistry.js\";\nimport { getApiUsageStats } from \"../core/providerGateway.js\";\n\nconst router = express.Router();\n\nrouter.get(\"/\", async (req, res) => {\n  try {\n    const sysResult = await toolRegistry.executeTool(\"get_telemetry\", {});\n    const apiStats = getApiUsageStats();\n    res.json({\n      success: true,\n      system: sysResult.telemetry,\n      aiUsage: apiStats\n    });\n  } catch (err) {\n    res.status(500).json({ success: false, error: err.message });\n  }\n});\n\nexport default router;\n",
       "wordCount": 62
-    },
-    {
-      "file": "server\\security\\allowList.js",
-      "ext": ".js",
-      "snippet": "// Approved executables and shell command prefixes for system safety\nexport const ALLOWED_EXECUTABLES = {\n  notepad: { command: \"notepad.exe\", desc: \"Text Editor\" },\n  spotify: { command: \"spotify.exe\", desc: \"Music Player\" },\n  whatsapp: { command: \"whatsapp.exe\", desc: \"Messenger\" },\n  calculator: { command: \"calc.exe\", desc: \"System Calculator\" },\n  browser: { command: \"start https://google.com\", desc: \"Web Browser\" },\n  vscode: { command: \"code\", desc: \"VS Code Editor\" },\n  terminal: { command: \"start cmd\", desc: \"Windows Command Prompt\" }\n};\n\nexport const ALLOWED_SHELL_PATTERNS = [\n  /^echo\\s+/i,\n  /^dir\\s*/i,\n  /^tasklist\\s*/i,\n  /^systeminfo\\s*/i,\n  /^ipconfig\\s*/i,\n  /^node -v$/i,\n  /^npm -v$/i,\n  /^git status$/i\n];\n\nexport function isCommandAllowed(rawCmd) {\n  if (!rawCmd || typeof rawCmd !== \"string\") return false;\n  const cleanCmd = rawCmd.trim();\n  \n  // Check exact executable alias match\n  if (ALLOWED_EXECUTABLES[cleanCmd.toLowerCase()]) return true;\n  \n  // Check shell pa",
-      "wordCount": 131
-    },
-    {
-      "file": "server\\security\\authMiddleware.js",
-      "ext": ".js",
-      "snippet": "export function authMiddleware(req, res, next) {\n  const clientToken = req.headers[\"x-wednesday-token\"] || req.query.token;\n  const expectedToken = process.env.AUTH_TOKEN || \"wednesday-secret-local-handshake-token-2026\";\n\n  if (!clientToken || clientToken !== expectedToken) {\n    return res.status(401).json({\n      error: \"Unauthorized: Invalid or missing local handshake token.\"\n    });\n  }\n  next();\n}\n",
-      "wordCount": 40
     },
     {
       "file": "server\\tools\\openApp.tool.js",
@@ -332,6 +338,12 @@
       "ext": ".js",
       "snippet": "import os from \"os\";\n\nexport const telemetryTool = {\n  name: \"get_telemetry\",\n  description: \"Retrieves live CPU, Memory, OS uptime, and platform telemetry metrics\",\n  inputSchema: {},\n  execute: async () => {\n    const freeMem = os.freemem();\n    const totalMem = os.totalmem();\n    const usedMem = totalMem - freeMem;\n    const memUsagePct = ((usedMem / totalMem) * 100).toFixed(1);\n\n    const cpus = os.cpus();\n    const loadAvg = os.loadavg();\n\n    return {\n      success: true,\n      telemetry: {\n        platform: os.platform(),\n        arch: os.arch(),\n        hostname: os.hostname(),\n        uptimeSeconds: Math.floor(os.uptime()),\n        cpuModel: cpus[0]?.model || \"Intel Core i7\",\n        cpuCores: cpus.length,\n        loadAvg,\n        memory: {\n          totalMB: Math.round(totalMem / (1024 * 1024)),\n          usedMB: Math.round(usedMem / (1024 * 1024)),\n          freeMB: Math.round(freeMem / (1024 * 1024)),\n          percentUsed: parseFloat(memUsagePct)\n        },\n        timesta",
       "wordCount": 113
+    },
+    {
+      "file": "vercel.json",
+      "ext": ".json",
+      "snippet": "{\n  \"version\": 2,\n  \"builds\": [\n    {\n      \"src\": \"server/index.js\",\n      \"use\": \"@vercel/node\"\n    },\n    {\n      \"src\": \"client/package.json\",\n      \"use\": \"@vercel/static-build\",\n      \"config\": { \"distDir\": \"dist\" }\n    }\n  ],\n  \"routes\": [\n    {\n      \"src\": \"/api/(.*)\",\n      \"dest\": \"/server/index.js\"\n    },\n    {\n      \"src\": \"/(.*)\",\n      \"dest\": \"/client/$1\"\n    }\n  ]\n}\n",
+      "wordCount": 40
     }
   ]
 }

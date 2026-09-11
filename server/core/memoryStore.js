@@ -20,6 +20,7 @@ function loadMemory() {
         personal: {
           callsign: "Boss",
           name: "Karthik",
+          roleTitle: "Founder & Chief Architect of SAGW AI",
           education: "Computer Science & Engineering",
           background: "AI Systems & Full-Stack Web Development"
         },
@@ -59,11 +60,16 @@ function loadMemory() {
       ],
       userFacts: [
         { id: "1", fact: "User preferred callsign is Boss", importance: "CRITICAL", tag: "preference", createdAt: new Date().toISOString() },
-        { id: "2", fact: "Working on ADVANCED PRO PROJECT (BRO AI Pro)", importance: "CRITICAL", tag: "project", createdAt: new Date().toISOString() }
+        { id: "2", fact: "Working on ADVANCED PRO PROJECT (BRO AI Pro)", importance: "CRITICAL", tag: "project", createdAt: new Date().toISOString() },
+        { id: "3", fact: "Karthik is the Founder, Creator, and Chief Architect of SAGW AI (W.E.D.N.E.S.D.A.Y. Pro)", importance: "CRITICAL", tag: "founder_identity", createdAt: new Date().toISOString() }
       ],
       sessions: []
     };
-    fs.writeFileSync(MEMORY_FILE, JSON.stringify(initial, null, 2), "utf8");
+    try {
+      fs.writeFileSync(MEMORY_FILE, JSON.stringify(initial, null, 2), "utf8");
+    } catch (e) {
+      // In read-only serverless environment (Vercel), ignore write error
+    }
     return initial;
   }
   try {
@@ -225,7 +231,15 @@ export function getFormattedUserProfile() {
 
   const projectList = Object.values(projects).map(p => `- **${p.projectName}**: ${p.description} (Tech: ${p.technologies?.join(", ") || "N/A"})`).join("\n");
 
-  return `### 👤 Personal Intelligence Profile & Journey Report
+  return `### 👤 Founder & User Intelligence Profile Report
+
+| Attribute | Details |
+|-----------|---------|
+| **Role & Title** | **${personal.roleTitle || "Founder & Chief Architect of SAGW AI"}** |
+| **Callsign / Name** | **${personal.callsign || personal.name || "Boss"} (${personal.name || "Karthik"})** |
+| **Education** | ${personal.education || "Computer Science & Engineering"} |
+| **Professional Focus** | ${personal.background || "AI Systems & Full-Stack Web Architecture"} |
+| **Primary Project** | SAGW AI (W.E.D.N.E.S.D.A.Y. Pro) |
 
 #### 📌 1. Identity & Background (Confirmed Facts)
 - **Callsign / Name**: **${personal.callsign || personal.name || "Boss"}**

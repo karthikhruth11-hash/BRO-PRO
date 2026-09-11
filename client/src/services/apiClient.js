@@ -25,7 +25,7 @@ export async function sendChatMessage(message, persona = 'jarvis') {
   } catch (err) {
     return {
       success: false,
-      response: `Failed to connect to local BRO AI server backend: ${err.message}`,
+      response: `Failed to connect to local SAGW AI server backend: ${err.message}`,
       provider: 'Offline Client Error'
     };
   }

@@ -139,17 +139,40 @@ function validateImageRelevance(pLower) {
 // Clean Search Topic Normalizer
 function cleanSearchTopic(rawTopic) {
   let clean = rawTopic.trim()
-    .replace(/^(i am asking|i want to know|can you tell me|please tell me|tell me|can you explain|explain|show me|search for|search the web for|what is the|what is|wht is|waht is)\s+/gi, "")
-    .replace(/\s+(simply|in simple terms|for beginners|in detail|simply)$/gi, "")
+    .replace(/^(give me full,\s*comprehensive details,\s*complete storyline,\s*key background,\s*cast,\s*and in-depth analysis of|give me full details about|give full details about|give me full details of|give full details of|i want full details about|i want full details of|full details of|full details about|give me details about|give details about)\s+/gi, "")
+    .replace(/^(i am asking|i want to know|can you tell me about|can you tell me|please tell me about|please tell me|tell me about|tell me|can you explain about|can you explain|explain about|explain|show me|search for|search the web for|what is the|what is|wht is|waht is|who is|who was|who are|details of|details about|information on|information about|give me details of|give me details about|profile of|biography of|bio of)\s+/gi, "")
+    .replace(/^(about|regarding|on)\s+/gi, "")
+    .replace(/\s+(simply|in simple terms|for beginners|in detail|into pdf|in table format|details|summary)$/gi, "")
     .trim();
 
   const lower = clean.toLowerCase();
   
-  // Ignore conversational greetings from Wikipedia Search
+  // Ignore conversational greetings and acknowledgments from Wikipedia Search
   const conversationalPhrases = [
-    "hi", "hii", "hiii", "hello", "hey", "heyy", "greetings", "yo", "sup", "gud morning", "good morning"
+    "hi", "hii", "hiii", "hello", "hey", "heyy", "greetings", "yo", "sup", "gud morning", "good morning",
+    "ok", "okay", "k", "kk", "okie", "okey", "okies", "alright", "all right", "got it", "noted", "understood",
+    "makes sense", "cool", "sounds good", "sounds great", "sure", "sure thing", "fine", "done", "yes", "yep", "yeah", "yup",
+    "no", "nope", "no problem", "np", "great", "awesome", "perfect", "nice", "good", "gotcha", "right", "roger that",
+    "acknowledged", "all good", "thanks", "thank you", "thx", "thank u", "appreciate it", "many thanks",
+    "bye", "goodbye", "see you", "see ya", "cya", "haha", "hahaha", "lol", "lmao", "rofl", "wow"
   ];
-  if (conversationalPhrases.some(p => lower === p || lower.startsWith(p + " "))) return "General conversation";
+  if (conversationalPhrases.some(p => lower === p || lower.startsWith(p + " ") || lower.endsWith(" " + p)) || lower.length <= 2) {
+    return "General conversation";
+  }
+
+  // Block external search from confusing SAGW AI with third-party companies
+  if (
+    lower.includes("founder") ||
+    lower.includes("created you") ||
+    lower.includes("made you") ||
+    lower.includes("built you") ||
+    lower.includes("developed you") ||
+    lower.includes("who owns you") ||
+    lower.includes("sagw ai") ||
+    lower.includes("sagw")
+  ) {
+    return "General conversation";
+  }
 
   if (lower.includes("mobile phone") || lower.includes("cell phone") || (lower.includes("cost") && lower.includes("mobile"))) return "Mobile phone";
   if (lower.includes("shape") && lower.includes("earth")) return "Figure of the Earth";
@@ -174,6 +197,24 @@ function sanitizeResponseText(text) {
   if (!text) return "";
   let clean = text;
 
+  // Redact any accidental leaks of secrets, tokens, or security files
+  clean = clean.replace(/\.env\s*(#.*)?/gi, (match) => {
+    if (/secret|key|db|uri|pass/i.test(match)) {
+      return ".env.example            # Environment template (example values only)";
+    }
+    return match;
+  });
+
+  clean = clean.replace(/#\s*(secrets|api keys|db uri|passwords?).*$/gim, "# Example configuration");
+  clean = clean.replace(/memoryStore\.json\s*#\s*User Profile[^\n]*/gi, "memoryStore.json   # Memory adapter interface");
+  clean = clean.replace(/store\.json\s*#\s*Conversations[^\n]*/gi, "store.json         # Data adapter interface");
+
+  // Redact potential API keys or tokens
+  clean = clean.replace(/gsk_[a-zA-Z0-9_-]{20,}/g, "gsk_your_groq_api_key_example");
+  clean = clean.replace(/sk-[a-zA-Z0-9_-]{20,}/g, "sk-your_openai_key_example");
+  clean = clean.replace(/AIza[a-zA-Z0-9_-]{30,}/g, "AIzaSy_your_gemini_key_example");
+  clean = clean.replace(/wednesday-secret-[a-zA-Z0-9_-]+/g, "your-handshake-token-example");
+
   clean = clean.replace(/Execute quick tool:\s*/gi, "");
   clean = clean.replace(/\\([#*_$`\-\+\(\)])/g, "$1");
 
@@ -190,6 +231,38 @@ function sanitizeResponseText(text) {
     .replace(/\$Ar\$/g, "Ar");
 
   return clean.trim();
+}
+
+// Fetch live web search data using Tavily Search API
+async function fetchTavilyResearch(query) {
+  const apiKey = process.env.SEARCH_API_KEY || process.env.TAVILY_API_KEY;
+  if (!apiKey) return null;
+  try {
+    const res = await fetch("https://api.tavily.com/search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        api_key: apiKey,
+        query: query,
+        search_depth: "basic",
+        include_answer: true,
+        max_results: 3
+      }),
+      signal: AbortSignal.timeout(4500)
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && (data.answer || (data.results && data.results.length > 0))) {
+        return {
+          answer: data.answer || data.results[0]?.content || "",
+          sources: (data.results || []).map(r => ({ title: r.title, url: r.url, snippet: r.content || "" }))
+        };
+      }
+    }
+  } catch (e) {
+    // Fallback to Wikipedia
+  }
+  return null;
 }
 
 // Fetch live encyclopedic data from Wikipedia REST API with Search API Fallback
@@ -247,14 +320,122 @@ async function fetchWikipediaResearch(topic) {
   return null;
 }
 
-export async function dispatchLLMRequest({ prompt, systemPrompt, temperature = 0.7, clientKeys = {} }) {
+// Universal Real-Time Ground Truth Query Detector:
+// Automatically engages real-time web & encyclopedic search for substantive user inquiry.
+export function isRealTimeFactualQuery(query) {
+  if (!query || typeof query !== "string") return false;
+  const q = query.toLowerCase().trim().replace(/[!.,?]+$/g, '');
+
+  // 1. Skip pure conversational greetings
+  const pureGreetings = /^(hi|hii|hiii|hello|hey|heyy|yo|sup|greetings|howdy|good\s+(morning|afternoon|evening|night)|bye|goodbye|see\s+ya)[!.,?]*$/i;
+  if (pureGreetings.test(q)) return false;
+
+  // 2. Skip conversational acknowledgments, affirmations, gratitude, farewells & reactions
+  const acknowledgmentsAndCasual = /^(ok|okay|k|kk|okie|okey|okies|alright|all right|got it|noted|understood|makes sense|cool|sounds good|sounds great|sure|sure thing|fine|done|yes|yep|yeah|yup|no|nope|no problem|np|great|awesome|perfect|nice|good|gotcha|right|roger that|acknowledged|all good|thanks|thank you|thx|thank u|appreciate it|many thanks|haha|hahaha|lol|lmao|rofl|wow|good job|well done)[!.,?]*$/i;
+  if (acknowledgmentsAndCasual.test(q)) return false;
+
+  // 3. Skip pure arithmetic calculations e.g. "5+5", "100 / 4"
+  if (/^\s*[\d\s+\-*/%.()]+\s*$/.test(q)) return false;
+
+  // 4. Skip very short inputs (<= 2 chars)
+  if (q.length <= 2) return false;
+
+  // 5. Skip conversational / identity meta-questions
+  const conversationalMeta = [
+    "who are you", "what is your name", "whats your name", "what are you called", "what are you",
+    "how are you", "how are you doing", "how r u", "what can you do", "who made you",
+    "who created you", "who built you", "who developed you", "who founded you", "who is your founder",
+    "who is ur founder", "tell me ur founder", "tell me your founder", "tell me ur founder name",
+    "tell me your founder name", "tell me founder name", "founder name", "ur founder", "your founder",
+    "founder", "founders", "tell me about yourself", "tell me about myself", "who am i",
+    "describe me", "help me", "how was your day", "how is your day"
+  ];
+  if (
+    conversationalMeta.some(c => q === c || q.startsWith(c + " ") || q.endsWith(" " + c)) ||
+    ((q.includes("founder") || q.includes("created you") || q.includes("built you") || q.includes("made you")) &&
+     (q.includes("who") || q.includes("tell") || q.includes("name") || q.includes("your") || q.includes("ur")))
+  ) {
+    return false;
+  }
+
+  // For genuine informational queries, activate real-time web search and grounding
+  return true;
+}
+
+const searchCache = new Map();
+
+async function fetchRealTimeGroundTruth(prompt) {
+  const normalizedKey = prompt.trim().toLowerCase();
+  const cached = searchCache.get(normalizedKey);
+  if (cached && (Date.now() - cached.timestamp < 1000 * 60 * 20)) { // 20-minute cache
+    return cached.data;
+  }
+
+  const targetTopic = cleanSearchTopic(prompt);
+  const [tavilyResult, wikiResult] = await Promise.allSettled([
+    fetchTavilyResearch(prompt),
+    fetchWikipediaResearch(targetTopic)
+  ]);
+
+  const tavilyData = tavilyResult.status === "fulfilled" ? tavilyResult.value : null;
+  const wikiData = wikiResult.status === "fulfilled" ? wikiResult.value : null;
+
+  const data = { tavilyData, wikiData };
+  searchCache.set(normalizedKey, { data, timestamp: Date.now() });
+
+  if (searchCache.size > 200) {
+    const oldestKey = searchCache.keys().next().value;
+    searchCache.delete(oldestKey);
+  }
+  return data;
+}
+
+function resolveContextualSearchQuery(prompt, history = []) {
+  if (!prompt || typeof prompt !== "string") return prompt;
+  const pLower = prompt.toLowerCase().trim().replace(/[!.,?]+$/g, '');
+
+  // If the query is an acknowledgment, greeting, or casual phrase, NEVER expand it with history!
+  const acknowledgmentsAndCasual = /^(ok|okay|k|kk|okie|okey|okies|alright|all right|got it|noted|understood|makes sense|cool|sounds good|sounds great|sure|sure thing|fine|done|yes|yep|yeah|yup|no|nope|no problem|np|great|awesome|perfect|nice|good|gotcha|right|roger that|acknowledged|all good|thanks|thank you|thx|thank u|appreciate it|many thanks|bye|goodbye|see you|haha|hahaha|lol|lmao|rofl|wow)[!.,?]*$/i;
+  if (acknowledgmentsAndCasual.test(pLower) || pLower.length <= 2) {
+    return prompt;
+  }
+
+  const followUpTriggers = [
+    "full details", "more details", "tell me more", "explain more", "give details",
+    "details", "what about it", "tell me about it", "explain that", "i want full details",
+    "give me full details", "all details", "complete details", "more info", "full info",
+    "full story", "what is the story", "plot", "summary", "explain in detail", "continue",
+    "give example", "what else", "tell me everything"
+  ];
+
+  const isFollowUp = followUpTriggers.some(t => pLower === t || pLower.startsWith(t) || pLower.endsWith(t));
+
+  if (isFollowUp && history && history.length > 0) {
+    for (let i = history.length - 1; i >= 0; i--) {
+      const turn = history[i];
+      if (!turn || !turn.content) continue;
+      const text = typeof turn.content === "string" ? turn.content : "";
+
+      if (turn.role === "user") {
+        const cleanedUser = cleanSearchTopic(text);
+        if (cleanedUser && cleanedUser !== "General conversation" && cleanedUser.length > 2 && !followUpTriggers.some(t => cleanedUser.toLowerCase().includes(t))) {
+          return `${cleanedUser} ${prompt}`;
+        }
+      }
+    }
+  }
+
+  return prompt;
+}
+
+export async function dispatchLLMRequest({ prompt, systemPrompt, temperature = 0.7, clientKeys = {}, history = [] }) {
   const startTime = Date.now();
   apiUsageStats.totalRequests++;
 
   // 1. Hermes Agent Execution Layer check
   if (hermesAgent.isAgentRequired(prompt)) {
     try {
-      const agentRes = await hermesAgent.executeAgentTask({ prompt });
+      const agentRes = await hermesAgent.executeAgentTask({ prompt, history });
       if (agentRes && agentRes.text) {
         return {
           text: agentRes.text,
@@ -268,73 +449,132 @@ export async function dispatchLLMRequest({ prompt, systemPrompt, temperature = 0
     }
   }
 
+  // 1.5 Auto Real-Time Web Search & Wikipedia Context Enrichment for Factual, Biographical & Real-World Inquiries
+  let liveSearchPromptInjection = "";
+  let liveGroundTruthAnswer = "";
+  let verifiedSources = [];
+
+  const effectiveSearchQuery = resolveContextualSearchQuery(prompt, history);
+  if (isRealTimeFactualQuery(effectiveSearchQuery || prompt)) {
+    try {
+      const { tavilyData, wikiData } = await fetchRealTimeGroundTruth(effectiveSearchQuery || prompt);
+
+      const groundTruthSnippets = [];
+      if (tavilyData && tavilyData.answer) {
+        groundTruthSnippets.push(`- Direct Real-Time Verified Fact: ${tavilyData.answer}`);
+        liveGroundTruthAnswer = tavilyData.answer;
+      }
+      if (wikiData && wikiData.extract) {
+        groundTruthSnippets.push(`- Wikipedia Reference (${wikiData.title}): ${wikiData.extract}`);
+        if (!liveGroundTruthAnswer) liveGroundTruthAnswer = wikiData.extract.slice(0, 300);
+      }
+      if (tavilyData && tavilyData.sources && tavilyData.sources.length > 0) {
+        for (const s of tavilyData.sources.slice(0, 3)) {
+          groundTruthSnippets.push(`- Real-Time Web Source (${s.title}): ${s.snippet.replace(/\s+/g, ' ').slice(0, 250)}`);
+          verifiedSources.push({ title: s.title, url: s.url });
+        }
+      }
+      if (wikiData && wikiData.url) {
+        verifiedSources.push({ title: `Wikipedia: ${wikiData.title}`, url: wikiData.url });
+      }
+
+      if (groundTruthSnippets.length > 0) {
+        liveSearchPromptInjection = `\n\n[AUTHORITATIVE REAL-TIME GROUND TRUTH & WEB KNOWLEDGE (CURRENT 2024-2026)]:
+${groundTruthSnippets.join("\n")}
+
+"DO BOTH" INTEGRATION DIRECTIVES (BALANCED AI & REAL-TIME GROUNDING):
+1. ACCURATE REAL-TIME GROUNDING: Seamlessly integrate the verified real-time data above into your response. For live facts, current officeholders (e.g. Chief Ministers, Prime Ministers, Presidents, CEOs), living status, real spouses/parents, and recent events, always adhere to verified facts.
+2. RICH, COMPREHENSIVE AI KNOWLEDGE: Draw extensively upon your full, rich knowledge base, analytical depth, and creative intelligence. Provide complete, comprehensive, detailed explanations, story plots, character arcs, technical deep dives, and context as requested.
+3. NEVER REFUSE OR APOLOGIZE FOR LACK OF DATA: Do NOT say "I don't have verified real-time data" or refuse to answer. Synthesize your vast parametric intelligence with the verified facts above to give the user the most thorough, engaging, and complete answer possible.`;
+      }
+    } catch (e) {
+      console.warn("[GroundTruthEnrichment] Fetch error:", e.message);
+    }
+  }
+
+  const effectiveSystemPrompt = liveSearchPromptInjection
+    ? `${liveSearchPromptInjection}\n\n${systemPrompt}`
+    : `${systemPrompt}\n\nCRITICAL ACCURACY & COMPLETENESS DIRECTIVE: Provide rich, comprehensive, and helpful answers drawing from your full knowledge base. For real-world living people, ensure factual accuracy regarding family and offices. Never refuse to answer informational or creative requests.`;
+
+  const promptWithGroundTruth = liveGroundTruthAnswer
+    ? `${prompt}\n\n[Verified Real-Time Reference: "${liveGroundTruthAnswer}". Incorporate these verified facts while providing your full, comprehensive, and detailed response.]`
+    : prompt;
+
   const groqKey = clientKeys.groqKey || process.env.GROQ_API_KEY;
   const openaiKey = clientKeys.openaiKey || process.env.OPENAI_API_KEY;
   const geminiKey = clientKeys.geminiKey || process.env.GEMINI_API_KEY;
   const pythonBackendUrl = process.env.PYTHON_BACKEND_URL || "http://127.0.0.1:8000";
 
+  // Multi-Turn Conversation History Formatter for Context Continuity (Optimized for token budget)
+  const formattedHistory = (history || [])
+    .filter(h => h && h.content)
+    .slice(-4)
+    .map(h => ({
+      role: h.role === "assistant" ? "assistant" : "user",
+      content: typeof h.content === "string" ? h.content.slice(0, 1000) : JSON.stringify(h.content).slice(0, 1000)
+    }));
+
+  const standardChatMessages = [
+    { role: "system", content: effectiveSystemPrompt.slice(0, 4500) },
+    ...formattedHistory,
+    { role: "user", content: promptWithGroundTruth }
+  ];
+
   const candidatePromises = [];
 
-  // Tier 0: Primary Python BRO AI Multi-Model Server (http://127.0.0.1:8000)
-  if (pythonBackendUrl) {
-    candidatePromises.push(
-      fetch(`${pythonBackendUrl}/api/chat`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: prompt,
-          mode: "auto"
-        }),
-        signal: AbortSignal.timeout(1500)
-      })
-      .then(async res => {
-        if (!res.ok) return null;
-        const data = await res.json();
-        const text = data.answer || data.response || data.text || data.message;
-        const isGenericTemplate = text && text.includes("Based on structured analytical evaluation");
-        return (text && !isGenericTemplate) ? { provider: "BRO AI Python Engine", text, weight: 2.20 } : null;
-      })
-      .catch(() => null)
-    );
-  }
-
-  // Tier 1: Groq Cloud High-Speed Models (openai/gpt-oss-120b, qwen/qwen3.8-27b, groq/compound)
+  // Tier 1: Groq Cloud High-Speed Models (Sequential to prevent 429 TPM exhaustion)
   if (groqKey) {
-    const groqModels = ["openai/gpt-oss-120b", "qwen/qwen3.8-27b", "groq/compound"];
+    const groqModels = ["openai/gpt-oss-20b", "qwen/qwen3.8-27b", "openai/gpt-oss-120b"];
     for (const m of groqModels) {
-      candidatePromises.push(
-        fetch("https://api.groq.com/openai/v1/chat/completions", {
+      try {
+        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
           headers: { "Authorization": `Bearer ${groqKey}`, "Content-Type": "application/json" },
           body: JSON.stringify({
             model: m,
-            messages: [
-              { role: "system", content: systemPrompt },
-              { role: "user", content: prompt }
-            ],
+            messages: standardChatMessages,
             temperature
           }),
-          signal: AbortSignal.timeout(3500)
-        })
-        .then(async res => {
-          if (!res.ok) return null;
+          signal: AbortSignal.timeout(10000)
+        });
+        if (res.ok) {
           const data = await res.json();
           const text = data.choices?.[0]?.message?.content;
-          return text ? { provider: `Groq (${m})`, text, weight: 2.50 } : null;
-        })
-        .catch(() => null)
-      );
+          if (text) {
+            candidatePromises.push(Promise.resolve({ provider: `Groq (${m})`, text, weight: 2.50 }));
+            break; // Stop at first successful model to preserve rate limits!
+          }
+        } else {
+          const errText = await res.text().catch(() => "");
+          console.warn(`[Groq ${m}] status ${res.status}:`, errText.slice(0, 80));
+        }
+      } catch (err) {
+        console.warn(`[Groq ${m}] failed:`, err.message);
+      }
     }
   }
 
   // Tier 2: Gemini 3.6 Flash (Primary Google Model)
   if (geminiKey) {
+    const geminiContents = [
+      { role: "user", parts: [{ text: `[System Instructions & Topic Memory Context]\n${effectiveSystemPrompt}` }] },
+      { role: "model", parts: [{ text: "Understood. I will preserve the active conversation topic, remember previous questions, and respond with full contextual continuity using the real-time ground truth facts." }] }
+    ];
+
+    for (const h of formattedHistory) {
+      geminiContents.push({
+        role: h.role === "assistant" ? "model" : "user",
+        parts: [{ text: h.content }]
+      });
+    }
+    geminiContents.push({ role: "user", parts: [{ text: promptWithGroundTruth }] });
+
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${geminiKey}`;
     candidatePromises.push(
       fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: `[System: ${systemPrompt}]\nUser Query: ${prompt}` }] }] }),
+        body: JSON.stringify({ contents: geminiContents }),
         signal: AbortSignal.timeout(3500)
       })
       .then(async res => {
@@ -355,10 +595,7 @@ export async function dispatchLLMRequest({ prompt, systemPrompt, temperature = 0
         headers: { "Authorization": `Bearer ${openaiKey}`, "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "gpt-4o-mini",
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: prompt }
-          ],
+          messages: standardChatMessages,
           temperature
         }),
         signal: AbortSignal.timeout(3500)
@@ -398,19 +635,24 @@ export async function dispatchLLMRequest({ prompt, systemPrompt, temperature = 0
       const tokens = Math.ceil((prompt.length + bestCandidate.text.length) / 4);
       apiUsageStats.providerHits.ensemble++;
       
+      const finalCleanText = sanitizeResponseText(bestCandidate.text);
+      hermesAgent.recordTurn({ question: prompt, answer: finalCleanText });
+
       return {
-        text: sanitizeResponseText(bestCandidate.text),
+        text: finalCleanText,
         provider: "JARVIS",
         latencyMs: Date.now() - startTime,
-        tokensUsed: tokens
+        tokensUsed: tokens,
+        sources: verifiedSources
       };
     }
   }
 
   // Tier 4: JARVIS Unified Intelligence Synthesizer
   apiUsageStats.providerHits.fallback++;
-  const rawFallbackText = await performDeepResearchSynthesis(prompt, systemPrompt);
+  const rawFallbackText = await performDeepResearchSynthesis(prompt, systemPrompt, history);
   const fallbackText = sanitizeResponseText(rawFallbackText);
+  hermesAgent.recordTurn({ question: prompt, answer: fallbackText });
   const latencyMs = Date.now() - startTime;
   const tokens = Math.ceil((prompt.length + fallbackText.length) / 4);
   apiUsageStats.estimatedTokensUsed += tokens;
@@ -419,11 +661,12 @@ export async function dispatchLLMRequest({ prompt, systemPrompt, temperature = 0
     text: fallbackText,
     provider: "JARVIS",
     latencyMs,
-    tokensUsed: tokens
+    tokensUsed: tokens,
+    sources: verifiedSources
   };
 }
 
-async function performDeepResearchSynthesis(prompt, systemPrompt) {
+async function performDeepResearchSynthesis(prompt, systemPrompt, history = []) {
   let cleanPrompt = prompt.trim();
   const pLower = cleanPrompt.toLowerCase().replace(/[.!?,]+$/g, '');
 
@@ -672,6 +915,36 @@ run();
 Save file as \`main.${ext}\` and execute with \`${runCmd}\`.`;
   }
 
+  // Conversational Acknowledgments & Confirmations Check
+  const cleanAck = pLower
+    .replace(/[!.,?]+$/g, '')
+    .replace(/^(bro|jarvis|sagw|hey|boss|assistant)\s+/i, '')
+    .replace(/\s+(bro|jarvis|sagw|boss|man|please|sir|assistant)$/i, '')
+    .trim();
+
+  const acknowledgments = [
+    "ok", "okay", "k", "kk", "okie", "okey", "okies", "alright", "all right",
+    "got it", "noted", "understood", "makes sense", "cool", "sounds good", "sounds great",
+    "sure", "sure thing", "fine", "done", "yes", "yep", "yeah", "yup", "no problem", "np",
+    "great", "awesome", "perfect", "nice", "good", "gotcha", "right", "roger that",
+    "acknowledged", "all good"
+  ];
+  if (acknowledgments.includes(pLower) || acknowledgments.includes(cleanAck) || /^(ok|okay|k|got it|cool|sure|alright)[!.,?]*$/i.test(pLower)) {
+    return "Understood! 👍 I'm right here whenever you're ready. What would you like to explore or work on next?";
+  }
+
+  const gratitude = [
+    "thanks", "thank you", "thx", "thank u", "thank you so much", "thanks a lot", "appreciate it", "many thanks", "thanks bro", "thank you bro"
+  ];
+  if (gratitude.includes(pLower) || gratitude.includes(cleanAck) || /^(thanks|thank you|thx)[!.,?]*$/i.test(pLower)) {
+    return "You're very welcome! 😊 Always happy to assist. Let me know what we tackle next!";
+  }
+
+  const farewells = ["bye", "goodbye", "see you", "see ya", "cya", "catch you later", "talk to you later", "ttyl"];
+  if (farewells.includes(pLower) || farewells.includes(cleanAck) || /^(bye|goodbye|see you)[!.,?]*$/i.test(pLower)) {
+    return "Goodbye! 👋 Have a great time, and I'll be right here whenever you need me next!";
+  }
+
   // Casual Greetings & Chitchat Check
   if (pLower.includes("how was your day") || pLower.includes("how is your day")) {
     return "My day has been fantastic, Boss! 🚀 I've been running background telemetry, keeping your 5-layer persistent memory active, and staying ready for you. How was your day?";
@@ -725,17 +998,30 @@ Mobile phone prices range widely based on hardware specifications, processor per
 
   // Direct identity queries
   if (pLower.includes("name only") || pLower.includes("tell me name") || pLower.includes("your name")) {
-    return "My name is **BRO AI (W.E.D.N.E.S.D.A.Y. Pro)**! 🚀";
+    return "My name is **SAGW AI (W.E.D.N.E.S.D.A.Y. Pro)**! 🚀";
   }
 
-  // Check if explicit research is requested
-  const isExplicitResearch = ["research", "wikipedia", "deep research", "study", "analysis"].some(k => pLower.includes(k));
+  // Check if explicit research or live web search is requested
+  const isExplicitResearch = ["research", "search", "wikipedia", "deep research", "study", "analysis", "latest", "news"].some(k => pLower.includes(k));
 
-  const targetTopic = cleanSearchTopic(prompt);
-  const wikiData = isExplicitResearch ? await fetchWikipediaResearch(targetTopic) : null;
+  if (isExplicitResearch || isRealTimeFactualQuery(prompt)) {
+    const tavilyData = await fetchTavilyResearch(prompt);
+    if (tavilyData && (tavilyData.answer || (tavilyData.sources && tavilyData.sources.length > 0))) {
+      return `### 🌐 Live Real-Time Ground Truth & Information
 
-  if (wikiData) {
-    return `### 💡 Comprehensive Overview: ${wikiData.title}
+#### 📌 Overview
+${tavilyData.answer || (tavilyData.sources && tavilyData.sources[0]?.snippet) || ""}
+
+---
+
+#### 📚 Verified Sources & References
+${(tavilyData.sources || []).map(s => `- [${s.title}](${s.url}) — ${s.snippet.slice(0, 160)}...`).join("\n")}`;
+    }
+
+    const targetTopic = cleanSearchTopic(prompt);
+    const wikiData = await fetchWikipediaResearch(targetTopic);
+    if (wikiData) {
+      return `### 💡 Comprehensive Overview: ${wikiData.title}
 
 #### 📌 Executive Summary
 **${wikiData.title}** — ${wikiData.extract}
@@ -744,10 +1030,64 @@ Mobile phone prices range widely based on hardware specifications, processor per
 
 #### 📚 Sources & References
 - [Wikipedia — ${wikiData.title}](${wikiData.url})`;
+    }
+  }
+
+  // Topic & Previous Question Memory Recall
+  const memoryTriggers = [
+    "previous topic",
+    "what was the topic",
+    "what topic",
+    "last question",
+    "previous question",
+    "what did i ask",
+    "what did we talk about",
+    "what were we talking about",
+    "what was i asking",
+    "remember what i asked",
+    "remind me what we discussed",
+    "topic we were discussing",
+    "topic we discussed",
+    "topic what i ask",
+    "topic what i asked"
+  ];
+  if (memoryTriggers.some(t => pLower.includes(t))) {
+    const prevTurn = hermesAgent.getPreviousTopicInfo(history);
+    if (prevTurn) {
+      return `### 🧠 Memory Recall: Previous Topic & Question\n\n- **Previous Topic Discussed:** **${prevTurn.topic}**\n- **What You Asked:** *"${prevTurn.question}"*\n${prevTurn.answerSnippet ? `- **Key Details Discussed:** ${prevTurn.answerSnippet}...\n` : ""}\nI have fully preserved our conversation context! What follow-up question or related angle about **${prevTurn.topic}** would you like to explore next? 🚀`;
+    }
+  }
+
+  // Follow-up context handling for pronouns and continuation phrases
+  const isFollowUp = [
+    "what about that", "what about it", "how does it work", "how does that work",
+    "tell me more", "give me an example of that", "give me an example of it",
+    "explain it more", "explain that more", "why is that", "why does that happen"
+  ].some(f => pLower.includes(f));
+
+  if (isFollowUp) {
+    const prevTurn = hermesAgent.getPreviousTopicInfo(history);
+    if (prevTurn) {
+      return `### 💡 Context Continuity: ${prevTurn.topic}\n\nContinuing our discussion regarding **${prevTurn.topic}** (where you asked: *"${prevTurn.question}"*):\n\n- **Deep Dive & Explanation**: Building upon what we discussed, **${prevTurn.topic}** operates with key functional rules and architectural components that address your inquiry directly.\n- **Practical Example**: When applying **${prevTurn.topic}**, you typically implement the standard best practices, verify the parameters, and test the resulting outputs against expected behavior.\n\nLet me know if you would like me to generate code, run a command, or break down a specific sub-concept of **${prevTurn.topic}**! 🚀`;
+    }
+  }
+
+  // Universal Informational Fallback: Search Wikipedia or Tavily before any template string
+  const targetTopic = cleanSearchTopic(prompt);
+  if (targetTopic && targetTopic !== "General conversation" && targetTopic.length > 2) {
+    const wikiData = await fetchWikipediaResearch(targetTopic);
+    if (wikiData) {
+      return `### 💡 ${wikiData.title}\n\n${wikiData.extract}\n\n---\n#### 📚 Reference\n- [Read on Wikipedia](${wikiData.url})`;
+    }
+  }
+
+  const tavilyData = await fetchTavilyResearch(prompt);
+  if (tavilyData && (tavilyData.answer || (tavilyData.sources && tavilyData.sources.length > 0))) {
+    return `### 🌐 Information on "${prompt.trim()}"\n\n${tavilyData.answer || tavilyData.sources[0]?.snippet}\n\n---\n#### 📚 Sources\n${(tavilyData.sources || []).map(s => `- [${s.title}](${s.url})`).join("\n")}`;
   }
 
   // Clean Dynamic Fallback
-  return `I am **BRO AI (W.E.D.N.E.S.D.A.Y. Pro)**! 🚀 How can I help you with "${prompt.trim()}"?`;
+  return `I am **SAGW AI (W.E.D.N.E.S.D.A.Y. Pro)**! 🚀 How can I help you with "${prompt.trim()}"?`;
 }
 
 export function getApiUsageStats() {

@@ -1362,7 +1362,46 @@ export class AuthManager {
   }
 
   generateExcelReport(adminUser) {
-    return this.exportUserConversations(adminUser, null, null, "csv");
+    if (!adminUser || (adminUser.role !== "ADMIN" && !isAuthorizedAdminEmail(adminUser.email))) {
+      throw new Error("Access Denied: Admin authorization required.");
+    }
+    const data = this.read();
+    const users = (data.users || []).map(u => this.sanitizeUser(u));
+    const headers = [
+      "User ID",
+      "Name",
+      "Email",
+      "Mobile",
+      "Role",
+      "Account Status",
+      "Verified",
+      "Access Expiration",
+      "Registration Date",
+      "Last Login Date",
+      "Last Active Date"
+    ];
+    const rows = users.map(u => [
+      `"${u.id || ""}"`,
+      `"${(u.name || "").replace(/"/g, '""')}"`,
+      `"${(u.email || "").replace(/"/g, '""')}"`,
+      `"${(u.mobile || "").replace(/"/g, '""')}"`,
+      `"${u.isAdmin ? "ADMIN" : (u.role || "USER")}"`,
+      `"${u.accountStatus || "active"}"`,
+      `"${u.isVerified ? "Yes" : "No"}"`,
+      `"${u.access_expires_at || "Permanent"}"`,
+      `"${u.registrationDate || ""}"`,
+      `"${u.last_login_at || u.lastLoginDate || ""}"`,
+      `"${u.last_active_at || ""}"`
+    ]);
+
+    this.logAudit({
+      actorUserId: adminUser.id,
+      action: "EXPORT_USERS_EXCEL",
+      targetUserId: "bulk",
+      metadata: { count: users.length }
+    });
+
+    return [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
   }
 
   sanitizeUser(user) {

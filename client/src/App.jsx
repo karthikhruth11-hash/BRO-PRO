@@ -22,14 +22,16 @@ import { streamChatResponse } from './services/streamingClient';
 import { soundFx } from './services/soundFx';
 import { speechEngine } from './services/speech';
 import { parseCommandFlags } from './services/inputProcessor';
+import { useDeviceType } from './services/deviceDetector';
 
 export default function App() {
+  const { isMobile, isTablet, isDesktop, deviceType, deviceLabel } = useDeviceType();
   const [theme, setTheme] = useState(localStorage.getItem('wednesday_theme') || 'dark');
   const [activeView, setActiveView] = useState('chat');
   const [persona, setPersona] = useState('jarvis');
   const [selectedModel, setSelectedModel] = useState('Multi-LLM Ensemble');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [isRightPanelOpen, setIsRightPanelOpen] = useState(true);
+  const [isRightPanelOpen, setIsRightPanelOpen] = useState(() => typeof window !== 'undefined' ? window.innerWidth > 1024 : false);
 
   // New Auth & Admin Module States
   const [currentUser, setCurrentUser] = useState(null);
@@ -41,6 +43,30 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('wednesday_theme', theme);
   }, [theme]);
+
+  // Responsive device mode synchronization
+  useEffect(() => {
+    if (isMobile) {
+      setIsSidebarCollapsed(false);
+      setIsRightPanelOpen(false);
+    } else if (isDesktop) {
+      setIsRightPanelOpen(true);
+    }
+  }, [isMobile, isDesktop]);
+
+  // Responsive screen resize listener
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 768) {
+        setIsSidebarCollapsed(false);
+      }
+      if (window.innerWidth <= 1024) {
+        setIsRightPanelOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Check Auth Manager Session on Mount
   useEffect(() => {
@@ -326,7 +352,20 @@ export default function App() {
   };
 
   return (
-    <div style={{ display: 'flex', height: '100vh', width: '100vw', overflow: 'hidden' }}>
+    <div style={{ display: 'flex', height: '100dvh', width: '100vw', maxWidth: '100vw', overflow: 'hidden', position: 'relative' }}>
+      {/* Mobile & Tablet Backdrop Overlay for Left Drawer and Right Drawer */}
+      {(isMobileSidebarOpen || (isRightPanelOpen && typeof window !== 'undefined' && window.innerWidth <= 1024)) && (
+        <div
+          className="mobile-backdrop"
+          onClick={() => {
+            setIsMobileSidebarOpen(false);
+            if (typeof window !== 'undefined' && window.innerWidth <= 1024) {
+              setIsRightPanelOpen(false);
+            }
+          }}
+        />
+      )}
+
       {/* Panel 1: Left Navigation Sidebar */}
       <Sidebar
         activeView={activeView}
@@ -352,13 +391,12 @@ export default function App() {
         onOpenAuth={() => setActiveView('auth')}
         onOpenAdmin={() => setShowAdminDashboard(true)}
         onLogout={handleLogout}
+        isMobile={isMobile}
+        deviceLabel={deviceLabel}
       />
 
       {/* Panel 2: Main Workspace & Conversation Area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
-        {/* Persona Selector Bar */}
-        <PersonalitySelector activePersona={persona} onSelectPersona={setPersona} />
-
         {/* Registered Tool State Indicator */}
         {activeTool && <AgentTools activeTool={activeTool} />}
 
@@ -370,6 +408,7 @@ export default function App() {
             isProcessing={isProcessing}
             activeTool={activeTool}
             persona={persona}
+            onSelectPersona={setPersona}
             activeEmotion={activeEmotion}
             onToggleMobileSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
             selectedModel={selectedModel}
@@ -379,6 +418,8 @@ export default function App() {
             onOpenAuth={() => setActiveView('auth')}
             onOpenAdmin={() => setShowAdminDashboard(true)}
             onLogout={handleLogout}
+            isMobile={isMobile}
+            deviceLabel={deviceLabel}
           />
         )}
 

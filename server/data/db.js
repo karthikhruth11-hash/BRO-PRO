@@ -43,39 +43,23 @@ const INITIAL_DATA = {
     }
   ],
   team: {
-    groupName: "W.E.D.N.E.S.D.A.Y. AI Engineering Team",
-    logoUrl: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=300&q=80",
-    description: "Architects of production-grade personal AI technology, intelligent tool routers, and multimodal human-machine interaction systems.",
+    groupName: "SAGW AI — Engineering & Leadership",
+    logoUrl: "/sagw-ai-logo.png",
+    description: "Built and engineered end-to-end by C Karthik — personal AI systems, multimodal LLM routing, intelligent tools, and production-grade software architecture.",
     members: [
       {
         id: "m1",
-        name: "Karthik",
-        role: "Lead AI Architect & Core Developer",
-        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
-        skills: ["LLM Orchestration", "Node.js", "React", "System Architecture"],
-        github: "https://github.com",
-        linkedin: "https://linkedin.com"
-      },
-      {
-        id: "m2",
-        name: "Alex Vance",
-        role: "Full-Stack & UX Engineer",
-        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
-        skills: ["React/Vite", "Tailwind/CSS", "Streaming Interfaces", "Web Speech API"],
-        github: "https://github.com",
-        linkedin: "https://linkedin.com"
-      },
-      {
-        id: "m3",
-        name: "Elena Rostova",
-        role: "AI Safety & Multimodal Specialist",
-        avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80",
-        skills: ["Vision LLMs", "Document Intelligence", "Tool Routing", "Prompt Engineering"],
-        github: "https://github.com",
-        linkedin: "https://linkedin.com"
+        name: "C Karthik",
+        role: "Founder, Lead AI Architect & Sole Creator",
+        avatar: "/karthik.png",
+        skills: ["AI Architecture", "LLM Orchestration", "Node.js", "React", "Full-Stack Engineering", "System Design"],
+        github: "https://github.com/karthikhruth11-hash",
+        linkedin: "https://www.linkedin.com/in/karthik-c-81538a358/"
       }
     ]
   }
+
+
 };
 
 class LocalDB {
@@ -153,6 +137,11 @@ class LocalDB {
   getMessages(conversationId) {
     const data = this.read();
     return data.messages.filter(m => m.conversationId === conversationId);
+  }
+
+  getAllMessages() {
+    const data = this.read();
+    return data.messages || [];
   }
 
   addMessage(conversationId, role, content, meta = {}) {

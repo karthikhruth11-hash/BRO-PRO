@@ -1,87 +1,48 @@
 import React from 'react';
-import { Bot, Zap, Heart, Terminal, Briefcase, GraduationCap, Scale, Code2 } from 'lucide-react';
+import { 
+  Bot, 
+  Cpu, 
+  Heart, 
+  Terminal, 
+  Briefcase, 
+  GraduationCap, 
+  Activity, 
+  Coffee 
+} from 'lucide-react';
+
+export const personas = [
+  { id: 'jarvis', name: 'J.A.R.V.I.S.', role: 'Tactical', icon: Bot, color: 'var(--accent-primary)', desc: 'Precise, logical, and structured execution' },
+  { id: 'friday', name: 'F.R.I.D.A.Y.', role: 'Operations', icon: Cpu, color: 'var(--accent-emerald)', desc: 'Fast, mission-oriented, and task-driven' },
+  { id: 'luna', name: 'Luna', role: 'Companion', icon: Heart, color: 'var(--accent-pink)', desc: 'Empathetic, encouraging, and emotionally intelligent' },
+  { id: 'neo', name: 'Neo', role: 'Systems', icon: Terminal, color: 'var(--accent-cyan)', desc: 'Direct, technical, and systems-focused' },
+  { id: 'victoria', name: 'Victoria', role: 'Tech Lead', icon: Briefcase, color: 'var(--accent-purple)', desc: 'Architecture audits & production code standards' },
+  { id: 'sage', name: 'Prof. Sage', role: 'Academic', icon: GraduationCap, color: 'var(--accent-amber)', desc: 'First-principles breakdowns & educational depth' },
+  { id: 'dr_alex', name: 'Dr. Alex', role: 'Clinical', icon: Activity, color: 'var(--accent-red)', desc: 'Evidence-based healthcare and biological insights' },
+  { id: 'sam', name: 'Sam', role: 'Casual', icon: Coffee, color: 'var(--accent-amber)', desc: 'Warm, down-to-earth, and conversational banter' }
+];
 
 export default function PersonalitySelector({ activePersona, onSelectPersona }) {
-  const personas = [
-    {
-      id: 'jarvis',
-      name: 'J.A.R.V.I.S.',
-      role: 'Tactical Assistant',
-      desc: 'Stark-inspired, calls user Boss, thorough & professional.',
-      icon: Bot,
-      color: '#00f0ff'
-    },
-    {
-      id: 'friday',
-      name: 'F.R.I.D.A.Y.',
-      role: 'Operations AI',
-      desc: 'Crisp, organized tactical operations manager.',
-      icon: Zap,
-      color: '#10b981'
-    },
-    {
-      id: 'girlfriend',
-      name: 'Luna',
-      role: 'Companion',
-      desc: 'Warm, affectionate, empathetic partner tone.',
-      icon: Heart,
-      color: '#ec4899'
-    },
-    {
-      id: 'cyberpunk',
-      name: 'Neo',
-      role: 'Cyberpunk Hacker',
-      desc: 'Futuristic high-octane tech & security specialist.',
-      icon: Terminal,
-      color: '#f43f5e'
-    },
-    {
-      id: 'lead_dev',
-      name: 'Victoria',
-      role: 'Senior Tech Lead',
-      desc: 'Architecture audits & production code standards.',
-      icon: Briefcase,
-      color: '#3b82f6'
-    },
-    {
-      id: 'tutor',
-      name: 'Prof. Sage',
-      role: 'Academic Tutor',
-      desc: 'Patient step-by-step science & math mentor.',
-      icon: GraduationCap,
-      color: '#a855f7'
-    },
-    {
-      id: 'lawyer',
-      name: 'Harvey',
-      role: 'Legal Counsel',
-      desc: 'Legal advocate — cites statutes, precedent & contracts.',
-      icon: Scale,
-      color: '#fbbf24'
-    },
-    {
-      id: 'polyglot',
-      name: 'Atlas',
-      role: 'Software Architect',
-      desc: 'Full-stack architect & polyglot code expert.',
-      icon: Code2,
-      color: '#06b6d4'
-    }
-  ];
-
   return (
     <div style={{
-      padding: '10px 20px',
-      background: 'rgba(7, 9, 14, 0.95)',
+      padding: '8px 16px',
+      background: 'var(--bg-secondary)',
       borderBottom: '1px solid var(--border-subtle)',
       display: 'flex',
       alignItems: 'center',
-      gap: '10px',
+      gap: '8px',
       overflowX: 'auto',
       userSelect: 'none'
     }}>
-      <span style={{ fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '1px', whiteSpace: 'nowrap' }}>
-        Select Persona:
+      <span style={{ 
+        fontSize: '0.72rem', 
+        fontWeight: 600, 
+        color: 'var(--text-dim)', 
+        textTransform: 'uppercase', 
+        letterSpacing: '0.04em', 
+        whiteSpace: 'nowrap',
+        marginRight: '4px'
+      }}>
+        Persona
       </span>
       {personas.map((p) => {
         const Icon = p.icon;
@@ -92,24 +53,25 @@ export default function PersonalitySelector({ activePersona, onSelectPersona }) 
             onClick={() => onSelectPersona(p.id)}
             title={p.desc}
             style={{
-              padding: '6px 14px',
-              borderRadius: '20px',
-              border: isSelected ? `1px solid ${p.color}` : '1px solid var(--border-subtle)',
-              background: isSelected ? `${p.color}20` : 'rgba(255,255,255,0.03)',
-              color: isSelected ? p.color : 'var(--text-muted)',
+              padding: '5px 11px',
+              borderRadius: 'var(--radius-sm)',
+              border: isSelected ? '1px solid var(--border-strong)' : '1px solid var(--border-subtle)',
+              background: isSelected ? 'var(--bg-card-hover)' : 'transparent',
+              color: isSelected ? 'var(--text-main)' : 'var(--text-muted)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              fontSize: '0.8rem',
+              fontSize: '0.78rem',
               fontWeight: isSelected ? 600 : 400,
-              transition: 'all 0.2s ease',
-              whiteSpace: 'nowrap'
+              transition: 'all 0.15s ease',
+              whiteSpace: 'nowrap',
+              boxShadow: isSelected ? 'var(--shadow-sm)' : 'none'
             }}
           >
-            <Icon size={14} color={isSelected ? p.color : 'var(--text-dim)'} />
+            <Icon size={13} style={{ color: isSelected ? p.color : 'var(--text-dim)' }} />
             <span>{p.name}</span>
-            <span style={{ opacity: 0.6, fontSize: '0.72rem' }}>({p.role})</span>
+            <span style={{ color: 'var(--text-dim)', fontSize: '0.7rem' }}>{p.role}</span>
           </button>
         );
       })}

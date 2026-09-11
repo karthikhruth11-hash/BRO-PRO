@@ -29,44 +29,57 @@ export default function CalculatorModal({ onClose }) {
 
   return (
     <div className="modal-overlay">
-      <div className="glass-panel-glow" style={{ width: '320px', padding: '20px', borderRadius: '18px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      <div style={{
+        width: '320px',
+        padding: '20px',
+        borderRadius: '16px',
+        background: 'var(--bg-card, #131b2e)',
+        border: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.12))',
+        boxShadow: 'var(--shadow-lg, 0 16px 48px rgba(0, 0, 0, 0.45))',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '16px'
+      }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Calculator size={18} color="var(--accent-purple)" />
-            <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Utility Calculator</h3>
+            <div style={{ width: '28px', height: '28px', borderRadius: '6px', background: 'rgba(59, 130, 246, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Calculator size={16} color="var(--accent-primary, #3b82f6)" />
+            </div>
+            <h3 style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: 'var(--text-main, #f8fafc)' }}>Utility Calculator</h3>
           </div>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+          <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted, #94a3b8)', cursor: 'pointer', padding: '6px', borderRadius: '6px', display: 'flex' }}>
             <X size={18} />
           </button>
         </div>
 
         <div style={{
-          background: 'rgba(0,0,0,0.6)',
-          border: '1px solid var(--border-subtle)',
+          background: 'var(--bg-input, rgba(0,0,0,0.4))',
+          border: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.12))',
           borderRadius: '10px',
           padding: '16px',
           textAlign: 'right',
           fontSize: '1.5rem',
           fontFamily: 'var(--font-mono)',
-          color: 'var(--accent-cyan)',
+          color: 'var(--text-main, #f8fafc)',
+          fontWeight: 700,
           minHeight: '60px',
           wordBreak: 'break-all'
         }}>
           {display}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
           {btns.map((btn, i) => (
             <button
               key={i}
               onClick={() => handleBtn(btn)}
-              className="btn-secondary"
+              className={btn === '=' ? "btn-primary" : "btn-secondary"}
               style={{
-                padding: '14px',
+                padding: '12px',
                 justifyContent: 'center',
-                fontSize: '1.1rem',
+                fontSize: '1.05rem',
                 fontWeight: 600,
-                color: btn === '=' ? 'var(--accent-cyan)' : btn === 'C' ? 'var(--accent-pink)' : '#fff'
+                color: btn === '=' ? '#ffffff' : btn === 'C' ? 'var(--accent-danger, #ef4444)' : 'var(--text-main, #f8fafc)'
               }}
             >
               {btn}

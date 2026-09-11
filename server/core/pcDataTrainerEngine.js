@@ -36,6 +36,26 @@ class PCDataTrainerEngine {
 
   async trainFromDirectory(dirPath = process.cwd()) {
     const validExtensions = [".js", ".jsx", ".ts", ".tsx", ".py", ".json", ".md", ".txt", ".html", ".css"];
+    const EXCLUDED_DIRS = new Set([
+      "node_modules", "dist", "build", "data", "security", "uploads",
+      ".git", ".vscode", ".dist", ".vercel"
+    ]);
+    const SENSITIVE_FILE_PATTERNS = [
+      /\.env/i,
+      /store\.json/i,
+      /memoryStore\.json/i,
+      /auth_db\.json/i,
+      /pc_ml_dataset\.json/i,
+      /package-lock\.json/i,
+      /secret/i,
+      /credential/i,
+      /token/i,
+      /password/i,
+      /key\./i,
+      /\.pem$/i,
+      /\.cert$/i
+    ];
+
     let filesIndexed = 0;
     let wordsCount = 0;
     const blocks = [];
@@ -45,18 +65,26 @@ class PCDataTrainerEngine {
       try {
         const entries = fs.readdirSync(currentDir, { withFileTypes: true });
         for (const entry of entries) {
-          if (entry.name.startsWith(".") || entry.name === "node_modules" || entry.name === "dist" || entry.name === "build") {
+          const entryNameLower = entry.name.toLowerCase();
+          if (entry.name.startsWith(".") || EXCLUDED_DIRS.has(entryNameLower)) {
             continue;
           }
           const fullPath = path.join(currentDir, entry.name);
           if (entry.isDirectory()) {
             scanDir(fullPath, depth + 1);
           } else if (entry.isFile()) {
+            if (SENSITIVE_FILE_PATTERNS.some(pat => pat.test(entry.name))) {
+              continue;
+            }
             const ext = path.extname(entry.name).toLowerCase();
             if (validExtensions.includes(ext)) {
               try {
                 const content = fs.readFileSync(fullPath, "utf-8");
                 if (content && content.length > 20 && content.length < 50000) {
+                  // Ensure no API keys or token strings are indexed
+                  if (/gsk_[a-zA-Z0-9_-]{20,}|sk-[a-zA-Z0-9_-]{20,}|AIza[a-zA-Z0-9_-]{30,}|handshake-token/i.test(content)) {
+                    continue;
+                  }
                   const relativePath = path.relative(process.cwd(), fullPath);
                   const words = content.split(/\s+/).length;
                   filesIndexed++;

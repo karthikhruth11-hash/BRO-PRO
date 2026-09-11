@@ -32,21 +32,21 @@ export default function FileSystemPanel() {
     <div style={{ flex: 1, padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px', overflowY: 'auto' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 700, fontFamily: 'var(--font-display)' }} className="cyan-gradient-text">
+          <h2 style={{ fontSize: '1.3rem', fontWeight: 700, margin: '0 0 4px 0', color: 'var(--text-main, #f8fafc)' }}>
             File System Explorer
           </h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+          <p style={{ color: 'var(--text-muted, #94a3b8)', fontSize: '0.82rem', margin: 0 }}>
             Safely browse local and virtual sandbox project files via the Tool Registry backend.
           </p>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: 'var(--accent-emerald)' }}>
-          <Shield size={16} /> Sandbox Enforced
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: 'var(--accent-success, #10b981)', background: 'rgba(16, 185, 129, 0.1)', padding: '4px 10px', borderRadius: '6px', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
+          <Shield size={15} /> Sandbox Enforced
         </div>
       </div>
 
       {/* Path Address Bar */}
-      <div className="glass-panel" style={{ padding: '12px 16px', display: 'flex', gap: '10px', alignItems: 'center' }}>
-        <HardDrive size={18} color="var(--accent-cyan)" />
+      <div style={{ background: 'var(--bg-card, #131b2e)', border: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.08))', borderRadius: '12px', padding: '10px 14px', display: 'flex', gap: '10px', alignItems: 'center', boxShadow: 'var(--shadow-sm)' }}>
+        <HardDrive size={18} color="var(--accent-primary, #3b82f6)" />
         <input
           type="text"
           value={pathInput}
@@ -57,9 +57,9 @@ export default function FileSystemPanel() {
             background: 'transparent',
             border: 'none',
             outline: 'none',
-            color: '#fff',
+            color: 'var(--text-main, #f8fafc)',
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.9rem'
+            fontSize: '0.88rem'
           }}
         />
         <button className="btn-primary" onClick={() => handleReadPath(pathInput)} style={{ padding: '6px 14px', fontSize: '0.8rem' }}>
@@ -68,8 +68,8 @@ export default function FileSystemPanel() {
       </div>
 
       {/* Main File Table */}
-      <div className="glass-panel" style={{ padding: '16px', flex: 1 }}>
-        <h4 style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '12px' }}>Directory Items</h4>
+      <div style={{ background: 'var(--bg-card, #131b2e)', border: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.08))', borderRadius: '12px', padding: '16px', flex: 1, boxShadow: 'var(--shadow-sm)' }}>
+        <h4 style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-muted, #94a3b8)', margin: '0 0 12px 0' }}>Directory Items</h4>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
           {virtualFiles.map((item, idx) => (
             <div
@@ -81,20 +81,20 @@ export default function FileSystemPanel() {
                 justifyContent: 'space-between',
                 padding: '10px 14px',
                 borderRadius: '8px',
-                background: 'rgba(255, 255, 255, 0.02)',
+                background: 'var(--bg-secondary, rgba(255, 255, 255, 0.02))',
                 cursor: 'pointer',
-                transition: 'all 0.15s ease'
+                transition: 'background 0.15s ease'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(0, 240, 255, 0.08)'}
-              onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)'}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.06)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'var(--bg-secondary, rgba(255, 255, 255, 0.02))'}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                {item.isDirectory ? <Folder size={18} color="var(--accent-amber)" /> : <FileText size={18} color="var(--accent-cyan)" />}
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.88rem' }}>{item.name}</span>
+                {item.isDirectory ? <Folder size={17} color="var(--accent-warning, #f59e0b)" /> : <FileText size={17} color="var(--accent-primary, #3b82f6)" />}
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: 'var(--text-main, #f8fafc)' }}>{item.name}</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '0.8rem', color: 'var(--text-dim)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '0.78rem', color: 'var(--text-muted, #94a3b8)' }}>
                 <span>{item.size}</span>
-                <Eye size={14} color="var(--text-muted)" />
+                <Eye size={14} color="var(--text-muted, #94a3b8)" />
               </div>
             </div>
           ))}
@@ -103,21 +103,23 @@ export default function FileSystemPanel() {
 
       {/* File Content Preview */}
       {fileContent && (
-        <div className="glass-panel-glow" style={{ padding: '16px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', fontFamily: 'var(--font-mono)' }}>
+        <div style={{ background: 'var(--bg-card, #131b2e)', border: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.12))', borderRadius: '12px', padding: '16px', boxShadow: 'var(--shadow-md)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+            <span style={{ fontSize: '0.82rem', color: 'var(--accent-primary, #3b82f6)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
               {fileContent.path}
             </span>
-            <button onClick={() => setFileContent(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>Close</button>
+            <button onClick={() => setFileContent(null)} style={{ background: 'none', border: 'none', color: 'var(--text-muted, #94a3b8)', cursor: 'pointer', fontSize: '0.78rem' }}>Close</button>
           </div>
           <pre style={{
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.85rem',
-            color: '#a7f3d0',
-            background: 'rgba(0,0,0,0.5)',
+            fontSize: '0.82rem',
+            color: 'var(--text-main, #f8fafc)',
+            background: 'var(--bg-input, rgba(0,0,0,0.4))',
             padding: '12px',
             borderRadius: '8px',
-            overflowX: 'auto'
+            border: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.06))',
+            overflowX: 'auto',
+            margin: 0
           }}>
             {fileContent.content}
           </pre>

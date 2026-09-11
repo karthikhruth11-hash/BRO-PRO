@@ -1,15 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   X, 
   Cpu, 
   MessageSquare, 
-  Clock, 
   Zap, 
   FileText, 
   Code, 
   Languages, 
   Sparkles, 
-  Share2, 
   Download, 
   Trash2,
   HelpCircle,
@@ -27,161 +25,156 @@ export default function RightContextPanel({
   onExportChat,
   onClearChat
 }) {
-  if (!isOpen) return null;
+  const [showStatsPopover, setShowStatsPopover] = useState(false);
+  const popoverRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
+        setShowStatsPopover(false);
+      }
+    }
+    if (showStatsPopover) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showStatsPopover]);
+
+  if (!isOpen && typeof window !== 'undefined' && window.innerWidth > 1024) return null;
 
   const aiTools = [
-    { id: 'summarize', label: 'Summarize', icon: FileText, desc: 'Condensed summary', color: 'var(--accent-cyan)' },
-    { id: 'explain', label: 'Explain Topic', icon: HelpCircle, desc: 'Simple terms', color: 'var(--accent-purple)' },
-    { id: 'rewrite', label: 'Rewrite', icon: Sparkles, desc: 'Polished prose', color: 'var(--accent-pink)' },
+    { id: 'summarize', label: 'Summarize', icon: FileText, desc: 'Condensed overview', color: 'var(--accent-primary)' },
+    { id: 'explain', label: 'Explain', icon: HelpCircle, desc: 'Clear breakdown', color: 'var(--accent-purple)' },
+    { id: 'rewrite', label: 'Rewrite', icon: Sparkles, desc: 'Refined prose', color: 'var(--accent-pink)' },
     { id: 'code', label: 'Write Code', icon: Code, desc: 'Syntax & solution', color: 'var(--accent-emerald)' },
     { id: 'translate', label: 'Translate', icon: Languages, desc: 'Multi-lingual', color: 'var(--accent-amber)' },
-    { id: 'analyze', label: 'Analyze Data', icon: Activity, desc: 'Deep insights', color: 'var(--accent-blue)' }
+    { id: 'analyze', label: 'Analyze', icon: Activity, desc: 'Key insights', color: 'var(--accent-cyan)' }
   ];
 
   return (
-    <aside style={{
-      width: '300px',
-      background: 'var(--bg-secondary)',
-      borderLeft: '1px solid var(--border-subtle)',
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%',
-      padding: '18px',
-      gap: '18px',
-      overflowY: 'auto',
-      userSelect: 'none',
-      boxShadow: '-4px 0 20px rgba(0,0,0,0.1)'
-    }}>
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '1px solid var(--border-subtle)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-main)' }}>
-          <Cpu size={18} color="var(--accent-cyan)" /> Context & AI Tools
-        </div>
+    <aside className={`right-context-panel ${isOpen ? 'open' : ''}`}>
+      {/* Session Analytics Trigger */}
+      <div style={{ position: 'relative' }} ref={popoverRef}>
         <button
-          onClick={onClose}
-          className="btn-secondary"
-          style={{ padding: '6px', borderRadius: '8px' }}
-          title="Close Panel"
+          onClick={() => setShowStatsPopover(!showStatsPopover)}
+          className={`right-rail-btn ${showStatsPopover ? 'active' : ''}`}
+          title={`Session Analytics (${selectedModel})`}
+          style={{ color: showStatsPopover ? 'var(--accent-primary)' : 'var(--text-muted)' }}
         >
-          <X size={16} />
+          <Cpu size={17} />
         </button>
-      </div>
 
-      {/* Chat Metadata Box */}
-      <div style={{
-        padding: '14px',
-        background: 'var(--bg-card)',
-        border: '1px solid var(--border-subtle)',
-        borderRadius: '12px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px'
-      }}>
-        <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '1px' }}>
-          Session Analytics
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.82rem' }}>
-          <span style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Cpu size={14} color="var(--accent-cyan)" /> Active Engine:
-          </span>
-          <span style={{ color: 'var(--accent-cyan)', fontWeight: 600 }}>{selectedModel}</span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.82rem' }}>
-          <span style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <MessageSquare size={14} color="var(--accent-purple)" /> Total Messages:
-          </span>
-          <span style={{ fontWeight: 600 }}>{messageCount}</span>
-        </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.82rem' }}>
-          <span style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Zap size={14} color="var(--accent-amber)" /> Est. Tokens:
-          </span>
-          <span style={{ fontWeight: 600 }}>{tokensUsed || '~' + (messageCount * 120)}</span>
-        </div>
-      </div>
-
-      {/* AI Tools Palette */}
-      <div>
-        <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '10px' }}>
-          AI Productivity Tools
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
-          {aiTools.map((tool) => {
-            const IconComp = tool.icon;
-            return (
+        {/* Floating Popover for Session Analytics */}
+        {showStatsPopover && (
+          <div
+            style={{
+              position: 'absolute',
+              right: '48px',
+              top: '0px',
+              width: '240px',
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-subtle)',
+              borderRadius: 'var(--radius-md)',
+              padding: '12px',
+              boxShadow: 'var(--shadow-lg)',
+              zIndex: 200,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+              animation: 'fadeIn 0.15s ease-out'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-subtle)', paddingBottom: '6px' }}>
+              <span style={{ fontSize: '0.74rem', fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <Cpu size={13} style={{ color: 'var(--accent-primary)' }} /> Session Analytics
+              </span>
               <button
-                key={tool.id}
-                onClick={() => onQuickToolClick && onQuickToolClick(tool.id)}
-                className="btn-secondary"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'flex-start',
-                  padding: '10px',
-                  borderRadius: '10px',
-                  gap: '4px',
-                  textAlign: 'left'
-                }}
+                onClick={() => setShowStatsPopover(false)}
+                style={{ background: 'transparent', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', padding: '2px', display: 'flex', alignItems: 'center' }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)' }}>
-                  <IconComp size={14} color={tool.color} /> {tool.label}
-                </div>
-                <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>{tool.desc}</span>
+                <X size={12} />
               </button>
-            );
-          })}
-        </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.76rem' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Model:</span>
+              <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{selectedModel}</span>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.76rem' }}>
+              <span style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <MessageSquare size={12} style={{ color: 'var(--accent-purple)' }} /> Messages:
+              </span>
+              <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{messageCount}</span>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.76rem' }}>
+              <span style={{ color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <Zap size={12} style={{ color: 'var(--accent-amber)' }} /> Est. Tokens:
+              </span>
+              <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{tokensUsed || '~' + (messageCount * 120)}</span>
+            </div>
+
+            {activeTopic && (
+              <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '6px', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
+                <div style={{ fontWeight: 600, color: 'var(--text-muted)', marginBottom: '2px' }}>Topic:</div>
+                <div style={{ color: 'var(--text-main)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {activeTopic}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
-      {/* Active Context / Memory Graph */}
-      <div>
-        <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '8px' }}>
-          Active Topic & Memory
-        </div>
-        <div style={{
-          padding: '12px',
-          background: 'var(--bg-card)',
-          border: '1px solid var(--border-subtle)',
-          borderRadius: '10px',
-          fontSize: '0.82rem',
-          color: 'var(--text-muted)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '6px'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--accent-cyan)', fontWeight: 600 }}>
-            <Sparkles size={14} /> Topic: {activeTopic}
-          </div>
-          <span style={{ fontSize: '0.75rem' }}>
-            Memory graph is active. Facts extracted automatically from user conversation.
-          </span>
-        </div>
-      </div>
+      <div className="right-rail-divider" />
+
+      {/* AI Productivity Tools */}
+      {aiTools.map((tool) => {
+        const IconComp = tool.icon;
+        return (
+          <button
+            key={tool.id}
+            onClick={() => onQuickToolClick && onQuickToolClick(tool.id)}
+            className="right-rail-btn"
+            title={`${tool.label} — ${tool.desc}`}
+          >
+            <IconComp size={17} style={{ color: tool.color }} />
+          </button>
+        );
+      })}
+
+      <div className="right-rail-divider" />
 
       {/* Quick Session Actions */}
-      <div style={{ marginTop: 'auto', borderTop: '1px solid var(--border-subtle)', paddingTop: '14px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '1px' }}>
-          Quick Actions
-        </div>
-        <button
-          onClick={onExportChat}
-          className="btn-secondary"
-          style={{ width: '100%', justifyContent: 'flex-start', fontSize: '0.82rem' }}
-        >
-          <Download size={15} color="var(--accent-cyan)" /> Export Session (Markdown)
-        </button>
+      <button
+        onClick={onExportChat}
+        className="right-rail-btn"
+        title="Export Session (Markdown)"
+      >
+        <Download size={16} />
+      </button>
 
-        <button
-          onClick={onClearChat}
-          className="btn-secondary"
-          style={{ width: '100%', justifyContent: 'flex-start', fontSize: '0.82rem', color: 'var(--accent-pink)' }}
-        >
-          <Trash2 size={15} /> Clear Current Canvas
-        </button>
-      </div>
+      <button
+        onClick={onClearChat}
+        className="right-rail-btn"
+        title="Clear Current Canvas"
+        style={{ color: 'var(--accent-red)' }}
+      >
+        <Trash2 size={16} />
+      </button>
+
+      {/* Close / Collapse Rail */}
+      <button
+        onClick={onClose}
+        className="right-rail-btn"
+        title="Close Sidebar"
+        style={{ marginTop: 'auto' }}
+      >
+        <X size={15} />
+      </button>
     </aside>
   );
 }

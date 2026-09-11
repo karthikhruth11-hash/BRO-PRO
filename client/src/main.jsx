@@ -44,28 +44,26 @@ class RootErrorBoundary extends React.Component {
           <div style={{
             maxWidth: '560px',
             width: '100%',
-            background: 'rgba(13, 20, 36, 0.95)',
-            border: '1px solid rgba(0, 240, 255, 0.3)',
+            background: 'var(--bg-card, #131b2e)',
+            border: '1px solid var(--border-subtle, rgba(255, 255, 255, 0.12))',
             borderRadius: '16px',
             padding: '32px',
-            boxShadow: '0 0 50px rgba(0, 240, 255, 0.15)',
+            boxShadow: 'var(--shadow-lg, 0 16px 48px rgba(0, 0, 0, 0.45))',
             textAlign: 'center'
           }}>
-            <h2 style={{ color: '#00f0ff', margin: '0 0 12px 0', fontSize: '20px' }}>Application Reload Assistant</h2>
-            <p style={{ color: '#94a3b8', fontSize: '14px', lineHeight: 1.5, margin: '0 0 24px 0' }}>
+            <h2 style={{ color: 'var(--text-main, #f8fafc)', margin: '0 0 12px 0', fontSize: '20px', fontWeight: 700 }}>Application Reload Assistant</h2>
+            <p style={{ color: 'var(--text-muted, #94a3b8)', fontSize: '14px', lineHeight: 1.5, margin: '0 0 24px 0' }}>
               {this.state.error?.message || "A rendering synchronization event occurred."}
             </p>
             <div style={{ display: 'flex', gap: '14px', justifyContent: 'center' }}>
               <button
                 onClick={() => this.setState({ hasError: false, error: null })}
+                className="btn-primary"
                 style={{
                   padding: '10px 22px',
                   borderRadius: '8px',
-                  background: 'rgba(0, 240, 255, 0.2)',
-                  border: '1px solid #00f0ff',
-                  color: '#00f0ff',
-                  fontWeight: 700,
                   fontSize: '14px',
+                  fontWeight: 600,
                   cursor: 'pointer'
                 }}
               >
