@@ -255,6 +255,28 @@ app.get("/api/firewall/status", (req, res) => {
   res.json(appFirewall.getMetrics());
 });
 
+// Google Search Console & Search Engine Discovery Endpoints
+app.get("/google87c89ec8032e7e93.html", (req, res) => {
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.send("google-site-verification: google87c89ec8032e7e93.html");
+});
+
+app.get("/robots.txt", (req, res) => {
+  res.setHeader("Content-Type", "text/plain; charset=utf-8");
+  res.send("User-agent: *\nAllow: /\nSitemap: https://wednesday-bro-ai-pro.vercel.app/sitemap.xml\n");
+});
+
+app.get("/sitemap.xml", (req, res) => {
+  res.setHeader("Content-Type", "application/xml; charset=utf-8");
+  try {
+    const sitemapPath = path.join(process.cwd(), "client", "public", "sitemap.xml");
+    if (fs.existsSync(sitemapPath)) {
+      return res.sendFile(sitemapPath);
+    }
+  } catch (e) {}
+  res.send(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://wednesday-bro-ai-pro.vercel.app/</loc><priority>1.0</priority></url></urlset>`);
+});
+
 // Hardened local auth handshake for protected API routes
 app.use("/api", authMiddleware);
 

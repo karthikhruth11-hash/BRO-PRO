@@ -17,6 +17,18 @@
       "dest": "/api/index.js"
     },
     {
+      "src": "/google87c89ec8032e7e93.html",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/sitemap.xml",
+      "dest": "/api/index.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/client/$1"
     }
