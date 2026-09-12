@@ -162,7 +162,32 @@
       </main>
     </noscript>
 
-    <div id="root"></div>
+    <div id="root">
+      <!-- Semantic Crawler Pre-render (Hydrated and replaced immediately upon React mount) -->
+      <div id="seo-prerender" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; background: #070a12; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; text-align: center;">
+        <div style="max-width: 800px; width: 100%; background: #131b2e; border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 18px; padding: 2.5rem; box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);">
+          <h1 style="font-size: 2rem; font-weight: 800; color: #38bdf8; margin: 0 0 1rem 0; letter-spacing: -0.5px;">
+            SAGW AI
+          </h1>
+          <p style="font-size: 1.15rem; font-weight: 600; color: #e2e8f0; margin: 0 0 1.25rem 0;">
+            Founded & Engineered by C Karthik
+          </p>
+          <p style="font-size: 0.95rem; color: #94a3b8; line-height: 1.6; margin: 0 0 1.75rem 0;">
+            SAGW AI is a production-grade personal AI assistant and cognitive platform designed and engineered end-to-end by C Karthik. 
+            Featuring multi-LLM orchestration, real-time telemetry, isolated memory systems, and secure administrative controls.
+          </p>
+          <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1.5rem;">
+            <a href="https://www.linkedin.com/in/karthik-c-81538a358/" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #38bdf8; text-decoration: none; font-size: 0.9rem; font-weight: 600;">
+              LinkedIn: Karthik C
+            </a>
+            <span style="color: rgba(255, 255, 255, 0.2);">•</span>
+            <a href="https://github.com/karthikhruth11-hash" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #38bdf8; text-decoration: none; font-size: 0.9rem; font-weight: 600;">
+              GitHub: karthikhruth11-hash
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
