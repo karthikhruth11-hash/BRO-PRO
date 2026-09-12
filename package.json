@@ -1,8 +1,8 @@
 {
-  "name": "wednesday-bro-ai-pro",
+  "name": "sagw-ai",
   "version": "2.0.0",
   "private": true,
-  "description": "BRO AI (W.E.D.N.E.S.D.A.Y. Pro) - Production-Grade Personal AI Assistant",
+  "description": "SAGW AI - Advanced Personal AI Platform Founded by C Karthik",
   "homepage": "https://karthikhruth11-hash.github.io/BRO-PRO",
   "type": "module",
   "scripts": {
