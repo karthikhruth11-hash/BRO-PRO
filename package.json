@@ -10,6 +10,8 @@
     "server": "node server/index.js",
     "client": "npm --prefix client run dev",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "tunnel": ".bin\\cloudflared.exe tunnel --url http://localhost:3000",
+    "share": "concurrently \"npm run dev\" \"npm run tunnel\"",
     "build": "npm --prefix client run build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d client/dist"
