@@ -4,7 +4,15 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const DB_FILE = path.join(__dirname, 'store.json');
+const LOCAL_DB_FILE = path.join(__dirname, 'store.json');
+const TMP_DB_FILE = path.join("/tmp", "store.json");
+
+const getDbFilePath = () => {
+  if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+    return TMP_DB_FILE;
+  }
+  return LOCAL_DB_FILE;
+};
 
 const INITIAL_DATA = {
   users: [
@@ -68,15 +76,28 @@ class LocalDB {
   }
 
   ensureDb() {
-    if (!fs.existsSync(DB_FILE)) {
-      fs.writeFileSync(DB_FILE, JSON.stringify(INITIAL_DATA, null, 2));
+    const dbFile = getDbFilePath();
+    if (!fs.existsSync(dbFile)) {
+      if (fs.existsSync(LOCAL_DB_FILE) && dbFile !== LOCAL_DB_FILE) {
+        try {
+          fs.copyFileSync(LOCAL_DB_FILE, dbFile);
+          return;
+        } catch (e) {
+          // ignore copy error
+        }
+      }
+      try {
+        fs.writeFileSync(dbFile, JSON.stringify(INITIAL_DATA, null, 2));
+      } catch (e) {
+        console.error("Error initializing database file:", e);
+      }
     }
   }
 
   read() {
     try {
       this.ensureDb();
-      const content = fs.readFileSync(DB_FILE, 'utf8');
+      const content = fs.readFileSync(getDbFilePath(), 'utf8');
       return JSON.parse(content);
     } catch (e) {
       console.error("Error reading database file:", e);
@@ -86,7 +107,7 @@ class LocalDB {
 
   write(data) {
     try {
-      fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+      fs.writeFileSync(getDbFilePath(), JSON.stringify(data, null, 2));
     } catch (e) {
       console.error("Error writing database file:", e);
     }
