@@ -86,10 +86,10 @@ export default function Sidebar({
     },
     { 
       id: 'team', 
-      label: 'Our Group', 
+      label: 'Founder & Team', 
       icon: Users, 
       color: 'var(--accent-emerald)',
-      desc: 'Team & Collaboration'
+      desc: 'Founded by C Karthik'
     },
     { 
       id: 'files', 
@@ -234,7 +234,7 @@ export default function Sidebar({
               background: activeView === 'team' ? 'var(--bg-hover)' : 'transparent',
               borderColor: activeView === 'team' ? 'var(--border-strong)' : 'transparent' 
             }}
-            title="Our Group"
+            title="Founder & Team (C Karthik)"
           >
             <Users size={17} style={{ color: activeView === 'team' ? 'var(--accent-emerald)' : 'var(--text-muted)' }} />
           </button>

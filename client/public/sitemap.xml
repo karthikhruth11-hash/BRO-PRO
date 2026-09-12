@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://wednesday-bro-ai-pro.vercel.app/</loc>
+    <lastmod>2026-09-12</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://wednesday-bro-ai-pro.vercel.app/sagw-ai-logo.png</image:loc>
+      <image:title>SAGW AI — Intelligent Personal AI Platform</image:title>
+      <image:caption>Founded and engineered by C Karthik</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://wednesday-bro-ai-pro.vercel.app/karthik.png</image:loc>
+      <image:title>C Karthik — Founder and Lead AI Architect of SAGW AI</image:title>
+      <image:caption>C Karthik, Founder of SAGW AI</image:caption>
+    </image:image>
+  </url>
+</urlset>
