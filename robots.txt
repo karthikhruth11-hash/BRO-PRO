@@ -1,0 +1,8 @@
+# Robots.txt for SAGW AI (W.E.D.N.E.S.D.A.Y. Pro)
+# Allow all search engines (Googlebot, Bingbot, Slurp, DuckDuckBot, etc.) to crawl and index all pages
+
+User-agent: *
+Allow: /
+
+# Canonical Sitemap
+Sitemap: https://wednesday-bro-ai-pro.vercel.app/sitemap.xml
